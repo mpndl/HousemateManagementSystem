@@ -94,7 +94,7 @@ public class Controller {
         TextField tfLastname = (TextField) mhStage.getScene().lookup("#"+n+"mhLastname");
         TextField tfPhoneNumber = (TextField) mhStage.getScene().lookup("#"+n+"mhPhoneNumber");
         TextField tfPassword = (TextField) mhStage.getScene().lookup("#"+n+"mhPassword");
-        CheckBox cbIsLeader = (CheckBox) mhStage.getScene().lookup("#"+n+"mhIsLeader");
+        //CheckBox cbIsLeader = (CheckBox) mhStage.getScene().lookup("#"+n+"mhIsLeader");
 
         TableView<Housemate> tvHousemates = (TableView<Housemate>) mhStage.getScene().lookup("#"+n+"mhTable");
 
