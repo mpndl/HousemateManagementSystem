@@ -2,13 +2,21 @@ package za.nmu.wrr;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import java.sql.ResultSet;
+import java.util.Optional;
 
 public class Controller {
     private final Database database = new Database();
@@ -28,6 +36,23 @@ public class Controller {
         removeHousemates(mhStage);
 
         setupDashboardLinks(dashboardScene, mhStage);
+    }
+
+    public EventHandler<KeyEvent> maxLength(final Integer i) {
+        return new EventHandler<KeyEvent>() {
+
+            @Override
+            public void handle(KeyEvent arg0) {
+
+                TextField tx = (TextField) arg0.getSource();
+                if (tx.getText().length() >= i) {
+                    arg0.consume();
+                }
+
+            }
+
+        };
+
     }
 
     private void removeHousemates(Stage mhStage) {
@@ -67,16 +92,32 @@ public class Controller {
 
             int index = getHousemateIndex(housemate.housemateID.getValue());
             if(index != -1) {
-                housemates.remove(index);
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Confirm Remove Housemate");
+                alert.setHeaderText("Remove " + "[ID="+housemate.housemateID.getValue()+"] " + housemate.firstName.getValue() + " " + housemate.lastName.getValue());
+                alert.setContentText("Are you sure you want to remove housemate?");
 
-                database.executeUpdate("DELETE FROM Housemate WHERE housemateID = '" + housemate.housemateID.getValue() + "'");
+                ButtonType btRemove = new ButtonType("Remove");
+                ButtonType btCancel = new ButtonType("Cancel");
 
-                tfHousemateID.setText("");
-                tfFirstname.setText("");
-                tfLastname.setText("");
-                tfPhoneNumber.setText("");
-                tfPassword.setText("");
-                tvHousemates.getSelectionModel().clearSelection();
+                alert.getButtonTypes().setAll(btRemove, btCancel);
+                Optional<ButtonType> result = alert.showAndWait();
+
+                if(result.get() == btRemove) {
+
+                    housemates.remove(index);
+
+                    database.executeUpdate("DELETE FROM Housemate WHERE housemateID = '" + housemate.housemateID.getValue() + "'");
+
+                    tfHousemateID.setText("");
+                    tfFirstname.setText("");
+                    tfLastname.setText("");
+                    tfPhoneNumber.setText("");
+                    tfPassword.setText("");
+                    tvHousemates.getSelectionModel().clearSelection();
+                }
+                else
+                    alert.close();
             }
         });
     }
@@ -93,8 +134,9 @@ public class Controller {
         TextField tfFirstname = (TextField) mhStage.getScene().lookup("#"+n+"mhFirstname");
         TextField tfLastname = (TextField) mhStage.getScene().lookup("#"+n+"mhLastname");
         TextField tfPhoneNumber = (TextField) mhStage.getScene().lookup("#"+n+"mhPhoneNumber");
+        tfPhoneNumber.addEventFilter(KeyEvent.KEY_TYPED, maxLength(10));
         TextField tfPassword = (TextField) mhStage.getScene().lookup("#"+n+"mhPassword");
-        //CheckBox cbIsLeader = (CheckBox) mhStage.getScene().lookup("#"+n+"mhIsLeader");
+        CheckBox cbIsLeader = (CheckBox) mhStage.getScene().lookup("#"+n+"mhIsLeader");
 
         TableView<Housemate> tvHousemates = (TableView<Housemate>) mhStage.getScene().lookup("#"+n+"mhTable");
 
@@ -206,16 +248,25 @@ public class Controller {
             housemate.password.setValue(tfPassword.getText());
             housemate.isLeader.set(0);
 
-            housemates.add(housemate);
-
-            database.executeUpdate("INSERT INTO Housemate(firstName, lastName, password, phoneNumber) VALUES('"+housemate.firstName.getValue()+"', '"+housemate.lastName.getValue()+"', '"+housemate.password.getValue()+"', '"+housemate.phoneNumber.getValue()+"')");
+            int id = database.executeInsert("INSERT INTO Housemate(firstName, lastName, password, phoneNumber) VALUES('"+housemate.firstName.getValue()+"', '"+housemate.lastName.getValue()+"', '"+housemate.password.getValue()+"', '"+housemate.phoneNumber.getValue()+"')");
+            if(id != -1)
+                housemate.housemateID.setValue(id + "");
             tfHousemateID.setText("");
             tfFirstname.setText("");
             tfLastname.setText("");
             tfPhoneNumber.setText("");
             tfPassword.setText("");
             tvHousemates.getSelectionModel().clearSelection();
+            housemates.add(housemate);
         });
+    }
+
+    private boolean inHousemates(String firstname, String lastname) {
+        for(Housemate housemate: housemates) {
+            if(housemate.firstName.equals(firstname) && housemate.lastName.equals(lastname))
+                return true;
+        }
+        return false;
     }
 
     private void setupHousemates() {
