@@ -52,6 +52,7 @@ public class Database {
     }
 
     public void disconnectFromDB() {
+
         try {
             conn.close();
         } catch (SQLException e) {
