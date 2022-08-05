@@ -261,14 +261,6 @@ public class Controller {
         });
     }
 
-    private boolean inHousemates(String firstname, String lastname) {
-        for(Housemate housemate: housemates) {
-            if(housemate.firstName.equals(firstname) && housemate.lastName.equals(lastname))
-                return true;
-        }
-        return false;
-    }
-
     private void setupHousemates() {
         ResultSet rs = database.executeQuery("SELECT * FROM Housemate");
         try {
