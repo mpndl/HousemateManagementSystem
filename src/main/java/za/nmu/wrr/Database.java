@@ -27,6 +27,19 @@ public class Database {
         }
     }
 
+    public int executeInsert(String sql) {
+        try {
+            stmt.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
+            ResultSet generatedKeys = stmt.getGeneratedKeys();
+            if(generatedKeys.next())
+                return generatedKeys.getInt(1);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return -1;
+    }
+
     private void connectToDB() {
         try {
             Class.forName("net.sourceforge.jtds.jdbc.Driver");
