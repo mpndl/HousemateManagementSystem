@@ -14,7 +14,6 @@ import java.sql.ResultSet;
 import java.util.Optional;
 
 public class MaintainHousemateController extends Controller {
-    private final Database database = new Database();
     private ObservableList<Housemate> housemates = FXCollections.observableArrayList();
     private final String ADD = "add_mh_";
     private final String EDIT = "edit_mh_";
@@ -49,12 +48,12 @@ public class MaintainHousemateController extends Controller {
         tvHousemates.getSelectionModel().selectedItemProperty().addListener((observableValue, housemate, t1) -> {
             Housemate temp = observableValue.getValue();
             if(temp != null) {
+                cbIsLeader.setSelected(temp.isLeader.getValue() != 0);
                 tfHousemateID.setText(temp.housemateID.getValue());
                 tfFirstname.setText(temp.firstName.getValue());
                 tfLastname.setText(temp.lastName.getValue());
                 tfPhoneNumber.setText(temp.phoneNumber.getValue());
                 tfPassword.setText(temp.password.getValue());
-                cbIsLeader.setDisable(temp.isLeader.getValue() == 0);
             }
         });
 
@@ -62,13 +61,14 @@ public class MaintainHousemateController extends Controller {
         Button btnClear = (Button) mhStage.getScene().lookup("#"+ REMOVE + "clear");
         btnClear.setDisable(true);
         tfHousemateID.textProperty().addListener((observableValue, s, t1) -> {
-            if(observableValue.getValue().length() > 0) {
+            if(observableValue.getValue().length() > 0 && !cbIsLeader.isSelected()) {
                 btnRemove.setDisable(false);
             }
             else {
                 btnRemove.setDisable(true);
             }
         });
+
         btnRemove.setOnAction(event -> {
             Housemate housemate = new Housemate();
             housemate.housemateID.setValue(tfHousemateID.getText());
@@ -106,7 +106,7 @@ public class MaintainHousemateController extends Controller {
                 }
                 else
                     alert.close();
-            }
+                }
         });
     }
 
@@ -117,8 +117,6 @@ public class MaintainHousemateController extends Controller {
         TextField tfPhoneNumber = (TextField) mhStage.getScene().lookup("#"+n+"phonenumber");
         tfPhoneNumber.addEventFilter(KeyEvent.KEY_TYPED, maxLength(10));
         TextField tfPassword = (TextField) mhStage.getScene().lookup("#"+n+"password");
-        CheckBox cbIsLeader = (CheckBox) mhStage.getScene().lookup("#"+n+"leader");
-
         TableView<Housemate> tvHousemates = (TableView<Housemate>) mhStage.getScene().lookup("#"+n+"table");
 
         TableColumn tcHousemateID = new TableColumn("Housemate ID");
@@ -180,12 +178,12 @@ public class MaintainHousemateController extends Controller {
         tvHousemates.getSelectionModel().selectedItemProperty().addListener((observableValue, housemate, t1) -> {
             Housemate temp = observableValue.getValue();
             if(temp != null) {
+                cbIsLeader.setSelected(temp.isLeader.getValue() != 0);
                 tfHousemateID.setText(temp.housemateID.getValue());
                 tfFirstname.setText(temp.firstName.getValue());
                 tfLastname.setText(temp.lastName.getValue());
                 tfPhoneNumber.setText(temp.phoneNumber.getValue());
                 tfPassword.setText(temp.password.getValue());
-                cbIsLeader.setDisable(temp.isLeader.getValue() == 0);
             }
         });
 
@@ -197,7 +195,7 @@ public class MaintainHousemateController extends Controller {
             housemate.lastName.setValue(tfLastname.getText());
             housemate.phoneNumber.setValue(tfPhoneNumber.getText());
             housemate.password.setValue(tfPassword.getText());
-            housemate.isLeader.set(0);
+            housemate.isLeader.setValue(0);
 
             try {
                 Integer.parseInt(housemate.phoneNumber.getValue());
@@ -222,8 +220,7 @@ public class MaintainHousemateController extends Controller {
         });
 
         Button btnClear = (Button) mhStage.getScene().lookup("#"+ EDIT + "clear");
-        setupDisableFuncs(btnEdit, btnClear, tfFirstname, tfLastname, tfPhoneNumber,tfPassword);
-
+        setupDisableFuncs(btnEdit, btnClear,cbIsLeader, tfFirstname, tfLastname, tfPhoneNumber,tfPassword);
     }
 
     private int getHousemateIndex(String id) {
@@ -279,7 +276,7 @@ public class MaintainHousemateController extends Controller {
 
         Button btnClear = (Button) mhStage.getScene().lookup("#"+ ADD + "clear");
 
-        setupDisableFuncs(btnAdd, btnClear, tfFirstname, tfLastname, tfPhoneNumber, tfPassword);
+        setupDisableFuncs(btnAdd, btnClear, null, tfFirstname, tfLastname, tfPhoneNumber, tfPassword);
     }
 
     private void setupHousemates() {

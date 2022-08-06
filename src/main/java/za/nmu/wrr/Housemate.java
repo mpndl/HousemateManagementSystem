@@ -12,6 +12,15 @@ public class Housemate {
     public StringProperty password = new SimpleStringProperty();
     public StringProperty phoneNumber = new SimpleStringProperty();
     public IntegerProperty isLeader = new SimpleIntegerProperty();
+    public Housemate() {}
+    public Housemate(String housemateID, String firstName, String lastName, String password, String phoneNumber, Integer isLeader) {
+        this.housemateID.setValue(housemateID);
+        this.firstName.setValue(firstName);
+        this.lastName.setValue(lastName);
+        this.password.setValue(password);
+        this.phoneNumber.setValue(phoneNumber);
+        this.isLeader.setValue(isLeader);
+    }
 
     public StringProperty housemateIDProperty() {
         return housemateID;

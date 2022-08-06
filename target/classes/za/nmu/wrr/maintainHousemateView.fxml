@@ -20,6 +20,10 @@
             </top>
             <left>
                 <GridPane hgap="5" vgap="5">
+                    <padding >
+                        <Insets left="10" right="10" top="10" bottom="10"/>
+                    </padding>
+
                     <Label text="Housemate ID:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
                     <TextField fx:id="add_mh_housemateid" disable="true" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
 
@@ -57,10 +61,14 @@
                 <Insets left="10" right="10" top="10" bottom="10"/>
             </padding>
             <top>
-                <Label text="Add Housemates" style="-fx-font-weight: bold"/>
+                <Label text="Edit Housemates" style="-fx-font-weight: bold"/>
             </top>
             <left>
                 <GridPane hgap="5" vgap="5">
+                    <padding >
+                        <Insets left="10" right="10" top="10" bottom="10"/>
+                    </padding>
+
                     <Label text="Housemate ID:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
                     <TextField fx:id="edit_mh_housemateid" disable="true" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
 
@@ -98,10 +106,14 @@
                 <Insets left="10" right="10" top="10" bottom="10"/>
             </padding>
             <top>
-                <Label text="Add Housemates" style="-fx-font-weight: bold"/>
+                <Label text="Remove Housemates" style="-fx-font-weight: bold"/>
             </top>
             <left>
                 <GridPane hgap="5" vgap="5">
+                    <padding >
+                        <Insets left="10" right="10" top="10" bottom="10"/>
+                    </padding>
+
                     <Label text="Housemate ID:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
                     <TextField fx:id="remove_mh_housemateid" disable="true" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
 

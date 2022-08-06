@@ -21,9 +21,12 @@ import java.sql.ResultSet;
 import java.util.Optional;
 
 public class Controller {
-    public Controller() {}
+    protected final Database database = new Database();
     protected StringProperty disableClearProperty = new SimpleStringProperty();
-
+    protected Housemate loggedInUser = new Housemate("", "Jake", "Smith", "", "", 0);
+    public Controller() {
+        setupProfile();
+    }
     protected EventHandler<KeyEvent> maxLength(final Integer i) {
         return new EventHandler<KeyEvent>() {
             @Override
@@ -36,7 +39,7 @@ public class Controller {
         };
     }
 
-    protected void setupDisableFuncs(Button btnFunc1, Button btnFunc2,TextField... textFields) {
+    protected void setupDisableFuncs(Button btnFunc1, Button btnFunc2, CheckBox cb,TextField... textFields) {
         btnFunc1.setDisable(true);
         btnFunc2.setDisable(true);
         for(TextField textField: textFields) {
@@ -46,7 +49,7 @@ public class Controller {
         }
         disableClearProperty.addListener((observableValue, s, t1) -> {
             String value = observableValue.getValue().replace("null", "");
-            if(value.length() > 0) {
+            if(value.length() > 0 && cb != null && !cb.isSelected()) {
                 btnFunc1.setDisable(false);
                 btnFunc2.setDisable(false);
             }
@@ -55,5 +58,21 @@ public class Controller {
                 btnFunc2.setDisable(true);
             }
         });
+    }
+
+    protected void setupProfile() {
+        ResultSet rs = database.executeQuery("SELECT * FROM Housemate WHERE firstName = '" + loggedInUser.firstName.getValue() + "' AND lastName = '" + loggedInUser.lastName.getValue() + "'");
+        try {
+            while (rs.next()) {
+                loggedInUser.housemateID.setValue(rs.getString("HousemateID"));
+                loggedInUser.password.setValue(rs.getString("password"));
+                loggedInUser.phoneNumber.setValue(rs.getString("phoneNumber"));
+                loggedInUser.isLeader.setValue(rs.getInt("isLeader"));
+                return;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 }

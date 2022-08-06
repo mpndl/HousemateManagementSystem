@@ -10,8 +10,8 @@
         <Label text="Dashboard" style="-fx-font-weight: bold;" BorderPane.alignment="CENTER" />
     </top>
     <left>
-        <VBox>
-            <Hyperlink text="Maintain Profile"/>
+        <VBox fx:id="dashboard_links">
+            <Hyperlink text="Maintain Profile" fx:id="mp_dashboard"/>
             <Hyperlink text="Maintain House"/>
             <Hyperlink text="Connect to House"/>
             <Hyperlink text="Maintain Housemates" fx:id="mh_dashboard" />
