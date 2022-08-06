@@ -1,5 +1,7 @@
 package za.nmu.wrr;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
@@ -20,8 +22,9 @@ import java.util.Optional;
 
 public class Controller {
     public Controller() {}
+    protected StringProperty disableClearProperty = new SimpleStringProperty();
 
-    public EventHandler<KeyEvent> maxLength(final Integer i) {
+    protected EventHandler<KeyEvent> maxLength(final Integer i) {
         return new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent arg0) {
@@ -31,5 +34,27 @@ public class Controller {
                 }
             }
         };
+    }
+
+    protected void setupDisableFuncs(Button btnFunc1, Button btnFunc2,TextField... textFields) {
+        btnFunc1.setDisable(true);
+        btnFunc2.setDisable(true);
+        for(TextField textField: textFields) {
+            textField.textProperty().addListener((observableValue, s, t1) -> {
+                disableClearProperty.setValue(observableValue.getValue());
+            });
+        }
+        disableClearProperty.addListener((observableValue, s, t1) -> {
+            String value = observableValue.getValue().replace("null", "");
+            if(value.length() > 0) {
+                System.out.println(">>>>>> " + value);
+                btnFunc1.setDisable(false);
+                btnFunc2.setDisable(false);
+            }
+            else {
+                btnFunc1.setDisable(true);
+                btnFunc2.setDisable(true);
+            }
+        });
     }
 }
