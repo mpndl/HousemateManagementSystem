@@ -47,7 +47,6 @@ public class Controller {
         disableClearProperty.addListener((observableValue, s, t1) -> {
             String value = observableValue.getValue().replace("null", "");
             if(value.length() > 0) {
-                System.out.println(">>>>>> " + value);
                 btnFunc1.setDisable(false);
                 btnFunc2.setDisable(false);
             }

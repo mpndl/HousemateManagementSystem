@@ -60,14 +60,13 @@ public class MaintainHousemateController extends Controller {
 
         Button btnRemove = (Button) mhStage.getScene().lookup("#"+ REMOVE + "remove");
         Button btnClear = (Button) mhStage.getScene().lookup("#"+ REMOVE + "clear");
+        btnClear.setDisable(true);
         tfHousemateID.textProperty().addListener((observableValue, s, t1) -> {
             if(observableValue.getValue().length() > 0) {
                 btnRemove.setDisable(false);
-                btnClear.setDisable(false);
             }
             else {
                 btnRemove.setDisable(true);
-                btnClear.setDisable(true);
             }
         });
         btnRemove.setOnAction(event -> {
@@ -200,15 +199,29 @@ public class MaintainHousemateController extends Controller {
             housemate.password.setValue(tfPassword.getText());
             housemate.isLeader.set(0);
 
-            int index = getHousemateIndex(housemate.housemateID.getValue());
-            if(index != -1) {
-                housemates.set(index, housemate);
+            try {
+                Integer.parseInt(housemate.phoneNumber.getValue());
+                if(housemate.phoneNumber.getValue().length() == 10) {
 
-                database.executeUpdate("UPDATE Housemate SET firstName = '" + housemate.firstName.getValue() + "', lastName = '" + housemate.lastName.getValue() + "', password = '" + housemate.password.getValue() + "', phoneNumber = '" + housemate.phoneNumber.getValue() + "' WHERE housemateID = '" + housemate.housemateID.getValue() + "'");
+                    int index = getHousemateIndex(housemate.housemateID.getValue());
+                    if (index != -1) {
+                        housemates.set(index, housemate);
+
+                        database.executeUpdate("UPDATE Housemate SET firstName = '" + housemate.firstName.getValue() + "', lastName = '" + housemate.lastName.getValue() + "', password = '" + housemate.password.getValue() + "', phoneNumber = '" + housemate.phoneNumber.getValue() + "' WHERE housemateID = '" + housemate.housemateID.getValue() + "'");
+                    }
+                }
+                else
+                    throw new Exception();
+            }
+            catch (Exception e) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Number format error");
+                alert.setHeaderText("Check phone number format");
+                alert.showAndWait();
             }
         });
 
-        Button btnClear = (Button) mhStage.getScene().lookup("#"+ REMOVE + "clear");
+        Button btnClear = (Button) mhStage.getScene().lookup("#"+ EDIT + "clear");
         setupDisableFuncs(btnEdit, btnClear, tfFirstname, tfLastname, tfPhoneNumber,tfPassword);
 
     }
@@ -239,19 +252,32 @@ public class MaintainHousemateController extends Controller {
             housemate.password.setValue(tfPassword.getText());
             housemate.isLeader.set(0);
 
-            int id = database.executeInsert("INSERT INTO Housemate(firstName, lastName, password, phoneNumber) VALUES('"+housemate.firstName.getValue()+"', '"+housemate.lastName.getValue()+"', '"+housemate.password.getValue()+"', '"+housemate.phoneNumber.getValue()+"')");
-            if(id != -1)
-                housemate.housemateID.setValue(id + "");
-            tfHousemateID.setText("");
-            tfFirstname.setText("");
-            tfLastname.setText("");
-            tfPhoneNumber.setText("");
-            tfPassword.setText("");
-            tvHousemates.getSelectionModel().clearSelection();
-            housemates.add(housemate);
+            try {
+                Integer.parseInt(housemate.phoneNumber.getValue());
+                if(housemate.phoneNumber.getValue().length() == 10) {
+                    int id = database.executeInsert("INSERT INTO Housemate(firstName, lastName, password, phoneNumber) VALUES('" + housemate.firstName.getValue() + "', '" + housemate.lastName.getValue() + "', '" + housemate.password.getValue() + "', '" + housemate.phoneNumber.getValue() + "')");
+                    if (id != -1)
+                        housemate.housemateID.setValue(id + "");
+                    tfHousemateID.setText("");
+                    tfFirstname.setText("");
+                    tfLastname.setText("");
+                    tfPhoneNumber.setText("");
+                    tfPassword.setText("");
+                    tvHousemates.getSelectionModel().clearSelection();
+                    housemates.add(housemate);
+                }
+                else
+                    throw new  Exception();
+            }
+            catch (Exception e) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Number format error");
+                alert.setHeaderText("Check phone number format");
+                alert.showAndWait();
+            }
         });
 
-        Button btnClear = (Button) mhStage.getScene().lookup("#"+ REMOVE + "clear");
+        Button btnClear = (Button) mhStage.getScene().lookup("#"+ ADD + "clear");
 
         setupDisableFuncs(btnAdd, btnClear, tfFirstname, tfLastname, tfPhoneNumber, tfPassword);
     }
