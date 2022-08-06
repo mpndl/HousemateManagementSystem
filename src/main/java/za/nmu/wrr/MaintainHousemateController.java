@@ -2,7 +2,6 @@ package za.nmu.wrr;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -19,7 +18,8 @@ public class MaintainHousemateController extends Controller {
     private final String EDIT = "edit_mh_";
     private final String REMOVE = "remove_mh_";
     public MaintainHousemateController(){}
-    public MaintainHousemateController(Stage mhStage) {
+    public MaintainHousemateController(Scene dashboardScene,Stage mhStage) {
+        setupDashboardLinks(dashboardScene, mhStage);
         setupHousemates();
         // Add
         linkToScene(mhStage, ADD);
@@ -248,5 +248,12 @@ public class MaintainHousemateController extends Controller {
         catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void setupDashboardLinks(Scene dashboardScene, Stage mhStage) {
+        Hyperlink hpMaintainHousemates = (Hyperlink) dashboardScene.lookup("#mh_dashboard");
+        hpMaintainHousemates.setOnAction(event -> {
+            mhStage.showAndWait();
+        });
     }
 }

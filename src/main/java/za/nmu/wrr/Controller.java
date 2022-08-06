@@ -19,35 +19,17 @@ import java.sql.ResultSet;
 import java.util.Optional;
 
 public class Controller {
-    private final Database database = new Database();
-    private ObservableList<Housemate> housemates = FXCollections.observableArrayList();
-
     public Controller() {}
-    public Controller(Scene dashboardScene, Stage mhStage) {
-        setupDashboardLinks(dashboardScene, mhStage);
-    }
 
     public EventHandler<KeyEvent> maxLength(final Integer i) {
         return new EventHandler<KeyEvent>() {
-
             @Override
             public void handle(KeyEvent arg0) {
-
                 TextField tx = (TextField) arg0.getSource();
                 if (tx.getText().length() >= i) {
                     arg0.consume();
                 }
-
             }
-
         };
-
-    }
-
-    private void setupDashboardLinks(Scene dashboardScene, Stage mhStage) {
-        Hyperlink hpMaintainHousemates = (Hyperlink) dashboardScene.lookup("#mh_dashboard");
-        hpMaintainHousemates.setOnAction(event -> {
-            mhStage.showAndWait();
-        });
     }
 }
