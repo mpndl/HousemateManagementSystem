@@ -14,6 +14,8 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
+import java.io.IOException;
+
 public class Main extends Application {
     public static void main(String[] args) {
         launch(args);
@@ -26,11 +28,14 @@ public class Main extends Application {
         dashboardView.setLocation(getClass().getResource("view.fxml"));
         Scene dashboardScene = new Scene(dashboardView.load());
 
-        // Maintain Housemates
-        Stage maintainHousematesStage = createMaintainHousemateView(dashboardStage);
+        // Maintain Housemates View
+        Stage mhStage = createMaintainHousemateView(dashboardStage);
 
-        // Controller
-        Controller controller = new Controller(dashboardScene, maintainHousematesStage);
+        // Main Controller
+        new Controller(dashboardScene, mhStage);
+
+        // Maintain Housemate Controller
+        new MaintainHousemateController(mhStage);
 
         dashboardStage.setScene(dashboardScene);
         dashboardStage.setTitle("Dashboard");
@@ -40,32 +45,13 @@ public class Main extends Application {
         dashboardStage.show();
     }
 
-    public Stage createMaintainHousemateView(Stage owner) {
+    public Stage createMaintainHousemateView(Stage owner) throws IOException {
         Stage stage = new Stage();
 
-        TabPane root = new TabPane();
+        FXMLLoader mhLoader = new FXMLLoader();
+        mhLoader.setLocation(getClass().getResource("maintainHousemateView.fxml"));
 
-        // Add
-        Tab tAddTab = new Tab("Add");
-        tAddTab.setClosable(false);
-        tAddTab.setId("mhAddTab");
-
-        tAddTab.setContent(createMHContent("a", "Add"));
-
-        Tab tEditTab = new Tab("Edit");
-        tEditTab.setId("mhEditTab");
-        tEditTab.setClosable(false);
-
-        tEditTab.setContent(createMHContent("e", "Edit"));
-
-        Tab tRemoveTab = new Tab("Remove");
-        tRemoveTab.setId("mhRemoveTab");
-        tRemoveTab.setClosable(false);
-
-        tRemoveTab.setContent(createMHContent("r", "Remove"));
-
-        root.getTabs().addAll(tAddTab, tEditTab, tRemoveTab);
-        Scene scene = new Scene(root);
+        Scene scene = new Scene(mhLoader.load());
 
         stage.setScene(scene);
         stage.setTitle("Maintain Housemates");

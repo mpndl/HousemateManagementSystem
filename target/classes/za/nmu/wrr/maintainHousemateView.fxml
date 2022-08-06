@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.geometry.Insets?>
+<TabPane xmlns="http://javafx.com/javafx"
+         xmlns:fx="http://javafx.com/fxml"
+         fx:controller="za.nmu.wrr.MaintainHousemateController">
+    <Tab text="Add" closable="false">
+        <BorderPane>
+            <padding >
+                <Insets left="10" right="10" top="10" bottom="10"/>
+            </padding>
+            <top>
+                <Label text="Add Housemates" style="-fx-font-weight: bold"/>
+            </top>
+            <left>
+                <GridPane hgap="5" vgap="5">
+                    <Label text="Housemate ID:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                    <TextField fx:id="add_mh_housemateid" disable="true" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+                    <Label text="First Name:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                    <TextField fx:id="add_mh_firstname" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+                    <Label text="Last Name:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+                    <TextField fx:id="add_mh_lastname" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+                    <Label text="Phone Number:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+                    <TextField fx:id="add_mh_phonenumber" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+
+                    <Label text="Password:" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+                    <TextField fx:id="add_mh_password" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+
+                    <Label text="Leader" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
+                    <CheckBox fx:id="add_mh_leader" GridPane.rowIndex="5" GridPane.columnIndex="1" disable="true"/>
+                </GridPane>
+            </left>
+            <right>
+                <VBox>
+                    <TableView fx:id="add_mh_table"/>
+                    <HBox>
+                        <Button fx:id="add_mh_add" text="Add"/>
+                        <Button fx:id="add_mh_cancel" text="Cancel"/>
+                        <Button fx:id="add_mh_clear" text="Clear"/>
+                    </HBox>
+                </VBox>
+            </right>
+        </BorderPane>
+    </Tab>
+    <Tab text="Edit" closable="false">
+        <BorderPane>
+            <padding >
+                <Insets left="10" right="10" top="10" bottom="10"/>
+            </padding>
+            <top>
+                <Label text="Add Housemates" style="-fx-font-weight: bold"/>
+            </top>
+            <left>
+                <GridPane hgap="5" vgap="5">
+                    <Label text="Housemate ID:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                    <TextField fx:id="edit_mh_housemateid" disable="true" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+                    <Label text="First Name:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                    <TextField fx:id="edit_mh_firstname" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+                    <Label text="Last Name:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+                    <TextField fx:id="edit_mh_lastname" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+                    <Label text="Phone Number:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+                    <TextField fx:id="edit_mh_phonenumber" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+
+                    <Label text="Password:" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+                    <TextField fx:id="edit_mh_password" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+
+                    <Label text="Leader" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
+                    <CheckBox fx:id="edit_mh_leader" GridPane.rowIndex="5" GridPane.columnIndex="1" disable="true"/>
+                </GridPane>
+            </left>
+            <right>
+                <VBox>
+                    <TableView fx:id="edit_mh_table"/>
+                    <HBox>
+                        <Button fx:id="edit_mh_edit" text="Edit"/>
+                        <Button fx:id="edit_mh_cancel" text="Cancel"/>
+                        <Button fx:id="edit_mh_clear" text="Clear"/>
+                    </HBox>
+                </VBox>
+            </right>
+        </BorderPane>
+    </Tab>
+    <Tab text="Remove" closable="false">
+        <BorderPane>
+            <padding >
+                <Insets left="10" right="10" top="10" bottom="10"/>
+            </padding>
+            <top>
+                <Label text="Add Housemates" style="-fx-font-weight: bold"/>
+            </top>
+            <left>
+                <GridPane hgap="5" vgap="5">
+                    <Label text="Housemate ID:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                    <TextField fx:id="remove_mh_housemateid" disable="true" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+                    <Label text="First Name:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                    <TextField fx:id="remove_mh_firstname" disable="true" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+                    <Label text="Last Name:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+                    <TextField fx:id="remove_mh_lastname" disable="true" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+                    <Label text="Phone Number:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+                    <TextField fx:id="remove_mh_phonenumber" disable="true" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+
+                    <Label text="Password:" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+                    <TextField fx:id="remove_mh_password" disable="true" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+
+                    <Label text="Leader" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
+                    <CheckBox fx:id="remove_mh_leader" GridPane.rowIndex="5" GridPane.columnIndex="1" disable="true"/>
+                </GridPane>
+            </left>
+            <right>
+                <VBox>
+                    <TableView fx:id="remove_mh_table"/>
+                    <HBox>
+                        <Button fx:id="remove_mh_remove" text="Remove"/>
+                        <Button fx:id="remove_mh_cancel" text="Cancel"/>
+                        <Button fx:id="remove_mh_clear" text="Clear"/>
+                    </HBox>
+                </VBox>
+            </right>
+        </BorderPane>
+    </Tab>
+</TabPane>
