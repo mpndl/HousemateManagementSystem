@@ -40,10 +40,21 @@ public class Database {
         return -1;
     }
 
+    public int getQueryRowCount(String query) throws SQLException {
+        try (Statement statement = conn.createStatement();
+             ResultSet standardRS = statement.executeQuery(query)) {
+            int size = 0;
+            while (standardRS.next()) {
+                size++;
+            }
+            return size;
+        }
+    }
+
     private void connectToDB() {
         try {
             Class.forName("net.sourceforge.jtds.jdbc.Driver");
-            conn = DriverManager.getConnection("jdbc:jtds:sqlserver://localhost:1433/HMS2;instance=MSSQLSERVER");
+            conn = DriverManager.getConnection("jdbc:jtds:sqlserver://localhost:1433/HMS3;instance=MSSQLSERVER");
             stmt = conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
         }
         catch (Exception e) {

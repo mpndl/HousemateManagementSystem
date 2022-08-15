@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.geometry.Insets?>
+<TabPane xmlns="http://javafx.com/javafx"
+         xmlns:fx="http://javafx.com/fxml"
+         fx:controller="za.nmu.wrr.ValidateHousemateController">
+    <Tab text="Login" closable="false">
+        <BorderPane>
+            <padding >
+                <Insets left="10" right="10" top="10" bottom="10"/>
+            </padding>
+            <top>
+                <Label text="Login" style="-fx-font-weight: bold"/>
+            </top>
+            <center>
+                <GridPane hgap="5" vgap="5">
+                    <padding >
+                        <Insets left="10" right="10" top="10" bottom="10"/>
+                    </padding>
+                    <Label text="Username:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                    <TextField fx:id="login_vh_username" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+                    <Label text="Password:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                    <TextField fx:id="login_vh_password" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+                </GridPane>
+            </center>
+            <bottom>
+                <VBox>
+                    <HBox>
+                        <Button fx:id="login_vh_login" text="Login"/>
+                        <Button fx:id="login_vh_cancel" text="Cancel"/>
+                        <Button fx:id="login_vh_clear" text="Clear"/>
+                    </HBox>
+                </VBox>
+            </bottom>
+        </BorderPane>
+    </Tab>
+    <Tab text="Register" closable="false">
+        <BorderPane>
+            <padding >
+                <Insets left="10" right="10" top="10" bottom="10"/>
+            </padding>
+            <top>
+                <Label text="Register" style="-fx-font-weight: bold"/>
+            </top>
+            <center>
+                <GridPane hgap="5" vgap="5">
+                    <padding >
+                        <Insets left="10" right="10" top="10" bottom="10"/>
+                    </padding>
+                    <Label text="Username:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                    <TextField fx:id="register_vh_username" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+                    <Label text="First Name:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                    <TextField fx:id="register_vh_firstname" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+                    <Label text="Last Name:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+                    <TextField fx:id="register_vh_lastname" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+                    <Label text="Phone Number:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+                    <TextField fx:id="register_vh_phonenumber" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+
+                    <Label text="Password:" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+                    <TextField fx:id="register_vh_password" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+                </GridPane>
+            </center>
+            <bottom>
+                <VBox>
+                    <HBox>
+                        <Button fx:id="register_vh_register" text="Register"/>
+                        <Button fx:id="register_vh_cancel" text="Cancel"/>
+                        <Button fx:id="register_vh_clear" text="Clear"/>
+                    </HBox>
+                </VBox>
+            </bottom>
+        </BorderPane>
+    </Tab>
+</TabPane>

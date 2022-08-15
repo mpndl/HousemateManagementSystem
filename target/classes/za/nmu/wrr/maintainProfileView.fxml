@@ -26,20 +26,23 @@
                     <Label text="Housemate ID:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
                     <TextField fx:id="edit_mp_housemateid" disable="true" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
 
-                    <Label text="First Name:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
-                    <TextField fx:id="edit_mp_firstname" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+                    <Label text="Username:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                    <TextField fx:id="edit_mp_username" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
 
-                    <Label text="Last Name:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
-                    <TextField fx:id="edit_mp_lastname" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+                    <Label text="First Name:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+                    <TextField fx:id="edit_mp_firstname" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
 
-                    <Label text="Phone Number:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
-                    <TextField fx:id="edit_mp_phonenumber" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+                    <Label text="Last Name:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+                    <TextField fx:id="edit_mp_lastname" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
 
-                    <Label text="Password:" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
-                    <TextField fx:id="edit_mp_password" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+                    <Label text="Phone Number:" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+                    <TextField fx:id="edit_mp_phonenumber" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
 
-                    <Label text="Leader" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
-                    <CheckBox fx:id="edit_mp_leader" GridPane.rowIndex="5" GridPane.columnIndex="1" disable="true"/>
+                    <Label text="Password:" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
+                    <TextField fx:id="edit_mp_password" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+
+                    <Label text="Leader" GridPane.rowIndex="6" GridPane.columnIndex="0"/>
+                    <CheckBox fx:id="edit_mp_leader" GridPane.rowIndex="6" GridPane.columnIndex="1" disable="true"/>
                 </GridPane>
             </center>
             <bottom>
@@ -70,20 +73,23 @@
                     <Label text="Housemate ID:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
                     <TextField fx:id="delete_mp_housemateid" disable="true" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
 
-                    <Label text="First Name:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
-                    <TextField fx:id="delete_mp_firstname" disable="true" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+                    <Label text="Username:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                    <TextField fx:id="delete_mp_username" disable="true" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
 
-                    <Label text="Last Name:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
-                    <TextField fx:id="delete_mp_lastname" disable="true" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+                    <Label text="First Name:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+                    <TextField fx:id="delete_mp_firstname" disable="true" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
 
-                    <Label text="Phone Number:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
-                    <TextField fx:id="delete_mp_phonenumber" disable="true" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+                    <Label text="Last Name:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+                    <TextField fx:id="delete_mp_lastname" disable="true" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
 
-                    <Label text="Password:" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
-                    <TextField fx:id="delete_mp_password" disable="true" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+                    <Label text="Phone Number:" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+                    <TextField fx:id="delete_mp_phonenumber" disable="true" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
 
-                    <Label text="Leader" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
-                    <CheckBox fx:id="delete_mp_leader" GridPane.rowIndex="5" GridPane.columnIndex="1" disable="true"/>
+                    <Label text="Password:" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
+                    <TextField fx:id="delete_mp_password" disable="true" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+
+                    <Label text="Leader" GridPane.rowIndex="6" GridPane.columnIndex="0"/>
+                    <CheckBox fx:id="delete_mp_leader" GridPane.rowIndex="6" GridPane.columnIndex="1" disable="true"/>
                 </GridPane>
             </center>
             <bottom>

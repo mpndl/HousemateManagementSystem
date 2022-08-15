@@ -2,31 +2,24 @@ package za.nmu.wrr;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
-import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.CornerRadii;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import java.sql.ResultSet;
-import java.util.Optional;
 
 public class Controller {
     protected final Database database = new Database();
     protected StringProperty disableClearProperty = new SimpleStringProperty();
-    protected Housemate loggedInUser = new Housemate("", "Jake", "Smith", "", "", 0);
-    public Controller() {
-        setupProfile();
+    protected static Housemate loggedInUser;
+    public Controller() {}
+
+    public Controller(Stage dashboardStage, Scene dashboardScene, Stage vhStage) {
+        vhStage.showAndWait();
     }
+
     protected EventHandler<KeyEvent> maxLength(final Integer i) {
         return new EventHandler<KeyEvent>() {
             @Override
@@ -50,6 +43,27 @@ public class Controller {
         disableClearProperty.addListener((observableValue, s, t1) -> {
             String value = observableValue.getValue().replace("null", "");
             if(value.length() > 0 && cb != null && !cb.isSelected()) {
+                btnFunc1.setDisable(false);
+                btnFunc2.setDisable(false);
+            }
+            else {
+                btnFunc1.setDisable(true);
+                btnFunc2.setDisable(true);
+            }
+        });
+    }
+
+    protected void setupDisableFuncsValidateUser(Button btnFunc1, Button btnFunc2,TextField... textFields) {
+        btnFunc1.setDisable(true);
+        btnFunc2.setDisable(true);
+        for(TextField textField: textFields) {
+            textField.textProperty().addListener((observableValue, s, t1) -> {
+                disableClearProperty.setValue(observableValue.getValue());
+            });
+        }
+        disableClearProperty.addListener((observableValue, s, t1) -> {
+            String value = observableValue.getValue().replace("null", "");
+            if(value.length() > 0) {
                 btnFunc1.setDisable(false);
                 btnFunc2.setDisable(false);
             }

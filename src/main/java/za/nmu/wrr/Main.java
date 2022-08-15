@@ -23,11 +23,15 @@ public class Main extends Application {
 
     @Override
     public void start(Stage dashboardStage) throws Exception {
+        // Validate Housemate View/Controller
+        Stage vhStage = createValidateHousemateView(dashboardStage);
+        new ValidateHousemateController(dashboardStage, vhStage);
+
         // Dashboard/Main View/Controller
         FXMLLoader dashboardView = new FXMLLoader();
         dashboardView.setLocation(getClass().getResource("view.fxml"));
         Scene dashboardScene = new Scene(dashboardView.load());
-        Controller controller = new Controller();
+        Controller controller = new Controller(dashboardStage, dashboardScene, vhStage);
 
         // Maintain Housemates View/Controller
         Stage mhStage = createMaintainHousemateView(dashboardStage);
@@ -77,6 +81,25 @@ public class Main extends Application {
 
         stage.setScene(scene);
         stage.setTitle("Maintain Profile");
+
+        stage.setResizable(false);
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.initStyle(StageStyle.UTILITY);
+        stage.initOwner(owner);
+
+        return stage;
+    }
+
+    public Stage createValidateHousemateView(Stage owner) throws IOException {
+        Stage stage = new Stage();
+
+        FXMLLoader mhLoader = new FXMLLoader();
+        mhLoader.setLocation(getClass().getResource("validateHousemateView.fxml"));
+
+        Scene scene = new Scene(mhLoader.load());
+
+        stage.setScene(scene);
+        stage.setTitle("Login/Register");
 
         stage.setResizable(false);
         stage.initModality(Modality.APPLICATION_MODAL);

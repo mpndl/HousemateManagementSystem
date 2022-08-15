@@ -7,14 +7,16 @@ import javafx.beans.property.StringProperty;
 
 public class Housemate {
     public StringProperty housemateID = new SimpleStringProperty();
+    public StringProperty username = new SimpleStringProperty();
     public StringProperty firstName = new SimpleStringProperty();
     public StringProperty lastName = new SimpleStringProperty();
     public StringProperty password = new SimpleStringProperty();
     public StringProperty phoneNumber = new SimpleStringProperty();
     public IntegerProperty isLeader = new SimpleIntegerProperty();
     public Housemate() {}
-    public Housemate(String housemateID, String firstName, String lastName, String password, String phoneNumber, Integer isLeader) {
+    public Housemate(String housemateID, String username, String firstName, String lastName, String password, String phoneNumber, Integer isLeader) {
         this.housemateID.setValue(housemateID);
+        this.username.setValue(username);
         this.firstName.setValue(firstName);
         this.lastName.setValue(lastName);
         this.password.setValue(password);
@@ -24,6 +26,9 @@ public class Housemate {
 
     public StringProperty housemateIDProperty() {
         return housemateID;
+    }
+    public StringProperty usernameProperty() {
+        return username;
     }
 
     public StringProperty firstNameProperty() {

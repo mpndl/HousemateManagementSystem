@@ -17,20 +17,21 @@ public class MaintainProfileController extends Controller {
     private ObservableList<Housemate> housemates = FXCollections.observableArrayList();
     private final String EDIT = "edit_mp_";
     private final String DELETE = "delete_mp_";
+    private Scene dashboardScene;
+    private Stage mpStage;
     public MaintainProfileController(){}
     public MaintainProfileController(Scene dashboardScene,Stage mpStage) {
+        this.dashboardScene = dashboardScene;
+        this.mpStage = mpStage;
         setupDashboardLinks(dashboardScene, mpStage);
-        // Edit
-        linkToScene(mpStage, EDIT);
-        editProfile(mpStage);
-        // Delete
-        linkToScene(mpStage, DELETE);
-        deleteProfile(mpStage);
     }
 
     private void deleteProfile(Stage mpStage) {
         TextField tfHousemateID = (TextField) mpStage.getScene().lookup("#"+ DELETE + "housemateid");
         tfHousemateID.setText(loggedInUser.housemateID.getValue());
+        TextField tfUsername = (TextField) mpStage.getScene().lookup("#"+ DELETE + "username");
+        tfUsername.setText(loggedInUser.username.getValue());
+        tfUsername.setDisable(true);
         TextField tfFirstname = (TextField) mpStage.getScene().lookup("#"+ DELETE + "firstname");
         tfFirstname.setText(loggedInUser.firstName.getValue());
         tfFirstname.setDisable(true);
@@ -61,6 +62,7 @@ public class MaintainProfileController extends Controller {
             Housemate housemate = new Housemate();
             housemate.housemateID.setValue(tfHousemateID.getText());
             housemate.firstName.setValue(tfFirstname.getText());
+            housemate.username.setValue(tfUsername.getText());
             housemate.lastName.setValue(tfLastname.getText());
             housemate.phoneNumber.setValue(tfPhoneNumber.getText());
             housemate.password.setValue(tfPassword.getText());
@@ -85,6 +87,7 @@ public class MaintainProfileController extends Controller {
                     database.executeUpdate("DELETE FROM Housemate WHERE housemateID = '" + loggedInUser.housemateID.getValue() + "'");
 
                     tfHousemateID.setText("");
+                    tfUsername.setText("");
                     tfFirstname.setText("");
                     tfLastname.setText("");
                     tfPhoneNumber.setText("");
@@ -98,6 +101,7 @@ public class MaintainProfileController extends Controller {
 
     private void linkToScene(Stage mpStage, String n) {
         TextField tfHousemateID = (TextField) mpStage.getScene().lookup("#"+n+"housemateid");
+        TextField tfUsername = (TextField) mpStage.getScene().lookup("#"+n+"username");
         TextField tfFirstname = (TextField) mpStage.getScene().lookup("#"+n+"firstname");
         TextField tfLastname = (TextField) mpStage.getScene().lookup("#"+n+"lastname");
         TextField tfPhoneNumber = (TextField) mpStage.getScene().lookup("#"+n+"phonenumber");
@@ -107,6 +111,7 @@ public class MaintainProfileController extends Controller {
         Button btnCancel = (Button) mpStage.getScene().lookup("#"+n+"cancel");
         btnCancel.setOnAction(event -> {
             mpStage.close();
+            tfUsername.setText(loggedInUser.username.getValue());
             tfFirstname.setText(loggedInUser.firstName.getValue());
             tfLastname.setText(loggedInUser.lastName.getValue());
             tfPhoneNumber.setText(loggedInUser.phoneNumber.getValue());
@@ -120,6 +125,7 @@ public class MaintainProfileController extends Controller {
         abtnClear.setDisable(true);
         abtnClear.setOnAction(event -> {
             tfHousemateID.setText("");
+            tfUsername.setText("");
             tfFirstname.setText("");
             tfLastname.setText("");
             tfPhoneNumber.setText("");
@@ -132,6 +138,8 @@ public class MaintainProfileController extends Controller {
     private void editProfile(Stage mpStage) {
         TextField tfHousemateID = (TextField) mpStage.getScene().lookup("#"+ EDIT + "housemateid");
         tfHousemateID.setText(loggedInUser.housemateID.getValue());
+        TextField tfUsername = (TextField) mpStage.getScene().lookup("#"+ EDIT + "username");
+        tfUsername.setText(loggedInUser.username.getValue());
         TextField tfFirstname = (TextField) mpStage.getScene().lookup("#"+ EDIT + "firstname");
         tfFirstname.setText(loggedInUser.firstName.getValue());
         TextField tfLastname = (TextField) mpStage.getScene().lookup("#"+ EDIT + "lastname");
@@ -147,6 +155,7 @@ public class MaintainProfileController extends Controller {
         btnEdit.setOnAction(event -> {
             Housemate housemate = new Housemate();
             housemate.housemateID.setValue(tfHousemateID.getText());
+            housemate.username.setValue(tfUsername.getText());
             housemate.firstName.setValue(tfFirstname.getText());
             housemate.lastName.setValue(tfLastname.getText());
             housemate.phoneNumber.setValue(tfPhoneNumber.getText());
@@ -161,7 +170,7 @@ public class MaintainProfileController extends Controller {
                     if (index != -1) {
                         housemates.set(index, housemate);
                         loggedInUser = housemate;
-                        database.executeUpdate("UPDATE Housemate SET firstName = '" + housemate.firstName.getValue() + "', lastName = '" + housemate.lastName.getValue() + "', password = '" + housemate.password.getValue() + "', phoneNumber = '" + housemate.phoneNumber.getValue() + "' WHERE housemateID = '" + housemate.housemateID.getValue() + "'");
+                        database.executeUpdate("UPDATE Housemate SET username = '" + housemate.username.getValue() + "', firstName = '" + housemate.firstName.getValue() + "', lastName = '" + housemate.lastName.getValue() + "', password = '" + housemate.password.getValue() + "', phoneNumber = '" + housemate.phoneNumber.getValue() + "' WHERE housemateID = '" + housemate.housemateID.getValue() + "'");
                     }
                 }
                 else
@@ -191,6 +200,12 @@ public class MaintainProfileController extends Controller {
     private void setupDashboardLinks(Scene dashboardScene, Stage mpStage) {
         Hyperlink hpMaintainProfile = (Hyperlink) dashboardScene.lookup("#mp_dashboard");
         hpMaintainProfile.setOnAction(event -> {
+            // Edit
+            linkToScene(mpStage, EDIT);
+            editProfile(mpStage);
+            // Delete
+            linkToScene(mpStage, DELETE);
+            deleteProfile(mpStage);
             mpStage.showAndWait();
         });
     }
