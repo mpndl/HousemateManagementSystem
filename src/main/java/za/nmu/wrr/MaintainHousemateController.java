@@ -314,16 +314,18 @@ public class MaintainHousemateController extends Controller {
     private void setupDashboardLinks(Scene dashboardScene, Stage mhStage) {
         Hyperlink hpMaintainHousemates = (Hyperlink) dashboardScene.lookup("#mh_dashboard");
         hpMaintainHousemates.setOnAction(event -> {
-            setupHousemates();
-            // Add
-            linkToScene(mhStage, ADD);
-            addHousemates(mhStage);
-            // Edit
-            linkToScene(mhStage, EDIT);
-            editHousemates(mhStage);
-            // Remove
-            linkToScene(mhStage, REMOVE);
-            removeHousemates(mhStage);
+            if (housemates.size() == 0) {
+                setupHousemates();
+                // Add
+                linkToScene(mhStage, ADD);
+                addHousemates(mhStage);
+                // Edit
+                linkToScene(mhStage, EDIT);
+                editHousemates(mhStage);
+                // Remove
+                linkToScene(mhStage, REMOVE);
+                removeHousemates(mhStage);
+            }
             mhStage.showAndWait();
         });
     }

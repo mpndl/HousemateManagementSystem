@@ -13,9 +13,11 @@ public class ValidateHousemateController extends Controller {
     private final ObservableList<Housemate> housemates = FXCollections.observableArrayList();
     private final String LOGIN = "login_vh_";
     private final String REGISTER = "register_vh_";
+    private Stage dashboardStage;
 
     public ValidateHousemateController(){}
     public ValidateHousemateController(Stage dashboardStage, Stage vhStage) {
+        this.dashboardStage = dashboardStage;
         // Login
         linkToLoginScene(vhStage);
         login(vhStage);
@@ -55,6 +57,7 @@ public class ValidateHousemateController extends Controller {
             if(temp.username.getValue().equals(housemate.username.getValue()) && temp.password.getValue().equals(housemate.password.getValue())) {
                 if(temp.password.getValue().equals(housemate.password.getValue())) {
                     loggedInUser = temp;
+                    dashboardStage.show();
                     vhStage.close();
                 }
                 else
@@ -63,7 +66,7 @@ public class ValidateHousemateController extends Controller {
             else
                 alert(Alert.AlertType.ERROR, "Login Error", "Username/Password combination incorrect");
         });
-        btnClear = (Button) vhStage.getScene().lookup("#"+ REGISTER + "clear");
+        btnClear = (Button) vhStage.getScene().lookup("#"+ LOGIN + "clear");
         setupDisableFuncsValidateUser(btnLogin, btnClear, tfUsername, tfPassword);
     }
 
@@ -91,6 +94,7 @@ public class ValidateHousemateController extends Controller {
                         database.executeUpdate("INSERT INTO Housemate(username, firstName, lastName, password, phoneNumber) VALUES('" + housemate.username.getValue() + "', '" + housemate.firstName.getValue() + "', '" + housemate.lastName.getValue() + "', '" + housemate.password.getValue() + "', '" + housemate.phoneNumber.getValue() + "')");
                         housemates.add(housemate);
                         loggedInUser = housemate;
+                        dashboardStage.show();
                         vhStage.close();
                     }
                     else {

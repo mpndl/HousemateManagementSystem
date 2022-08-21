@@ -41,6 +41,10 @@ public class Main extends Application {
         Stage mpStage = createMaintainProfileView(dashboardStage);
         new MaintainProfileController(dashboardScene, mpStage);
 
+        // Manage Chore View/Controller
+        Stage mcStage = createManageChoreView(dashboardStage);
+        new ManageChoreController(dashboardScene, mcStage);
+
         dashboardStage.setScene(dashboardScene);
         dashboardStage.setTitle("Dashboard");
         dashboardStage.setWidth(600);
@@ -49,7 +53,6 @@ public class Main extends Application {
         dashboardStage.setOnCloseRequest(event -> {
             controller.database.disconnectFromDB();
         });
-        dashboardStage.show();
     }
 
     public Stage createMaintainHousemateView(Stage owner) throws IOException {
@@ -103,7 +106,24 @@ public class Main extends Application {
 
         stage.setResizable(false);
         stage.initModality(Modality.APPLICATION_MODAL);
-        stage.initStyle(StageStyle.UTILITY);
+        stage.initOwner(owner);
+
+        return stage;
+    }
+
+    public Stage createManageChoreView(Stage owner) throws IOException {
+        Stage stage = new Stage();
+
+        FXMLLoader mhLoader = new FXMLLoader();
+        mhLoader.setLocation(getClass().getResource("manageChoreView.fxml"));
+
+        Scene scene = new Scene(mhLoader.load());
+
+        stage.setScene(scene);
+        stage.setTitle("Manage Chore");
+
+        stage.setResizable(false);
+        stage.initModality(Modality.APPLICATION_MODAL);
         stage.initOwner(owner);
 
         return stage;

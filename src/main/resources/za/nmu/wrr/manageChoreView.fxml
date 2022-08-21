@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.geometry.Insets?>
+<TabPane xmlns="http://javafx.com/javafx"
+         xmlns:fx="http://javafx.com/fxml"
+         fx:controller="za.nmu.wrr.ManageChoreController">
+    <Tab text="Add" closable="false">
+        <BorderPane>
+            <padding >
+                <Insets left="10" right="10" top="10" bottom="10"/>
+            </padding>
+            <top>
+                <Label text="Add Chore" style="-fx-font-weight: bold"/>
+            </top>
+            <left>
+                <GridPane hgap="5" vgap="5">
+                    <padding >
+                        <Insets left="10" right="10" top="10" bottom="10"/>
+                    </padding>
+
+                    <Label text="Chore ID:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                    <TextField fx:id="add_mc_choreid" disable="true" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+                    <Label text="Resources:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                    <ComboBox fx:id="add_mc_resources" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+                    <Label text="Area Name:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+                    <TextField fx:id="add_mc_areaname"  GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+                    <Label text="Description:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+                    <TextArea fx:id="add_mc_description" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+
+                    <Label text="Completed:" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+                    <CheckBox fx:id="add_mc_completed" disable="true" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+
+                    <Label text="Date Completed:" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
+                    <DatePicker fx:id="add_mc_datecompleted" disable="true" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+                </GridPane>
+            </left>
+            <right>
+                <VBox>
+                    <TableView fx:id="add_mc_table"/>
+                    <HBox>
+                        <Button fx:id="add_mc_add" disable="true" text="Add"/>
+                        <Button fx:id="add_mc_cancel" text="Cancel"/>
+                        <Button fx:id="add_mc_clear" disable="true" text="Clear"/>
+                    </HBox>
+                </VBox>
+            </right>
+        </BorderPane>
+    </Tab>
+
+    <Tab text="Edit" closable="false">
+        <BorderPane>
+            <padding >
+                <Insets left="10" right="10" top="10" bottom="10"/>
+            </padding>
+            <top>
+                <Label text="Edit Chore" style="-fx-font-weight: bold"/>
+            </top>
+            <left>
+                <GridPane hgap="5" vgap="5">
+                    <padding >
+                        <Insets left="10" right="10" top="10" bottom="10"/>
+                    </padding>
+
+                    <Label text="Chore ID:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                    <TextField fx:id="edit_mc_choreid" disable="true" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+                    <Label text="Resources:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                    <ComboBox fx:id="edit_mc_resources" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+                    <Label text="Area Name:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+                    <TextField fx:id="edit_mc_areaname" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+                    <Label text="Description:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+                    <TextArea fx:id="edit_mc_description" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+
+                    <Label text="Completed:" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+                    <CheckBox fx:id="edit_mc_completed" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+
+                    <Label text="Date Completed:" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
+                    <DatePicker fx:id="edit_mc_datecompleted" disable="true" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+                </GridPane>
+            </left>
+            <right>
+                <VBox>
+                    <TableView fx:id="edit_mc_table"/>
+                    <HBox>
+                        <Button fx:id="edit_mc_edit" disable="true" text="Edit"/>
+                        <Button fx:id="edit_mc_cancel" text="Cancel"/>
+                        <Button fx:id="edit_mc_clear" disable="true" text="Clear"/>
+                    </HBox>
+                </VBox>
+            </right>
+        </BorderPane>
+    </Tab>
+
+    <Tab text="Remove" closable="false">
+        <BorderPane>
+            <padding >
+                <Insets left="10" right="10" top="10" bottom="10"/>
+            </padding>
+            <top>
+                <Label text="Remove Chore" style="-fx-font-weight: bold"/>
+            </top>
+            <left>
+                <GridPane hgap="5" vgap="5">
+                    <padding >
+                        <Insets left="10" right="10" top="10" bottom="10"/>
+                    </padding>
+
+                    <Label text="Chore ID:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                    <TextField fx:id="remove_mc_choreid" disable="true" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+                    <Label text="Resources:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                    <ComboBox fx:id="remove_mc_resources" disable="true" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+                    <Label text="Area Name:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+                    <TextField fx:id="remove_mc_areaname" disable="true" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+                    <Label text="Description:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+                    <TextArea fx:id="remove_mc_description" disable="true" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+
+                    <Label text="Completed:" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+                    <CheckBox fx:id="remove_mc_completed" disable="true" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+
+                    <Label text="Date Completed:" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
+                    <DatePicker fx:id="remove_mc_datecompleted" disable="true" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+                </GridPane>
+            </left>
+            <right>
+                <VBox>
+                    <TableView fx:id="remove_mc_table"/>
+                    <HBox>
+                        <Button fx:id="remove_mc_remove" disable="true" text="Remove"/>
+                        <Button fx:id="remove_mc_cancel" text="Cancel"/>
+                        <Button fx:id="remove_mc_clear" disable="true" text="Clear"/>
+                    </HBox>
+                </VBox>
+            </right>
+        </BorderPane>
+    </Tab>
+</TabPane>

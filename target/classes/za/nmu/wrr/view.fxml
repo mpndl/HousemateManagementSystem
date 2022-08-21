@@ -15,7 +15,7 @@
             <Hyperlink text="Maintain House"/>
             <Hyperlink text="Connect to House"/>
             <Hyperlink text="Maintain Housemates" fx:id="mh_dashboard" />
-            <Hyperlink text="Manage Chores"/>
+            <Hyperlink text="Manage Chores" fx:id="mc_dashboard"/>
             <Hyperlink text="Manage Resources"/>
             <Hyperlink text="Assign Chores"/>
             <Hyperlink text="Swap Chores"/>
