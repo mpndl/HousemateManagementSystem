@@ -50,9 +50,9 @@
                 <VBox>
                     <TableView fx:id="add_mh_table"/>
                     <HBox>
-                        <Button fx:id="add_mh_add" text="Add"/>
+                        <Button fx:id="add_mh_add" disable="true" text="Add"/>
                         <Button fx:id="add_mh_cancel" text="Cancel"/>
-                        <Button fx:id="add_mh_clear" text="Clear"/>
+                        <Button fx:id="add_mh_clear" disable="true" text="Clear"/>
                     </HBox>
                 </VBox>
             </right>
@@ -98,9 +98,9 @@
                 <VBox>
                     <TableView fx:id="edit_mh_table"/>
                     <HBox>
-                        <Button fx:id="edit_mh_edit" text="Edit"/>
+                        <Button fx:id="edit_mh_edit" disable="true" text="Edit"/>
                         <Button fx:id="edit_mh_cancel" text="Cancel"/>
-                        <Button fx:id="edit_mh_clear" text="Clear"/>
+                        <Button fx:id="edit_mh_clear" disable="true" text="Clear"/>
                     </HBox>
                 </VBox>
             </right>
@@ -146,9 +146,9 @@
                 <VBox>
                     <TableView fx:id="remove_mh_table"/>
                     <HBox>
-                        <Button fx:id="remove_mh_remove" text="Remove"/>
+                        <Button fx:id="remove_mh_remove" disable="true" text="Remove"/>
                         <Button fx:id="remove_mh_cancel" text="Cancel"/>
-                        <Button fx:id="remove_mh_clear" text="Clear"/>
+                        <Button fx:id="remove_mh_clear" disable="true" text="Clear"/>
                     </HBox>
                 </VBox>
             </right>

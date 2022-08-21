@@ -4,8 +4,7 @@
 <?import javafx.scene.layout.*?>
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
-            fx:controller="za.nmu.wrr.Controller"
-            prefHeight="400.0" prefWidth="600.0">
+            fx:controller="za.nmu.wrr.Controller">
     <top>
         <Label text="Dashboard" style="-fx-font-weight: bold;" BorderPane.alignment="CENTER" />
     </top>
@@ -17,9 +16,8 @@
             <Hyperlink text="Maintain Housemates" fx:id="mh_dashboard" />
             <Hyperlink text="Manage Chores" fx:id="mc_dashboard"/>
             <Hyperlink text="Manage Resources"/>
-            <Hyperlink text="Assign Chores"/>
+            <Hyperlink text="Assign Chores" fx:id="ac_dashboard"/>
             <Hyperlink text="Swap Chores"/>
-            <Hyperlink text="View Chores"/>
             <Hyperlink text="View Housemates"/>
             <Hyperlink text="View Chores"/>
             <Hyperlink text="View Resources"/>

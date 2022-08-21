@@ -235,7 +235,7 @@ public class ManageChoreController extends Controller {
         CheckBox cbCompleted = (CheckBox) mcStage.getScene().lookup("#"+ n + "completed");
         DatePicker dpDateCompleted = (DatePicker) mcStage.getScene().lookup("#"+ n + "datecompleted");
 
-        TableColumn tcChoreID = new TableColumn("Housemate ID");
+        TableColumn tcChoreID = new TableColumn("Chore ID");
         tcChoreID.setCellValueFactory(new PropertyValueFactory<>("choreID"));
         tcChoreID.setPrefWidth(100);
 
@@ -332,8 +332,8 @@ public class ManageChoreController extends Controller {
     }
 
     private void setupDashboardLinks(Scene dashboardScene, Stage mcStage) {
-        Hyperlink hpMaintainHousemates = (Hyperlink) dashboardScene.lookup("#mc_dashboard");
-        hpMaintainHousemates.setOnAction(event -> {
+        Hyperlink hpManageChore = (Hyperlink) dashboardScene.lookup("#mc_dashboard");
+        hpManageChore.setOnAction(event -> {
             if (chores.size() == 0) {
                 setupChores();
                 // Add

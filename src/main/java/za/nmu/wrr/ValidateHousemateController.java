@@ -54,7 +54,7 @@ public class ValidateHousemateController extends Controller {
             catch (Exception e) {
                 e.printStackTrace();
             }
-            if(temp.username.getValue().equals(housemate.username.getValue()) && temp.password.getValue().equals(housemate.password.getValue())) {
+            if(temp.username.getValue() != null && temp.username.getValue().equals(housemate.username.getValue()) && temp.password.getValue().equals(housemate.password.getValue())) {
                 if(temp.password.getValue().equals(housemate.password.getValue())) {
                     loggedInUser = temp;
                     dashboardStage.show();

@@ -48,7 +48,7 @@
             <bottom>
                 <VBox>
                     <HBox>
-                        <Button fx:id="edit_mp_edit" text="Edit"/>
+                        <Button fx:id="edit_mp_edit" disable="true" text="Edit"/>
                         <Button fx:id="edit_mp_cancel" text="Cancel"/>
                         <Button fx:id="edit_mp_clear" text="Clear"/>
                     </HBox>

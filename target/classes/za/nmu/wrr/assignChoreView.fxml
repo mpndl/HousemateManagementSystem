@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.geometry.Insets?>
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="za.nmu.wrr.AssignChoreController">
+    <padding >
+        <Insets left="10" right="10" top="10" bottom="10"/>
+    </padding>
+    <top>
+        <Label text="Assign Chores" style="-fx-font-weight: bold"/>
+    </top>
+    <center>
+        <BorderPane>
+            <top>
+                <Label BorderPane.alignment="CENTER" text="Housemates" style="-fx-font-weight: bold"/>
+            </top>
+            <right>
+                <TableView fx:id="housemates_ac_table" prefHeight="50"/>
+            </right>
+            <left>
+                <GridPane hgap="5" vgap="5">
+                    <padding >
+                        <Insets left="10" right="10" top="10" bottom="10"/>
+                    </padding>
+
+                    <Label text="Housemate ID:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                    <TextField fx:id="ac_housemateid" disable="true" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+                    <Label text="Username:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                    <TextField fx:id="ac_username" disable="true" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+                    <Label text="First Name:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+                    <TextField fx:id="ac_firstname" disable="true" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+                    <Label text="Last Name:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+                    <TextField fx:id="ac_lastname" disable="true" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+
+                    <Label text="Phone Number:" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+                    <TextField fx:id="ac_phonenumber" disable="true" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+
+                    <Label text="Password:" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
+                    <TextField fx:id="ac_password" disable="true" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+
+                    <Label text="Leader" GridPane.rowIndex="6" GridPane.columnIndex="0"/>
+                    <CheckBox fx:id="ac_leader"  GridPane.rowIndex="6" GridPane.columnIndex="1" disable="true"/>
+                </GridPane>
+            </left>
+        </BorderPane>
+    </center>
+    <bottom>
+        <BorderPane>
+            <top>
+                <Label BorderPane.alignment="CENTER" text="Chores" style="-fx-font-weight: bold"/>
+            </top>
+            <right>
+                <TableView fx:id="chores_ac_table" prefHeight="50"/>
+            </right>
+            <left>
+                <GridPane hgap="5" vgap="5">
+                    <padding >
+                        <Insets left="10" right="10" top="10" bottom="10"/>
+                    </padding>
+
+                    <Label text="Chore ID:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                    <TextField fx:id="ac_choreid" disable="true" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+                    <Label text="Resources:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                    <ComboBox fx:id="ac_resources" disable="true" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+                    <Label text="Area Name:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+                    <TextField fx:id="ac_areaname" disable="true" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+                    <Label text="Description:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+                    <TextArea fx:id="ac_description" disable="true" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+
+                    <Label text="Completed:" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+                    <CheckBox fx:id="ac_completed" disable="true" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+
+                    <Label text="Date Completed:" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
+                    <DatePicker fx:id="ac_datecompleted" disable="true" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+                </GridPane>
+            </left>
+            <bottom>
+                <HBox>
+                    <Button fx:id="ac_assign" disable="true" text="Assign"/>
+                    <Button fx:id="ac_cancel" text="Cancel"/>
+                </HBox>
+            </bottom>
+        </BorderPane>
+    </bottom>
+</BorderPane>
