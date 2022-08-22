@@ -209,9 +209,9 @@ public class MaintainHousemateController extends Controller {
 
                     int index = getHousemateIndex(housemate.housemateID.getValue());
                     if (index != -1) {
-                        housemates.set(index, housemate);
-
                         database.executeUpdate("UPDATE Housemate SET username = '" + housemate.username.getValue() + "', firstName = '" + housemate.firstName.getValue() + "', lastName = '" + housemate.lastName.getValue() + "', password = '" + housemate.password.getValue() + "', phoneNumber = '" + housemate.phoneNumber.getValue() + "' WHERE housemateID = '" + housemate.housemateID.getValue() + "'");
+                        housemates.set(index, housemate);
+                        btnEdit.setDisable(true);
                     }
                 }
                 else
@@ -225,6 +225,7 @@ public class MaintainHousemateController extends Controller {
             }
         });
     }
+
     private int getHousemateIndex(String id) {
         for (int i = 0; i < housemates.size(); i++) {
 
@@ -294,7 +295,7 @@ public class MaintainHousemateController extends Controller {
     private void setupDisableFuncs(Button func, Button clear, TextField... textFields) {
         if (anyNotEmpty(textFields)) {
             clear.setDisable(false);
-            if (allNotEmpty(textFields)) {
+            if (valuesChanged()) {
                 func.setDisable(false);
             }
             else func.setDisable(true);
@@ -313,12 +314,30 @@ public class MaintainHousemateController extends Controller {
         return false;
     }
 
-    private boolean allNotEmpty(TextField... textFields) {
-        for (TextField textField: textFields) {
-            if (textField.getText().isEmpty())
-                return false;
+    private String username = "";
+    private String firstname = "";
+    private String lastname = "";
+    private String phoneNumber = "";
+    private String password = "";
+    private boolean valuesChanged() {
+        TextField tfUsername = (TextField) mhStage.getScene().lookup("#"+ EDIT + "username");
+        TextField tfFirstname = (TextField) mhStage.getScene().lookup("#"+ EDIT + "firstname");
+        TextField tfLastname = (TextField) mhStage.getScene().lookup("#"+ EDIT + "lastname");
+        TextField tfPhoneNumber = (TextField) mhStage.getScene().lookup("#"+ EDIT + "phonenumber");
+        TextField tfPassword = (TextField) mhStage.getScene().lookup("#"+ EDIT + "password");
+        if (username.equals("")) {
+            if (!tfFirstname.getText().isEmpty() && !tfFirstname.getText().isEmpty() && !tfLastname.getText().isEmpty()
+            && !tfPhoneNumber.getText().isEmpty() && !tfPassword.getText().isEmpty()) {
+                username = tfUsername.getText();
+                firstname = tfFirstname.getText();
+                lastname = tfLastname.getText();
+                phoneNumber = tfPhoneNumber.getText();
+                password = tfPassword.getText();
+            }
         }
-        return true;
+        return !tfUsername.getText().equals(username) || !tfFirstname.getText().equals(firstname)
+                || !tfLastname.getText().equals(lastname) || !tfPhoneNumber.getText().equals(phoneNumber)
+                || !tfPassword.getText().equals(password);
     }
 
     private void setupHousemates() {

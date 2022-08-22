@@ -46,6 +46,9 @@
             <right>
                 <VBox>
                     <TableView fx:id="add_mc_table"/>
+                    <CheckBox fx:id="add_mc_self_assign" visible="false" text="Self assign" >
+                        <tooltip><Tooltip text="Automatically assign chore"/></tooltip>
+                    </CheckBox>
                     <HBox>
                         <Button fx:id="add_mc_add" disable="true" text="Add"/>
                         <Button fx:id="add_mc_cancel" text="Cancel"/>

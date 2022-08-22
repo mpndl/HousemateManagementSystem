@@ -92,6 +92,7 @@ public class ManageChoreController extends Controller {
 
                     chores.remove(index);
 
+                    database.executeUpdate("DELETE FROM Swap WHERE choreID = '" + chore.choreID.getValue() + "' AND housemateID = " + loggedInUser.housemateID.getValue());
                     database.executeUpdate("DELETE FROM Chore WHERE choreID = '" + chore.choreID.getValue() + "'");
 
                     tfChoreID.setText("");
@@ -208,23 +209,47 @@ public class ManageChoreController extends Controller {
             chore.areaName.setValue(tfAreaName.getText());
 
             try {
-                    int id = database.executeInsert("INSERT INTO Chore(description, areaName) VALUES('" + chore.description.getValue() + "', '" + chore.areaName.getValue() + "')");
-                    if (id != -1)
-                        chore.choreID.setValue(id + "");
-                    tfChoreID.setText("");
-                    taDescription.setText("");
-                    cbCompleted.setSelected(false);
-                    dpDateCompleted.setValue(null);
-                    tfAreaName.setText("");
-                    chores.add(chore);
-                    tvChores.getSelectionModel().clearSelection();
-                    btnAdd.setDisable(true);
-                    btnClear.setDisable(true);
+                CheckBox cbSelfAssign = (CheckBox) mcStage.getScene().lookup("#" + ADD + "self_assign");
+                int id;
+                if (loggedInUser.isLeader.getValue() == 1 && !cbSelfAssign.isSelected())
+                    id = database.executeInsert("INSERT INTO Chore(description, areaName) VALUES('" + chore.description.getValue() + "', '" + chore.areaName.getValue() + "')");
+                else {
+                    id = database.executeInsert("INSERT INTO Chore(description, areaName) VALUES('" + chore.description.getValue() + "', '" + chore.areaName.getValue() + "')");
+                    database.executeInsert("INSERT INTO Swap(housemateID, choreID) VALUES(" + loggedInUser.housemateID.getValue() + "," + id + ")");
+                }
+                if (id != -1)
+                    chore.choreID.setValue(id + "");
+                tfChoreID.setText("");
+                taDescription.setText("");
+                cbCompleted.setSelected(false);
+                dpDateCompleted.setValue(null);
+                tfAreaName.setText("");
+                chores.add(chore);
+                tvChores.getSelectionModel().clearSelection();
+                btnAdd.setDisable(true);
+                btnClear.setDisable(true);
             }
             catch (Exception e) {
                 e.printStackTrace();
             }
         });
+    }
+
+    private String areaName = "";
+    private String description = "";
+    private boolean completed = false;
+    private boolean valuesChanged() {
+        TextField tfAreaName = (TextField) mcStage.getScene().lookup("#"+ EDIT + "areaname");
+        TextArea taDescription = (TextArea) mcStage.getScene().lookup("#"+ EDIT + "description");
+        CheckBox cbCompleted = (CheckBox) mcStage.getScene().lookup("#" +EDIT+"completed");
+        if (areaName.equals("")) {
+            if (!tfAreaName.getText().isEmpty() && !taDescription.getText().isEmpty()) {
+                areaName = tfAreaName.getText();
+                description = taDescription.getText();
+                completed = cbCompleted.isSelected();
+            }
+        }
+        return !tfAreaName.getText().equals(areaName) || !taDescription.getText().equals(description) || !(cbCompleted.isSelected() == completed);
     }
 
     private void linkToScene(Stage mcStage, String n) {
@@ -274,12 +299,16 @@ public class ManageChoreController extends Controller {
             tfAreaName.setText("");
             tvChores.getSelectionModel().clearSelection();
         });
+
+        CheckBox cbSelfAssign = (CheckBox) mcStage.getScene().lookup("#" + ADD + "self_assign");
+        if (loggedInUser.isLeader.getValue() == 1)
+            cbSelfAssign.setVisible(true);
     }
 
     private void setupDisableFuncs(Button func, Button clear, TextField areaName, TextArea description, CheckBox completed, DatePicker dateCompleted) {
         if (!areaName.getText().isEmpty() || !description.getText().isEmpty()) {
             clear.setDisable(false);
-            if (!areaName.getText().isEmpty() && !description.getText().isEmpty()) {
+            if (!areaName.getText().isEmpty() && !description.getText().isEmpty() && valuesChanged()) {
                 if (completed.isSelected()) {
                     try {
                         if (dateCompleted.getEditor().getText().isEmpty())
@@ -313,7 +342,11 @@ public class ManageChoreController extends Controller {
     }
 
     private void setupChores() {
-        ResultSet rs = database.executeQuery("SELECT * FROM Chore");
+        ResultSet rs;
+        if (loggedInUser.isLeader.getValue() == 0)
+            rs = database.executeQuery("SELECT Chore.choreID, Chore.description, Chore.isCompleted, Chore.dateCompleted, Chore.areaName FROM Chore INNER JOIN Swap ON Chore.choreID = Swap.choreID WHERE HousemateID = " + loggedInUser.housemateID.getValue());
+        else
+            rs = database.executeQuery("SELECT Chore.choreID, Chore.description, Chore.isCompleted, Chore.dateCompleted, Chore.areaName FROM Chore FULL JOIN Swap ON Chore.choreID = Swap.choreID");
         try {
             while (rs.next()) {
                 Chore chore = new Chore();
