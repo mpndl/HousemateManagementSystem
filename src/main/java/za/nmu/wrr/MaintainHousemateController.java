@@ -58,7 +58,7 @@ public class MaintainHousemateController extends Controller {
 
         Button btnRemove = (Button) mhStage.getScene().lookup("#"+ REMOVE + "remove");
         Button btnClear = (Button) mhStage.getScene().lookup("#"+ REMOVE + "clear");
-        addFuncsLister(btnRemove, btnClear, tfUsername, tfFirstname, tfLastname, tfPhoneNumber, tfPassword);
+        addFuncsLister(btnRemove, btnClear, true, tfUsername, tfFirstname, tfLastname, tfPhoneNumber, tfPassword);
 
         btnRemove.setOnAction(event -> {
             Housemate housemate = new Housemate();
@@ -191,7 +191,7 @@ public class MaintainHousemateController extends Controller {
         Button btnEdit = (Button) mhStage.getScene().lookup("#"+ EDIT + "edit");
         Button btnClear = (Button) mhStage.getScene().lookup("#"+ EDIT + "clear");
 
-        addFuncsLister(btnEdit, btnClear, tfUsername, tfFirstname, tfLastname, tfPhoneNumber, tfPassword);
+        addFuncsLister(btnEdit, btnClear, false, tfUsername, tfFirstname, tfLastname, tfPhoneNumber, tfPassword);
 
         btnEdit.setOnAction(event -> {
             Housemate housemate = new Housemate();
@@ -234,10 +234,10 @@ public class MaintainHousemateController extends Controller {
         }
         return -1;
     }
-    private void addFuncsLister(Button func, Button clear , TextField... textFields) {
+    private void addFuncsLister(Button func, Button clear, boolean remove, TextField... textFields) {
         for (TextField textField: textFields){
             textField.textProperty().addListener((observableValue, s, t1) -> {
-                setupDisableFuncs(func, clear, textFields);
+                setupDisableFuncs(func, clear, remove, textFields);
             });
         }
     }
@@ -254,7 +254,7 @@ public class MaintainHousemateController extends Controller {
         Button btnClear = (Button) mhStage.getScene().lookup("#"+ ADD + "clear");
         Button btnAdd = (Button) mhStage.getScene().lookup("#"+ ADD + "add");
 
-        addFuncsLister(btnAdd, btnClear, tfUsername, tfFirstname, tfLastname, tfPhoneNumber, tfPassword);
+        addFuncsLister(btnAdd, btnClear, false, tfUsername, tfFirstname, tfLastname, tfPhoneNumber, tfPassword);
 
         btnAdd.setOnAction(event -> {
             Housemate housemate = new Housemate();
@@ -292,10 +292,10 @@ public class MaintainHousemateController extends Controller {
         });
     }
 
-    private void setupDisableFuncs(Button func, Button clear, TextField... textFields) {
+    private void setupDisableFuncs(Button func, Button clear, boolean remove, TextField... textFields) {
         if (anyNotEmpty(textFields)) {
             clear.setDisable(false);
-            if (valuesChanged()) {
+            if (valuesChanged() || remove) {
                 func.setDisable(false);
             }
             else func.setDisable(true);
