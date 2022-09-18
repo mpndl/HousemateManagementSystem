@@ -28,9 +28,6 @@ public class MaintainHousemateController extends Controller {
     private Scene dashboardScene;
     private Stage mhStage;
     private boolean linked = false;
-    private enum Func {
-        ADD, EDIT, REMOVE;
-    }
 
     public MaintainHousemateController(){}
     public MaintainHousemateController(Scene dashboardScene,Stage mhStage) {
@@ -180,7 +177,7 @@ public class MaintainHousemateController extends Controller {
     }
 
     private void validate(TextField tfUsername, TextField tfFirstname, TextField tfLastname, TextField tfPhoneNumber, TextField tfPassword, Button btnFunc) {
-        ValidateHousemateController.validate(tfUsername, tfFirstname, tfLastname, tfPhoneNumber, tfPassword, btnFunc);
+        ValidateHousemateController.validate2(tfUsername, tfFirstname, tfLastname, tfPhoneNumber, tfPassword, btnFunc);
     }
 
     private void editHousemates(Stage mhStage) {

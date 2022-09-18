@@ -19,7 +19,7 @@
     <center>
         <TableView fx:id="view_vh_table"/>
     </center>
-    <right>
+    <bottom>
         <Button fx:id="view_vh_cancel" text="Cancel"/>
-    </right>
+    </bottom>
 </BorderPane>

@@ -149,11 +149,12 @@ public class MaintainProfileController extends Controller {
         Button btnEdit = (Button) mpStage.getScene().lookup("#"+ EDIT + "edit");
         Button btnClear = (Button) mpStage.getScene().lookup("#"+ EDIT + "clear");
 
-        btnEdit.disableProperty().bind(Bindings.createBooleanBinding(() -> tfUsername.getText().equals(username)
+        /*btnEdit.disableProperty().bind(Bindings.createBooleanBinding(() -> tfUsername.getText().equals(username)
                         || tfFirstname.getText().equals(firstname) || tfLastname.getText().equals(lastname)
                         || tfPhoneNumber.getText().equals(phoneNumber) || tfPassword.getText().equals(password),
                 tfUsername.textProperty(), tfFirstname.textProperty(), tfLastname.textProperty()
-                , tfPhoneNumber.textProperty(), tfPassword.textProperty()));
+                , tfPhoneNumber.textProperty(), tfPassword.textProperty()));*/
+        validate(tfUsername, tfFirstname, tfLastname, tfPhoneNumber, tfPassword, btnEdit);
 
         btnClear.disableProperty().bind(Bindings.createBooleanBinding(() -> !(!tfUsername.getText().isEmpty() || !tfFirstname.getText().isEmpty()
                         || !tfLastname.getText().isEmpty() || !tfPhoneNumber.getText().isEmpty()
@@ -187,6 +188,10 @@ public class MaintainProfileController extends Controller {
                 alert.showAndWait();
             }
         });
+    }
+
+    private void validate(TextField tfUsername, TextField tfFirstname, TextField tfLastname, TextField tfPhoneNumber, TextField tfPassword, Button btnFunc) {
+        ValidateHousemateController.validateProfile(tfUsername, tfFirstname, tfLastname, tfPhoneNumber, tfPassword, btnFunc);
     }
 
     private int getHousemateIndex(String id) {

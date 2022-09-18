@@ -10,6 +10,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 
 import java.sql.ResultSet;
+import java.util.ArrayList;
 
 public class Controller {
     protected final Database database = new Database();

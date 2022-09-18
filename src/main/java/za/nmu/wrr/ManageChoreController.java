@@ -153,11 +153,14 @@ public class ManageChoreController extends Controller {
                             if (dpDateCompleted.getValue() == null || dpDateCompleted.getValue().toString().isEmpty())
                                 throw  new DateTimeException("Date is empty");
                             dpDateCompleted.getConverter().fromString(dpDateCompleted.getValue().toString().replace("-", "/"));
+                            dpDateCompleted.setStyle("-fx-border-color: rgba(0, 0, 0, 1)");
                         }
                         catch (DateTimeException e) {
+                            dpDateCompleted.setStyle("-fx-border-color: red");
                             return true;
                         }
                     }
+                    else dpDateCompleted.setStyle("-fx-border-color: rgba(0, 0, 0, 1)");
                 }
             }
             return false;

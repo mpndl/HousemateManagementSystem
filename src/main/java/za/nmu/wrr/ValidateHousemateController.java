@@ -3,12 +3,15 @@ package za.nmu.wrr;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 import java.sql.ResultSet;
+import java.util.ArrayList;
 
 public class ValidateHousemateController extends Controller {
     private final ObservableList<Housemate> housemates = FXCollections.observableArrayList();
@@ -32,8 +35,7 @@ public class ValidateHousemateController extends Controller {
         TextField tfPassword = (TextField) vhStage.getScene().lookup("#"+ LOGIN + "password");
 
         Button btnLogin = (Button) vhStage.getScene().lookup("#"+ LOGIN + "login");
-        btnLogin.disableProperty().bind(Bindings.createBooleanBinding(() -> !(tfUsername.getText().length() >= 4 && tfPassword.getText().length() >= 4),
-                tfUsername.textProperty(), tfPassword.textProperty()));
+        validateLogin(tfUsername, tfPassword, btnLogin);
         Button btnClear = (Button) vhStage.getScene().lookup("#"+ LOGIN + "clear");
         btnClear.disableProperty().bind(Bindings.createBooleanBinding(() -> !(!tfPassword.getText().isEmpty() || !tfUsername.getText().isEmpty()),
                 tfUsername.textProperty(), tfPassword.textProperty()));
@@ -83,7 +85,7 @@ public class ValidateHousemateController extends Controller {
         Button btnRegister = (Button) vhStage.getScene().lookup("#"+ REGISTER + "register");
         Button btnClear = (Button) vhStage.getScene().lookup("#"+ REGISTER + "clear");
 
-        validate(tfUsername, tfFirstname, tfLastname, tfPhoneNumber, tfPassword, btnRegister);
+        validate2(tfUsername, tfFirstname, tfLastname, tfPhoneNumber, tfPassword, btnRegister);
 
         btnClear.disableProperty().bind(Bindings.createBooleanBinding(() -> !(!tfPassword.getText().isEmpty() || !tfUsername.getText().isEmpty()),
                 tfUsername.textProperty(), tfPassword.textProperty()));
@@ -120,10 +122,217 @@ public class ValidateHousemateController extends Controller {
         });
     }
 
-    static void validate(TextField tfUsername, TextField tfFirstname, TextField tfLastname, TextField tfPhoneNumber, TextField tfPassword, Button btnRegister) {
-        btnRegister.disableProperty().bind(Bindings.createBooleanBinding(() -> !(tfUsername.getText().length() >= 4 && tfFirstname.getText().length() > 0
-                        && tfLastname.getText().length() > 0 && tfPhoneNumber.getText().length() == 10
-                        && tfPassword.getText().length() >= 4), tfUsername.textProperty(), tfFirstname.textProperty(), tfLastname.textProperty()
+    static void validateLogin(TextField tfUsername, TextField tfPassword, Button btnFunc) {
+        btnFunc.disableProperty().bind(Bindings.createBooleanBinding(() -> {
+                    if (tfUsername.getText().length() < 4) {
+                        Tooltip tooltip = new Tooltip("Username length must be at least 4 characters.");
+                        tooltip.setShowDelay(Duration.ONE);
+                        tfUsername.setTooltip(tooltip);
+                        tfUsername.setStyle("-fx-border-color: red");
+                    }
+                    else {
+                        tfUsername.setTooltip(null);
+                        tfUsername.setStyle("-fx-border-color: green");
+                    }
+
+                    if (tfPassword.getText().length() < 4) {
+                        Tooltip tooltip = new Tooltip("Password must be at least 4 characters.");
+                        tooltip.setShowDelay(Duration.ONE);
+                        tfPassword.setTooltip(tooltip);
+                        tfPassword.setStyle("-fx-border-color: red");
+                        return true;
+                    }
+                    else {
+                        tfPassword.setTooltip(null);
+                        tfPassword.setStyle("-fx-border-color: green");
+                    }
+                    return false;
+                }
+                , tfUsername.textProperty(), tfPassword.textProperty()));
+    }
+
+    static void validateProfile(TextField tfUsername, TextField tfFirstname, TextField tfLastname, TextField tfPhoneNumber, TextField tfPassword, Button btnFunc) {
+        btnFunc.disableProperty().bind(Bindings.createBooleanBinding(() -> {
+                    String username = loggedInUser.username.getValue();
+                    String firstname = loggedInUser.firstName.getValue();
+                    String lastname = loggedInUser.lastName.getValue();
+                    String phoneNumber = loggedInUser.phoneNumber.getValue();
+                    String password = loggedInUser.password.getValue();
+                    int warningCount = 0;
+
+                    if (tfUsername.getText().length() < 4) {
+                        Tooltip tooltip = new Tooltip("Username length must be at least 4 characters.");
+                        tooltip.setShowDelay(Duration.ONE);
+                        tfUsername.setTooltip(tooltip);
+                        tfUsername.setStyle("-fx-border-color: red");
+                    }
+                    else {
+                        if (tfUsername.getText().equals(username)) {
+                            tfUsername.setStyle("-fx-border-color: orange");
+                            Tooltip tooltip = new Tooltip("Username has not changed.");
+                            tooltip.setShowDelay(Duration.ONE);
+                            tfUsername.setTooltip(tooltip);
+                            warningCount++;
+                        }
+                        else {
+                            tfUsername.setTooltip(null);
+                            tfUsername.setStyle("-fx-border-color: green");
+                        }
+                    }
+                    if (tfFirstname.getText().isEmpty()) {
+                        Tooltip tooltip = new Tooltip("Firstname was not entered.");
+                        tooltip.setShowDelay(Duration.ONE);
+                        tfFirstname.setTooltip(tooltip);
+                        tfFirstname.setStyle("-fx-border-color: red");
+                        return true;
+                    }
+                    else {
+                        if (tfFirstname.getText().equals(firstname)) {
+                            Tooltip tooltip = new Tooltip("Firstname has not changed.");
+                            tooltip.setShowDelay(Duration.ONE);
+                            tfFirstname.setStyle("-fx-border-color: orange");
+                            tfFirstname.setTooltip(tooltip);
+                            warningCount++;
+                        }
+                        else {
+                            tfFirstname.setTooltip(null);
+                            tfFirstname.setStyle("-fx-border-color: green");
+                        }
+                    }
+                    if (tfLastname.getText().isEmpty()) {
+                        Tooltip tooltip = new Tooltip("Lastname was not entered.");
+                        tooltip.setShowDelay(Duration.ONE);
+                        tfLastname.setTooltip(tooltip);
+                        tfLastname.setStyle("-fx-border-color: red");
+                        return true;
+                    }
+                    else {
+                        if (tfLastname.getText().equals(lastname)) {
+                            Tooltip tooltip = new Tooltip("Lastname has not changed.");
+                            tooltip.setShowDelay(Duration.ONE);
+                            tfLastname.setTooltip(tooltip);
+                            tfLastname.setStyle("-fx-border-color: orange");
+                            warningCount++;
+                        }
+                        else {
+                            tfLastname.setTooltip(null);
+                            tfLastname.setStyle("-fx-border-color: green");
+                        }
+                    }
+                    try {
+                        Integer.parseInt(tfPhoneNumber.getText());
+                        if (tfPhoneNumber.getText().length() != 10)
+                            throw new NumberFormatException();
+
+                        if (tfPhoneNumber.getText().equals(phoneNumber)) {
+                            Tooltip tooltip = new Tooltip("Phone number has not changed.");
+                            tooltip.setShowDelay(Duration.ONE);
+                            tfPhoneNumber.setTooltip(tooltip);
+                            tfPhoneNumber.setStyle("-fx-border-color: orange");
+                            warningCount++;
+                        }
+                        else {
+                            tfPhoneNumber.setTooltip(null);
+                            tfPhoneNumber.setStyle("-fx-border-color: green");
+                        }
+                    }
+                    catch (NumberFormatException e) {
+                        Tooltip tooltip = new Tooltip("Invalid phone number.");
+                        tooltip.setShowDelay(Duration.ONE);
+                        tfPhoneNumber.setTooltip(tooltip);
+                        tfPhoneNumber.setStyle("-fx-border-color: red");
+                        return true;
+                    }
+                    if (tfPassword.getText().length() < 4) {
+                        Tooltip tooltip = new Tooltip("Password must be at least 4 characters.");
+                        tooltip.setShowDelay(Duration.ONE);
+                        tfPassword.setTooltip(tooltip);
+                        tfPassword.setStyle("-fx-border-color: red");
+                        return true;
+                    }
+                    else {
+                        if (tfPassword.getText().equals(password)) {
+                            Tooltip tooltip = new Tooltip("Password has not changed.");
+                            tooltip.setShowDelay(Duration.ONE);
+                            tfPassword.setTooltip(tooltip);
+                            tfPassword.setStyle("-fx-border-color: orange");
+                            warningCount++;
+                        }
+                        else {
+                            tfPassword.setTooltip(null);
+                            tfPassword.setStyle("-fx-border-color: green");
+                        }
+                    }
+
+                    if (!(warningCount > 0) || !(warningCount < 5)) return true;
+                    return false;
+                }
+                , tfUsername.textProperty(), tfFirstname.textProperty(), tfLastname.textProperty()
+                , tfPhoneNumber.textProperty(), tfPassword.textProperty()));
+    }
+
+    static void validate2(TextField tfUsername, TextField tfFirstname, TextField tfLastname, TextField tfPhoneNumber, TextField tfPassword, Button btnFunc) {
+        btnFunc.disableProperty().bind(Bindings.createBooleanBinding(() -> {
+            if (tfUsername.getText().length() < 4) {
+                Tooltip tooltip = new Tooltip("Username length must be at least 4 characters.");
+                tooltip.setShowDelay(Duration.ONE);
+                tfUsername.setTooltip(tooltip);
+                tfUsername.setStyle("-fx-border-color: red");
+            }
+            else {
+                tfUsername.setTooltip(null);
+                tfUsername.setStyle("-fx-border-color: green");
+            }
+            if (tfFirstname.getText().isEmpty()) {
+                Tooltip tooltip = new Tooltip("Firstname was not entered.");
+                tooltip.setShowDelay(Duration.ONE);
+                tfFirstname.setTooltip(tooltip);
+                tfFirstname.setStyle("-fx-border-color: red");
+                return true;
+            }
+            else {
+                tfFirstname.setTooltip(null);
+                tfFirstname.setStyle("-fx-border-color: green");
+            }
+            if (tfLastname.getText().isEmpty()) {
+                Tooltip tooltip = new Tooltip("Lastname was not entered.");
+                tooltip.setShowDelay(Duration.ONE);
+                tfLastname.setTooltip(tooltip);
+                tfLastname.setStyle("-fx-border-color: red");
+                return true;
+            }
+            else {
+                tfLastname.setTooltip(null);
+                tfLastname.setStyle("-fx-border-color: green");
+            }
+            try {
+                Integer.parseInt(tfPhoneNumber.getText());
+                if (tfPhoneNumber.getText().length() != 10)
+                    throw new NumberFormatException();
+                tfPhoneNumber.setTooltip(null);
+                tfPhoneNumber.setStyle("-fx-border-color: green");
+            }
+            catch (NumberFormatException e) {
+                Tooltip tooltip = new Tooltip("Invalid phone number.");
+                tooltip.setShowDelay(Duration.ONE);
+                tfPhoneNumber.setTooltip(tooltip);
+                tfPhoneNumber.setStyle("-fx-border-color: red");
+                return true;
+            }
+            if (tfPassword.getText().length() < 4) {
+                Tooltip tooltip = new Tooltip("Password must be at least 4 characters.");
+                tooltip.setShowDelay(Duration.ONE);
+                tfPassword.setTooltip(tooltip);
+                tfPassword.setStyle("-fx-border-color: red");
+                return true;
+            }
+            else {
+                tfPassword.setTooltip(null);
+                tfPassword.setStyle("-fx-border-color: green");
+            }
+           return false;
+                }
+                , tfUsername.textProperty(), tfFirstname.textProperty(), tfLastname.textProperty()
                 , tfPhoneNumber.textProperty(), tfPassword.textProperty()));
     }
 
