@@ -50,7 +50,7 @@
                     <HBox>
                         <Button fx:id="edit_mp_edit" disable="true" text="Edit"/>
                         <Button fx:id="edit_mp_cancel" text="Cancel"/>
-                        <Button fx:id="edit_mp_clear" text="Clear"/>
+                        <Button fx:id="edit_mp_clear" disable="true" text="Clear"/>
                     </HBox>
                 </VBox>
             </bottom>
@@ -97,7 +97,7 @@
                     <HBox>
                         <Button fx:id="delete_mp_delete" text="Remove"/>
                         <Button fx:id="delete_mp_cancel" text="Cancel"/>
-                        <Button fx:id="delete_mp_clear" text="Clear"/>
+                        <Button fx:id="delete_mp_clear" disable="true" text="Clear"/>
                     </HBox>
                 </VBox>
             </bottom>

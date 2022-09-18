@@ -49,8 +49,6 @@ public class MaintainProfileController extends Controller {
         cbIsLeader.setSelected(loggedInUser.isLeader.getValue() != 0);
 
         Button btnDelete = (Button) mpStage.getScene().lookup("#"+ DELETE + "delete");
-        Button btnClear = (Button) mpStage.getScene().lookup("#"+ DELETE + "clear");
-        //addFuncsLister(btnDelete, btnClear, tfFirstname, tfLastname, tfPhoneNumber, tfPassword);
         btnDelete.setOnAction(event -> {
             Housemate housemate = new Housemate();
             housemate.housemateID.setValue(tfHousemateID.getText());
@@ -112,7 +110,6 @@ public class MaintainProfileController extends Controller {
 
         });
 
-        Button btnDelete = (Button) mpStage.getScene().lookup("#"+ DELETE + "delete");
         Button btnClear = (Button) mpStage.getScene().lookup("#"+n+"clear");
         btnClear.setOnAction(event -> {
             tfHousemateID.setText("");
@@ -140,20 +137,9 @@ public class MaintainProfileController extends Controller {
         CheckBox cbIsLeader = (CheckBox) mpStage.getScene().lookup("#"+ EDIT + "leader");
         cbIsLeader.setSelected(loggedInUser.isLeader.getValue() != 0);
 
-        String username = loggedInUser.username.getValue();
-        String firstname = loggedInUser.username.getValue();
-        String lastname = loggedInUser.username.getValue();
-        String phoneNumber = loggedInUser.username.getValue();
-        String password = loggedInUser.username.getValue();
-
         Button btnEdit = (Button) mpStage.getScene().lookup("#"+ EDIT + "edit");
         Button btnClear = (Button) mpStage.getScene().lookup("#"+ EDIT + "clear");
 
-        /*btnEdit.disableProperty().bind(Bindings.createBooleanBinding(() -> tfUsername.getText().equals(username)
-                        || tfFirstname.getText().equals(firstname) || tfLastname.getText().equals(lastname)
-                        || tfPhoneNumber.getText().equals(phoneNumber) || tfPassword.getText().equals(password),
-                tfUsername.textProperty(), tfFirstname.textProperty(), tfLastname.textProperty()
-                , tfPhoneNumber.textProperty(), tfPassword.textProperty()));*/
         validate(tfUsername, tfFirstname, tfLastname, tfPhoneNumber, tfPassword, btnEdit);
 
         btnClear.disableProperty().bind(Bindings.createBooleanBinding(() -> !(!tfUsername.getText().isEmpty() || !tfFirstname.getText().isEmpty()

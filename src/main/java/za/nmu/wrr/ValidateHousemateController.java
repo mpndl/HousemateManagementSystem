@@ -273,6 +273,7 @@ public class ValidateHousemateController extends Controller {
 
     static void validate2(TextField tfUsername, TextField tfFirstname, TextField tfLastname, TextField tfPhoneNumber, TextField tfPassword, Button btnFunc) {
         btnFunc.disableProperty().bind(Bindings.createBooleanBinding(() -> {
+            int errorCount = 0;
             if (tfUsername.getText().length() < 4) {
                 Tooltip tooltip = new Tooltip("Username length must be at least 4 characters.");
                 tooltip.setShowDelay(Duration.ONE);
@@ -284,22 +285,22 @@ public class ValidateHousemateController extends Controller {
                 tfUsername.setStyle("-fx-border-color: green");
             }
             if (tfFirstname.getText().isEmpty()) {
-                Tooltip tooltip = new Tooltip("Firstname was not entered.");
+                Tooltip tooltip = new Tooltip("First Name was not entered.");
                 tooltip.setShowDelay(Duration.ONE);
                 tfFirstname.setTooltip(tooltip);
                 tfFirstname.setStyle("-fx-border-color: red");
-                return true;
+                errorCount++;
             }
             else {
                 tfFirstname.setTooltip(null);
                 tfFirstname.setStyle("-fx-border-color: green");
             }
             if (tfLastname.getText().isEmpty()) {
-                Tooltip tooltip = new Tooltip("Lastname was not entered.");
+                Tooltip tooltip = new Tooltip("Last Name was not entered.");
                 tooltip.setShowDelay(Duration.ONE);
                 tfLastname.setTooltip(tooltip);
                 tfLastname.setStyle("-fx-border-color: red");
-                return true;
+                errorCount++;
             }
             else {
                 tfLastname.setTooltip(null);
@@ -317,20 +318,20 @@ public class ValidateHousemateController extends Controller {
                 tooltip.setShowDelay(Duration.ONE);
                 tfPhoneNumber.setTooltip(tooltip);
                 tfPhoneNumber.setStyle("-fx-border-color: red");
-                return true;
+                errorCount++;
             }
             if (tfPassword.getText().length() < 4) {
                 Tooltip tooltip = new Tooltip("Password must be at least 4 characters.");
                 tooltip.setShowDelay(Duration.ONE);
                 tfPassword.setTooltip(tooltip);
                 tfPassword.setStyle("-fx-border-color: red");
-                return true;
+                errorCount++;
             }
             else {
                 tfPassword.setTooltip(null);
                 tfPassword.setStyle("-fx-border-color: green");
             }
-           return false;
+           return errorCount > 0;
                 }
                 , tfUsername.textProperty(), tfFirstname.textProperty(), tfLastname.textProperty()
                 , tfPhoneNumber.textProperty(), tfPassword.textProperty()));
