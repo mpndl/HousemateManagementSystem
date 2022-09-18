@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.geometry.Insets?>
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="za.nmu.wrr.ViewHousematesController"
+            prefHeight="400.0" prefWidth="600.0">
+    <BorderPane>
+        <padding >
+            <Insets left="10" right="10" top="10" bottom="10"/>
+        </padding>
+        <top>
+            <Label text="View Housemates" style="-fx-font-weight: bold"/>
+        </top>
+        <right>
+            <VBox>
+                <TableView fx:id="view_vh_table"/>
+                <HBox>
+                    <Button fx:id="view_vh_view_resources" disable="true" text="View Resources"/>
+                    <Button fx:id="view_vh_view_chores" disable="true" text="View Chores"/>
+                    <Button fx:id="view_vh_cancel" text="Cancel"/>
+                </HBox>
+            </VBox>
+        </right>
+    </BorderPane>
+</AnchorPane>

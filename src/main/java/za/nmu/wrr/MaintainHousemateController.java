@@ -1,7 +1,9 @@
 package za.nmu.wrr;
 
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
+import javafx.beans.property.*;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Scene;
@@ -10,8 +12,12 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 
+import java.lang.reflect.Type;
 import java.sql.ResultSet;
 import java.time.DateTimeException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 public class MaintainHousemateController extends Controller {
@@ -22,6 +28,10 @@ public class MaintainHousemateController extends Controller {
     private Scene dashboardScene;
     private Stage mhStage;
     private boolean linked = false;
+    private enum Func {
+        ADD, EDIT, REMOVE;
+    }
+
     public MaintainHousemateController(){}
     public MaintainHousemateController(Scene dashboardScene,Stage mhStage) {
         this.dashboardScene = dashboardScene;
@@ -56,9 +66,8 @@ public class MaintainHousemateController extends Controller {
             }
         });
 
+
         Button btnRemove = (Button) mhStage.getScene().lookup("#"+ REMOVE + "remove");
-        Button btnClear = (Button) mhStage.getScene().lookup("#"+ REMOVE + "clear");
-        addFuncsLister(btnRemove, btnClear, true, tfUsername, tfFirstname, tfLastname, tfPhoneNumber, tfPassword);
 
         btnRemove.setOnAction(event -> {
             Housemate housemate = new Housemate();
@@ -103,7 +112,7 @@ public class MaintainHousemateController extends Controller {
         });
     }
 
-    private void linkToScene(Stage mhStage, String n) {
+    private void linkToScene(Stage mhStage, String n, String f) {
         TextField tfHousemateID = (TextField) mhStage.getScene().lookup("#"+n+"housemateid");
         TextField tfUsername = (TextField) mhStage.getScene().lookup("#"+n+"username");
         TextField tfFirstname = (TextField) mhStage.getScene().lookup("#"+n+"firstname");
@@ -149,11 +158,17 @@ public class MaintainHousemateController extends Controller {
             mhStage.close();
         });
 
-        Button btnRemove = (Button) mhStage.getScene().lookup("#"+ REMOVE + "remove");
-        btnRemove.setDisable(true);
-        Button abtnClear = (Button) mhStage.getScene().lookup("#"+n+"clear");
-        abtnClear.setDisable(true);
-        abtnClear.setOnAction(event -> {
+        Button btnFunc = (Button) mhStage.getScene().lookup("#"+ n + f);
+
+        validate(tfUsername, tfFirstname, tfLastname, tfPhoneNumber, tfPassword, btnFunc);
+
+        Button btnClear = (Button) mhStage.getScene().lookup("#"+n+"clear");
+        btnClear.disableProperty().bind(Bindings.createBooleanBinding(() -> !(!tfUsername.getText().isEmpty() || !tfFirstname.getText().isEmpty()
+                        || !tfLastname.getText().isEmpty() || !tfPhoneNumber.getText().isEmpty()
+                        || !tfPassword.getText().isEmpty()), tfUsername.textProperty(), tfFirstname.textProperty(), tfLastname.textProperty()
+                , tfPhoneNumber.textProperty(), tfPassword.textProperty()));
+
+        btnClear.setOnAction(event -> {
             tfHousemateID.setText("");
             tfUsername.setText("");
             tfFirstname.setText("");
@@ -161,9 +176,11 @@ public class MaintainHousemateController extends Controller {
             tfPhoneNumber.setText("");
             tfPassword.setText("");
             tvHousemates.getSelectionModel().clearSelection();
-            btnRemove.setDisable(true);
-            abtnClear.setDisable(true);
         });
+    }
+
+    private void validate(TextField tfUsername, TextField tfFirstname, TextField tfLastname, TextField tfPhoneNumber, TextField tfPassword, Button btnFunc) {
+        ValidateHousemateController.validate(tfUsername, tfFirstname, tfLastname, tfPhoneNumber, tfPassword, btnFunc);
     }
 
     private void editHousemates(Stage mhStage) {
@@ -190,8 +207,6 @@ public class MaintainHousemateController extends Controller {
 
         Button btnEdit = (Button) mhStage.getScene().lookup("#"+ EDIT + "edit");
         Button btnClear = (Button) mhStage.getScene().lookup("#"+ EDIT + "clear");
-
-        addFuncsLister(btnEdit, btnClear, false, tfUsername, tfFirstname, tfLastname, tfPhoneNumber, tfPassword);
 
         btnEdit.setOnAction(event -> {
             Housemate housemate = new Housemate();
@@ -234,13 +249,6 @@ public class MaintainHousemateController extends Controller {
         }
         return -1;
     }
-    private void addFuncsLister(Button func, Button clear, boolean remove, TextField... textFields) {
-        for (TextField textField: textFields){
-            textField.textProperty().addListener((observableValue, s, t1) -> {
-                setupDisableFuncs(func, clear, remove, textFields);
-            });
-        }
-    }
 
     public void addHousemates(Stage mhStage) {
         TableView<Housemate> tvHousemates = (TableView<Housemate>) mhStage.getScene().lookup("#"+ ADD + "table");
@@ -253,8 +261,6 @@ public class MaintainHousemateController extends Controller {
 
         Button btnClear = (Button) mhStage.getScene().lookup("#"+ ADD + "clear");
         Button btnAdd = (Button) mhStage.getScene().lookup("#"+ ADD + "add");
-
-        addFuncsLister(btnAdd, btnClear, false, tfUsername, tfFirstname, tfLastname, tfPhoneNumber, tfPassword);
 
         btnAdd.setOnAction(event -> {
             Housemate housemate = new Housemate();
@@ -292,54 +298,6 @@ public class MaintainHousemateController extends Controller {
         });
     }
 
-    private void setupDisableFuncs(Button func, Button clear, boolean remove, TextField... textFields) {
-        if (anyNotEmpty(textFields)) {
-            clear.setDisable(false);
-            if (valuesChanged() || remove) {
-                func.setDisable(false);
-            }
-            else func.setDisable(true);
-        }
-        else {
-            clear.setDisable(true);
-            func.setDisable(true);
-        }
-    }
-
-    private boolean anyNotEmpty(TextField... textFields) {
-        for (TextField textField: textFields) {
-            if (!textField.getText().isEmpty())
-                return true;
-        }
-        return false;
-    }
-
-    private String username = "";
-    private String firstname = "";
-    private String lastname = "";
-    private String phoneNumber = "";
-    private String password = "";
-    private boolean valuesChanged() {
-        TextField tfUsername = (TextField) mhStage.getScene().lookup("#"+ EDIT + "username");
-        TextField tfFirstname = (TextField) mhStage.getScene().lookup("#"+ EDIT + "firstname");
-        TextField tfLastname = (TextField) mhStage.getScene().lookup("#"+ EDIT + "lastname");
-        TextField tfPhoneNumber = (TextField) mhStage.getScene().lookup("#"+ EDIT + "phonenumber");
-        TextField tfPassword = (TextField) mhStage.getScene().lookup("#"+ EDIT + "password");
-        if (username.equals("")) {
-            if (!tfFirstname.getText().isEmpty() && !tfFirstname.getText().isEmpty() && !tfLastname.getText().isEmpty()
-            && !tfPhoneNumber.getText().isEmpty() && !tfPassword.getText().isEmpty()) {
-                username = tfUsername.getText();
-                firstname = tfFirstname.getText();
-                lastname = tfLastname.getText();
-                phoneNumber = tfPhoneNumber.getText();
-                password = tfPassword.getText();
-            }
-        }
-        return !tfUsername.getText().equals(username) || !tfFirstname.getText().equals(firstname)
-                || !tfLastname.getText().equals(lastname) || !tfPhoneNumber.getText().equals(phoneNumber)
-                || !tfPassword.getText().equals(password);
-    }
-
     private void setupHousemates() {
         ResultSet rs = database.executeQuery("SELECT * FROM Housemate WHERE NOT housemateID = " + loggedInUser.housemateID.getValue());
         try {
@@ -371,13 +329,13 @@ public class MaintainHousemateController extends Controller {
                     if (!linked) {
                         setupHousemates();
                         // Add
-                        linkToScene(mhStage, ADD);
+                        linkToScene(mhStage, ADD, "add");
                         addHousemates(mhStage);
                         // Edit
-                        linkToScene(mhStage, EDIT);
+                        linkToScene(mhStage, EDIT, "edit");
                         editHousemates(mhStage);
                         // Remove
-                        linkToScene(mhStage, REMOVE);
+                        linkToScene(mhStage, REMOVE, "remove");
                         removeHousemates(mhStage);
                         linked = true;
                     }
@@ -385,5 +343,7 @@ public class MaintainHousemateController extends Controller {
                 });
             }
         }
+        else
+            hpMaintainHousemates.setDisable(true);
     }
 }

@@ -1,5 +1,6 @@
 package za.nmu.wrr;
 
+import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Scene;
@@ -31,8 +32,12 @@ public class ValidateHousemateController extends Controller {
         TextField tfPassword = (TextField) vhStage.getScene().lookup("#"+ LOGIN + "password");
 
         Button btnLogin = (Button) vhStage.getScene().lookup("#"+ LOGIN + "login");
+        btnLogin.disableProperty().bind(Bindings.createBooleanBinding(() -> !(tfUsername.getText().length() >= 4 && tfPassword.getText().length() >= 4),
+                tfUsername.textProperty(), tfPassword.textProperty()));
         Button btnClear = (Button) vhStage.getScene().lookup("#"+ LOGIN + "clear");
-        btnClear.setDisable(true);
+        btnClear.disableProperty().bind(Bindings.createBooleanBinding(() -> !(!tfPassword.getText().isEmpty() || !tfUsername.getText().isEmpty()),
+                tfUsername.textProperty(), tfPassword.textProperty()));
+
         btnLogin.setOnAction(event -> {
             Housemate housemate = new Housemate();
             housemate.username.setValue(tfUsername.getText());
@@ -66,8 +71,6 @@ public class ValidateHousemateController extends Controller {
             else
                 alert(Alert.AlertType.ERROR, "Login Error", "Username/Password combination incorrect");
         });
-        btnClear = (Button) vhStage.getScene().lookup("#"+ LOGIN + "clear");
-        setupDisableFuncsValidateUser(btnLogin, btnClear, tfUsername, tfPassword);
     }
 
     private void register(Stage vhStage) {
@@ -78,6 +81,13 @@ public class ValidateHousemateController extends Controller {
         TextField tfPassword = (TextField) vhStage.getScene().lookup("#"+ REGISTER + "password");
 
         Button btnRegister = (Button) vhStage.getScene().lookup("#"+ REGISTER + "register");
+        Button btnClear = (Button) vhStage.getScene().lookup("#"+ REGISTER + "clear");
+
+        validate(tfUsername, tfFirstname, tfLastname, tfPhoneNumber, tfPassword, btnRegister);
+
+        btnClear.disableProperty().bind(Bindings.createBooleanBinding(() -> !(!tfPassword.getText().isEmpty() || !tfUsername.getText().isEmpty()),
+                tfUsername.textProperty(), tfPassword.textProperty()));
+
         btnRegister.setOnAction(event -> {
             Housemate housemate = new Housemate();
             housemate.username.setValue(tfUsername.getText());
@@ -108,9 +118,13 @@ public class ValidateHousemateController extends Controller {
                 alert(Alert.AlertType.ERROR, "Number format error", "Check phone number format");
             }
         });
+    }
 
-        Button btnClear = (Button) vhStage.getScene().lookup("#"+ REGISTER + "clear");
-        setupDisableFuncsValidateUser(btnRegister, btnClear, tfUsername, tfFirstname, tfLastname, tfPhoneNumber,tfPassword);
+    static void validate(TextField tfUsername, TextField tfFirstname, TextField tfLastname, TextField tfPhoneNumber, TextField tfPassword, Button btnRegister) {
+        btnRegister.disableProperty().bind(Bindings.createBooleanBinding(() -> !(tfUsername.getText().length() >= 4 && tfFirstname.getText().length() > 0
+                        && tfLastname.getText().length() > 0 && tfPhoneNumber.getText().length() == 10
+                        && tfPassword.getText().length() >= 4), tfUsername.textProperty(), tfFirstname.textProperty(), tfLastname.textProperty()
+                , tfPhoneNumber.textProperty(), tfPassword.textProperty()));
     }
 
     private void alert(Alert.AlertType type, String title, String header) {

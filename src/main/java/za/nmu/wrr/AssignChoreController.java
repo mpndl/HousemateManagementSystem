@@ -42,7 +42,7 @@ public class AssignChoreController extends Controller {
     private void setupChores() {
         TableView<Chore> tvChores = (TableView<Chore>) acStage.getScene().lookup("#chores_"+ ASSIGN + "table");
         clearTables(tvChores, null);
-        ResultSet rs = database.executeQuery("SELECT DISTINCT Chore.choreID, Chore.description, Chore.isCompleted, Chore.dateCompleted, Chore.areaName FROM Chore WHERE NOT EXISTS (SELECT housemateID, choreID FROM Swap WHERE Swap.choreID = Chore.choreID) AND isCompleted = 0");
+        ResultSet rs = database.executeQuery("SELECT choreID, description, isCompleted, dateCompleted, areaName FROM Chore WHERE assigned = 0");
         try {
             while (rs.next()) {
                 Chore chore = new Chore();
@@ -133,6 +133,7 @@ public class AssignChoreController extends Controller {
             TextField tfChoreID = (TextField) acStage.getScene().lookup("#"+ ASSIGN + "choreid");
 
             database.executeInsert("INSERT INTO Swap(housemateID, choreID) VALUES(" + tfHousemateID.getText() + "," + tfChoreID.getText() + ")");
+            database.executeUpdate("UPDATE Chore SET assigned = 1 WHERE choreID = " + tfChoreID.getText());
             setupChores();
 
             TextField tfAreaName = (TextField) acStage.getScene().lookup("#"+ ASSIGN + "areaname");
@@ -245,6 +246,7 @@ public class AssignChoreController extends Controller {
         tcDateCompleted.setPrefWidth(100);
 
         tvChores.getColumns().addAll(tcChoreID, tcAreaName, tcDescription, tcCompleted, tcDateCompleted);
+        System.out.println(chores.size());
 
         tvChores.setItems(chores);
 

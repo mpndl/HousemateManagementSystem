@@ -18,7 +18,7 @@
             <Hyperlink text="Manage Resources"/>
             <Hyperlink text="Assign Chores" fx:id="ac_dashboard"/>
             <Hyperlink text="Swap Chores"/>
-            <Hyperlink text="View Housemates"/>
+            <Hyperlink text="View Housemates" fx:id="vh_dashboard"/>
             <Hyperlink text="View Chores"/>
             <Hyperlink text="View Resources"/>
         </VBox>

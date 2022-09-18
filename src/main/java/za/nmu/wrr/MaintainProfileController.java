@@ -1,5 +1,6 @@
 package za.nmu.wrr;
 
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
@@ -49,7 +50,7 @@ public class MaintainProfileController extends Controller {
 
         Button btnDelete = (Button) mpStage.getScene().lookup("#"+ DELETE + "delete");
         Button btnClear = (Button) mpStage.getScene().lookup("#"+ DELETE + "clear");
-        addFuncsLister(btnDelete, btnClear, tfFirstname, tfLastname, tfPhoneNumber, tfPassword);
+        //addFuncsLister(btnDelete, btnClear, tfFirstname, tfLastname, tfPhoneNumber, tfPassword);
         btnDelete.setOnAction(event -> {
             Housemate housemate = new Housemate();
             housemate.housemateID.setValue(tfHousemateID.getText());
@@ -112,18 +113,14 @@ public class MaintainProfileController extends Controller {
         });
 
         Button btnDelete = (Button) mpStage.getScene().lookup("#"+ DELETE + "delete");
-        btnDelete.setDisable(true);
-        Button abtnClear = (Button) mpStage.getScene().lookup("#"+n+"clear");
-        abtnClear.setDisable(true);
-        abtnClear.setOnAction(event -> {
+        Button btnClear = (Button) mpStage.getScene().lookup("#"+n+"clear");
+        btnClear.setOnAction(event -> {
             tfHousemateID.setText("");
             tfUsername.setText("");
             tfFirstname.setText("");
             tfLastname.setText("");
             tfPhoneNumber.setText("");
             tfPassword.setText("");
-            btnDelete.setDisable(true);
-            abtnClear.setDisable(true);
         });
     }
 
@@ -143,9 +140,25 @@ public class MaintainProfileController extends Controller {
         CheckBox cbIsLeader = (CheckBox) mpStage.getScene().lookup("#"+ EDIT + "leader");
         cbIsLeader.setSelected(loggedInUser.isLeader.getValue() != 0);
 
+        String username = loggedInUser.username.getValue();
+        String firstname = loggedInUser.username.getValue();
+        String lastname = loggedInUser.username.getValue();
+        String phoneNumber = loggedInUser.username.getValue();
+        String password = loggedInUser.username.getValue();
+
         Button btnEdit = (Button) mpStage.getScene().lookup("#"+ EDIT + "edit");
         Button btnClear = (Button) mpStage.getScene().lookup("#"+ EDIT + "clear");
-        addFuncsLister(btnEdit, btnClear, tfUsername, tfFirstname, tfLastname, tfPhoneNumber, tfPassword);
+
+        btnEdit.disableProperty().bind(Bindings.createBooleanBinding(() -> tfUsername.getText().equals(username)
+                        || tfFirstname.getText().equals(firstname) || tfLastname.getText().equals(lastname)
+                        || tfPhoneNumber.getText().equals(phoneNumber) || tfPassword.getText().equals(password),
+                tfUsername.textProperty(), tfFirstname.textProperty(), tfLastname.textProperty()
+                , tfPhoneNumber.textProperty(), tfPassword.textProperty()));
+
+        btnClear.disableProperty().bind(Bindings.createBooleanBinding(() -> !(!tfUsername.getText().isEmpty() || !tfFirstname.getText().isEmpty()
+                        || !tfLastname.getText().isEmpty() || !tfPhoneNumber.getText().isEmpty()
+                        || !tfPassword.getText().isEmpty()), tfUsername.textProperty(), tfFirstname.textProperty(), tfLastname.textProperty()
+                , tfPhoneNumber.textProperty(), tfPassword.textProperty()));
 
         btnEdit.setOnAction(event -> {
             Housemate housemate = new Housemate();
@@ -174,48 +187,6 @@ public class MaintainProfileController extends Controller {
                 alert.showAndWait();
             }
         });
-    }
-
-    private void addFuncsLister(Button func, Button clear , TextField... textFields) {
-        for (TextField textField: textFields){
-            textField.textProperty().addListener((observableValue, s, t1) -> {
-                setupDisableFuncs2(func, clear, textFields);
-            });
-        }
-    }
-
-    private void setupDisableFuncs2(Button func, Button clear, TextField... textFields) {
-        if (anyNotEmpty(textFields)) {
-            clear.setDisable(false);
-            if (valuesChanged()) {
-                func.setDisable(false);
-            }
-            else func.setDisable(true);
-        }
-        else {
-            clear.setDisable(true);
-            func.setDisable(true);
-        }
-    }
-
-    private boolean anyNotEmpty(TextField... textFields) {
-        for (TextField textField: textFields) {
-            if (!textField.getText().isEmpty())
-                return true;
-        }
-        return false;
-    }
-
-    private boolean valuesChanged() {
-        TextField tfUsername = (TextField) mpStage.getScene().lookup("#"+ EDIT + "username");
-        TextField tfFirstname = (TextField) mpStage.getScene().lookup("#"+ EDIT + "firstname");
-        TextField tfLastname = (TextField) mpStage.getScene().lookup("#"+ EDIT + "lastname");
-        TextField tfPhoneNumber = (TextField) mpStage.getScene().lookup("#"+ EDIT + "phonenumber");
-        TextField tfPassword = (TextField) mpStage.getScene().lookup("#"+ EDIT + "password");
-
-        return !tfUsername.getText().equals(loggedInUser.username.getValue()) || !tfFirstname.getText().equals(loggedInUser.firstName.getValue())
-                || !tfLastname.getText().equals(loggedInUser.lastName.getValue()) || !tfPhoneNumber.getText().equals(loggedInUser.phoneNumber.getValue())
-                || !tfPassword.getText().equals(loggedInUser.password.getValue());
     }
 
     private int getHousemateIndex(String id) {

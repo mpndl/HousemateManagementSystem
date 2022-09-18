@@ -29,7 +29,7 @@ public class Main extends Application {
 
         // Dashboard/Main View/Controller
         FXMLLoader dashboardView = new FXMLLoader();
-        dashboardView.setLocation(getClass().getResource("view.fxml"));
+        dashboardView.setLocation(getClass().getResource("dashBoardView.fxml"));
         Scene dashboardScene = new Scene(dashboardView.load());
         Controller controller = new Controller(dashboardStage, dashboardScene, vhStage);
 
@@ -48,6 +48,10 @@ public class Main extends Application {
         // Assign Chore View/Controller
         Stage acStage = createAssignChoreView(dashboardStage);
         new AssignChoreController(dashboardScene, acStage);
+
+        // View Housemates View/Controller
+        Stage vhStage2 = createViewHousematesView(dashboardStage);
+        new ViewHousematesController(dashboardScene, vhStage2);
 
         dashboardStage.setScene(dashboardScene);
         dashboardStage.setTitle("Dashboard");
@@ -88,6 +92,25 @@ public class Main extends Application {
 
         stage.setScene(scene);
         stage.setTitle("Maintain Housemates");
+
+        stage.setResizable(false);
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.initStyle(StageStyle.UTILITY);
+        stage.initOwner(owner);
+
+        return stage;
+    }
+
+    public Stage createViewHousematesView(Stage owner) throws IOException {
+        Stage stage = new Stage();
+
+        FXMLLoader mhLoader = new FXMLLoader();
+        mhLoader.setLocation(getClass().getResource("viewHousematesView.fxml"));
+
+        Scene scene = new Scene(mhLoader.load());
+
+        stage.setScene(scene);
+        stage.setTitle("View Housemates");
 
         stage.setResizable(false);
         stage.initModality(Modality.APPLICATION_MODAL);

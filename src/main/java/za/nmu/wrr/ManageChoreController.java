@@ -1,11 +1,11 @@
 package za.nmu.wrr;
 
+import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 
 import java.sql.ResultSet;
@@ -13,6 +13,8 @@ import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class ManageChoreController extends Controller {
     private ObservableList<Chore> chores = FXCollections.observableArrayList();
@@ -21,6 +23,7 @@ public class ManageChoreController extends Controller {
     private final String REMOVE = "remove_mc_";
     private Scene dashboardScene;
     private Stage mcStage;
+    private boolean linked = false;
     public ManageChoreController(){}
     public ManageChoreController(Scene dashboardScene,Stage mcStage) {
         this.dashboardScene = dashboardScene;
@@ -36,9 +39,12 @@ public class ManageChoreController extends Controller {
         CheckBox cbCompleted = (CheckBox) mcStage.getScene().lookup("#"+ REMOVE + "completed");
         DatePicker dpDateCompleted = (DatePicker) mcStage.getScene().lookup("#"+ REMOVE + "datacompleted");
 
+        Button btnRemove = (Button) mcStage.getScene().lookup("#"+ REMOVE + "remove");
+
         tvChores.getSelectionModel().selectedItemProperty().addListener((observableValue, housemate, t1) -> {
             Chore temp = observableValue.getValue();
             if(temp != null) {
+                btnRemove.setDisable(false);
                 cbCompleted.setSelected(temp.isCompleted.getValue() != 0);
                 tfChoreID.setText(temp.choreID.getValue());
                 tfAreaName.setText(temp.areaName.getValue());
@@ -51,18 +57,7 @@ public class ManageChoreController extends Controller {
                 }
                 else if(dpDateCompleted != null && temp.dateCompleted.getValue() == null) dpDateCompleted.setValue(null);
             }
-        });
-
-        Button btnRemove = (Button) mcStage.getScene().lookup("#"+ REMOVE + "remove");
-        Button btnClear = (Button) mcStage.getScene().lookup("#"+ REMOVE + "clear");
-        btnClear.setDisable(true);
-        tfChoreID.textProperty().addListener((observableValue, s, t1) -> {
-            if(observableValue.getValue().length() > 0) {
-                btnRemove.setDisable(false);
-            }
-            else {
-                btnRemove.setDisable(true);
-            }
+            else btnRemove.setDisable(true);
         });
 
         btnRemove.setOnAction(event -> {
@@ -119,6 +114,11 @@ public class ManageChoreController extends Controller {
 
         dpDateCompleted.disableProperty().bind(cbCompleted.selectedProperty().not());
 
+        AtomicReference<String> areaName = new AtomicReference<>("");
+        AtomicReference<String> description = new AtomicReference<>("");
+        AtomicBoolean completed = new AtomicBoolean(false);
+        AtomicReference<LocalDate> dateCompleted = new AtomicReference<>();
+
         tvChores.getSelectionModel().selectedItemProperty().addListener((observableValue, housemate, t1) -> {
             Chore temp = observableValue.getValue();
             if(temp != null) {
@@ -126,33 +126,42 @@ public class ManageChoreController extends Controller {
                 tfChoreID.setText(temp.choreID.getValue());
                 tfAreaName.setText(temp.areaName.getValue());
                 taDescription.setText(temp.description.getValue());
-                cbCompleted.setText(temp.isCompleted.getValue() + "");
+                dateCompleted.set(null);
                 if (temp.dateCompleted.getValue() != null) {
                     DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-                    LocalDate localDate = LocalDate.parse(temp.dateCompleted.getValue(), dateTimeFormatter);
+                    LocalDate localDate = LocalDate.parse(temp.dateCompleted.getValue().replace("\'",""), dateTimeFormatter);
+                    dateCompleted.set(localDate);
                     dpDateCompleted.setValue(localDate);
                 }
+
+                areaName.set(temp.areaName.getValue());
+                description.set(temp.description.getValue());
+                completed.set(temp.isCompleted.getValue() != 0);
             }
         });
 
         Button btnEdit = (Button) mcStage.getScene().lookup("#"+ EDIT + "edit");
         Button btnClear = (Button) mcStage.getScene().lookup("#"+ EDIT + "clear");
 
-        tfAreaName.textProperty().addListener((observableValue, s, t1) -> {
-            setupDisableFuncs(btnEdit, btnClear, tfAreaName, taDescription, cbCompleted, dpDateCompleted);
-        });
-
-        taDescription.textProperty().addListener((observableValue, s, t1) -> {
-            setupDisableFuncs(btnEdit, btnClear, tfAreaName, taDescription, cbCompleted, dpDateCompleted);
-        });
-
-        cbCompleted.selectedProperty().addListener((observableValue, aBoolean, t1) -> {
-            setupDisableFuncs(btnEdit, btnClear, tfAreaName, taDescription, cbCompleted, dpDateCompleted);
-        });
-
-        dpDateCompleted.setOnAction(actionEvent -> {
-            setupDisableFuncs(btnEdit, btnClear, tfAreaName, taDescription, cbCompleted, dpDateCompleted);
-        });
+        btnEdit.disableProperty().bind(Bindings.createBooleanBinding(() -> {
+            if(tfAreaName.getText().isEmpty() || taDescription.getText().isEmpty())
+                return true;
+            else {
+                if (!tfAreaName.getText().isEmpty() && !taDescription.getText().isEmpty()) {
+                    if (cbCompleted.isSelected()) {
+                        try {
+                            if (dpDateCompleted.getValue() == null || dpDateCompleted.getValue().toString().isEmpty())
+                                throw  new DateTimeException("Date is empty");
+                            dpDateCompleted.getConverter().fromString(dpDateCompleted.getValue().toString().replace("-", "/"));
+                        }
+                        catch (DateTimeException e) {
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
+        }, tfAreaName.textProperty(), taDescription.textProperty(), cbCompleted.selectedProperty(), dpDateCompleted.valueProperty()));
 
         btnEdit.setOnAction(event -> {
             Chore chore = new Chore();
@@ -169,7 +178,7 @@ public class ManageChoreController extends Controller {
             try {
                 int index = getChoreIndex(chore.choreID.getValue());
                 if (index != -1) {
-                    database.executeUpdate("UPDATE Chore SET description = '" + chore.description.getValue() + "', isCompleted = '" + chore.isCompleted.getValue() + "', dateCompleted = " + chore.dateCompleted.getValue() + ", areaName = '" + chore.areaName.getValue() + "' WHERE choreID = '" + chore.choreID.getValue() + "'");
+                    database.executeUpdate("UPDATE Chore SET description = '" + chore.description.getValue() + "', isCompleted = '" + chore.isCompleted.getValue().toString() + "', dateCompleted = " + chore.dateCompleted.getValue() + ", areaName = '" + chore.areaName.getValue() + "' WHERE choreID = '" + chore.choreID.getValue() + "'");
                     chores.set(index, chore);
                 }
             }
@@ -189,14 +198,15 @@ public class ManageChoreController extends Controller {
 
         Button btnAdd = (Button) mcStage.getScene().lookup("#"+ ADD + "add");
         Button btnClear = (Button) mcStage.getScene().lookup("#"+ ADD + "clear");
+        CheckBox cbSelfAssign = (CheckBox) mcStage.getScene().lookup("#"+ ADD + "self_assign");
 
-        tfAreaName.textProperty().addListener((observableValue, s, t1) -> {
-            setupDisableFuncs(btnAdd, btnClear, tfAreaName, taDescription, cbCompleted, dpDateCompleted);
-        });
+        cbSelfAssign.disableProperty().bind(Bindings.createBooleanBinding(() -> {
+            return tfAreaName.getText().isEmpty() || taDescription.getText().isEmpty();
+        }, tfAreaName.textProperty(), taDescription.textProperty()));
 
-        taDescription.textProperty().addListener((observableValue, s, t1) -> {
-            setupDisableFuncs(btnAdd, btnClear, tfAreaName, taDescription, cbCompleted, dpDateCompleted);
-        });
+        btnAdd.disableProperty().bind(Bindings.createBooleanBinding(() -> {
+            return tfAreaName.getText().isEmpty() || taDescription.getText().isEmpty();
+        }, tfAreaName.textProperty(), taDescription.textProperty()));
 
         btnAdd.setOnAction(event -> {
             Chore chore = new Chore();
@@ -209,13 +219,13 @@ public class ManageChoreController extends Controller {
             chore.areaName.setValue(tfAreaName.getText());
 
             try {
-                CheckBox cbSelfAssign = (CheckBox) mcStage.getScene().lookup("#" + ADD + "self_assign");
                 int id;
                 if (loggedInUser.isLeader.getValue() == 1 && !cbSelfAssign.isSelected())
                     id = database.executeInsert("INSERT INTO Chore(description, areaName) VALUES('" + chore.description.getValue() + "', '" + chore.areaName.getValue() + "')");
                 else {
                     id = database.executeInsert("INSERT INTO Chore(description, areaName) VALUES('" + chore.description.getValue() + "', '" + chore.areaName.getValue() + "')");
                     database.executeInsert("INSERT INTO Swap(housemateID, choreID) VALUES(" + loggedInUser.housemateID.getValue() + "," + id + ")");
+                    database.executeUpdate("UPDATE Chore SET assigned = 1 WHERE choreID = " + id);
                 }
                 if (id != -1)
                     chore.choreID.setValue(id + "");
@@ -226,30 +236,11 @@ public class ManageChoreController extends Controller {
                 tfAreaName.setText("");
                 chores.add(chore);
                 tvChores.getSelectionModel().clearSelection();
-                btnAdd.setDisable(true);
-                btnClear.setDisable(true);
             }
             catch (Exception e) {
                 e.printStackTrace();
             }
         });
-    }
-
-    private String areaName = "";
-    private String description = "";
-    private boolean completed = false;
-    private boolean valuesChanged() {
-        TextField tfAreaName = (TextField) mcStage.getScene().lookup("#"+ EDIT + "areaname");
-        TextArea taDescription = (TextArea) mcStage.getScene().lookup("#"+ EDIT + "description");
-        CheckBox cbCompleted = (CheckBox) mcStage.getScene().lookup("#" +EDIT+"completed");
-        if (areaName.equals("")) {
-            if (!tfAreaName.getText().isEmpty() && !taDescription.getText().isEmpty()) {
-                areaName = tfAreaName.getText();
-                description = taDescription.getText();
-                completed = cbCompleted.isSelected();
-            }
-        }
-        return !tfAreaName.getText().equals(areaName) || !taDescription.getText().equals(description) || !(cbCompleted.isSelected() == completed);
     }
 
     private void linkToScene(Stage mcStage, String n) {
@@ -305,33 +296,6 @@ public class ManageChoreController extends Controller {
             cbSelfAssign.setVisible(true);
     }
 
-    private void setupDisableFuncs(Button func, Button clear, TextField areaName, TextArea description, CheckBox completed, DatePicker dateCompleted) {
-        if (!areaName.getText().isEmpty() || !description.getText().isEmpty()) {
-            clear.setDisable(false);
-            if (!areaName.getText().isEmpty() && !description.getText().isEmpty() && valuesChanged()) {
-                if (completed.isSelected()) {
-                    try {
-                        if (dateCompleted.getEditor().getText().isEmpty())
-                            throw  new DateTimeException("Date is empty");
-                        dateCompleted.getConverter().fromString(dateCompleted.getEditor().getText());
-                    }
-                    catch (DateTimeException e) {
-                        func.setDisable(true);
-                        return;
-                    }
-                    func.setDisable(false);
-                } else {
-                    func.setDisable(false);
-                }
-            }
-            else func.setDisable(true);
-        }
-        else {
-            clear.setDisable(true);
-            func.setDisable(true);
-        }
-    }
-
     private int getChoreIndex(String id) {
         for (int i = 0; i < chores.size(); i++) {
 
@@ -366,20 +330,25 @@ public class ManageChoreController extends Controller {
 
     private void setupDashboardLinks(Scene dashboardScene, Stage mcStage) {
         Hyperlink hpManageChore = (Hyperlink) dashboardScene.lookup("#mc_dashboard");
-        hpManageChore.setOnAction(event -> {
-            if (chores.size() == 0) {
-                setupChores();
-                // Add
-                linkToScene(mcStage, ADD);
-                addChore(mcStage);
-                // Edit
-                linkToScene(mcStage, EDIT);
-                editChore(mcStage);
-                // Remove
-                linkToScene(mcStage, REMOVE);
-                removeChore(mcStage);
-            }
+        if (loggedInUser != null) {
+            hpManageChore.setOnAction(event -> {
+                if (!linked) {
+                    setupChores();
+                    // Add
+                    linkToScene(mcStage, ADD);
+                    addChore(mcStage);
+                    // Edit
+                    linkToScene(mcStage, EDIT);
+                    editChore(mcStage);
+                    // Remove
+                    linkToScene(mcStage, REMOVE);
+                    removeChore(mcStage);
+                    linked = true;
+                }
                 mcStage.showAndWait();
-        });
+            });
+        }
+        else
+            hpManageChore.setDisable(true);
     }
 }

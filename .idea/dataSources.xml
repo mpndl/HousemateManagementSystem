@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="HMS3@localhost" uuid="59e7d188-1620-4fba-b5cb-e00c874636cb">
+    <data-source source="LOCAL" name="HMS4@localhost" uuid="59e7d188-1620-4fba-b5cb-e00c874636cb">
       <driver-ref>sqlserver.jtds</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>net.sourceforge.jtds.jdbc.Driver</jdbc-driver>
-      <jdbc-url>jdbc:jtds:sqlserver://localhost:1433/HMS3;instance=MSSQLSERVER</jdbc-url>
+      <jdbc-url>jdbc:jtds:sqlserver://localhost:1433/HMS4;instance=MSSQLSERVER</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
   </component>
