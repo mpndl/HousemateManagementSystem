@@ -169,7 +169,7 @@ public class ValidateHousemateController extends Controller {
                     else {
                         if (tfUsername.getText().equals(username)) {
                             tfUsername.setStyle("-fx-border-color: orange");
-                            Tooltip tooltip = new Tooltip("Username has not changed.");
+                            Tooltip tooltip = new Tooltip("Username not changed.");
                             tooltip.setShowDelay(Duration.ONE);
                             tfUsername.setTooltip(tooltip);
                             warningCount++;
@@ -180,7 +180,7 @@ public class ValidateHousemateController extends Controller {
                         }
                     }
                     if (tfFirstname.getText().isEmpty()) {
-                        Tooltip tooltip = new Tooltip("Firstname was not entered.");
+                        Tooltip tooltip = new Tooltip("Firstname not entered.");
                         tooltip.setShowDelay(Duration.ONE);
                         tfFirstname.setTooltip(tooltip);
                         tfFirstname.setStyle("-fx-border-color: red");
@@ -188,7 +188,7 @@ public class ValidateHousemateController extends Controller {
                     }
                     else {
                         if (tfFirstname.getText().equals(firstname)) {
-                            Tooltip tooltip = new Tooltip("Firstname has not changed.");
+                            Tooltip tooltip = new Tooltip("Firstname not changed.");
                             tooltip.setShowDelay(Duration.ONE);
                             tfFirstname.setStyle("-fx-border-color: orange");
                             tfFirstname.setTooltip(tooltip);
@@ -200,7 +200,7 @@ public class ValidateHousemateController extends Controller {
                         }
                     }
                     if (tfLastname.getText().isEmpty()) {
-                        Tooltip tooltip = new Tooltip("Lastname was not entered.");
+                        Tooltip tooltip = new Tooltip("Lastname not entered.");
                         tooltip.setShowDelay(Duration.ONE);
                         tfLastname.setTooltip(tooltip);
                         tfLastname.setStyle("-fx-border-color: red");
@@ -208,7 +208,7 @@ public class ValidateHousemateController extends Controller {
                     }
                     else {
                         if (tfLastname.getText().equals(lastname)) {
-                            Tooltip tooltip = new Tooltip("Lastname has not changed.");
+                            Tooltip tooltip = new Tooltip("Lastname not changed.");
                             tooltip.setShowDelay(Duration.ONE);
                             tfLastname.setTooltip(tooltip);
                             tfLastname.setStyle("-fx-border-color: orange");
@@ -225,7 +225,7 @@ public class ValidateHousemateController extends Controller {
                             throw new NumberFormatException();
 
                         if (tfPhoneNumber.getText().equals(phoneNumber)) {
-                            Tooltip tooltip = new Tooltip("Phone number has not changed.");
+                            Tooltip tooltip = new Tooltip("Phone number not changed.");
                             tooltip.setShowDelay(Duration.ONE);
                             tfPhoneNumber.setTooltip(tooltip);
                             tfPhoneNumber.setStyle("-fx-border-color: orange");
@@ -252,7 +252,7 @@ public class ValidateHousemateController extends Controller {
                     }
                     else {
                         if (tfPassword.getText().equals(password)) {
-                            Tooltip tooltip = new Tooltip("Password has not changed.");
+                            Tooltip tooltip = new Tooltip("Password not changed.");
                             tooltip.setShowDelay(Duration.ONE);
                             tfPassword.setTooltip(tooltip);
                             tfPassword.setStyle("-fx-border-color: orange");
@@ -285,7 +285,7 @@ public class ValidateHousemateController extends Controller {
                 tfUsername.setStyle("-fx-border-color: green");
             }
             if (tfFirstname.getText().isEmpty()) {
-                Tooltip tooltip = new Tooltip("First Name was not entered.");
+                Tooltip tooltip = new Tooltip("First name not entered.");
                 tooltip.setShowDelay(Duration.ONE);
                 tfFirstname.setTooltip(tooltip);
                 tfFirstname.setStyle("-fx-border-color: red");
@@ -296,7 +296,7 @@ public class ValidateHousemateController extends Controller {
                 tfFirstname.setStyle("-fx-border-color: green");
             }
             if (tfLastname.getText().isEmpty()) {
-                Tooltip tooltip = new Tooltip("Last Name was not entered.");
+                Tooltip tooltip = new Tooltip("Last name not entered.");
                 tooltip.setShowDelay(Duration.ONE);
                 tfLastname.setTooltip(tooltip);
                 tfLastname.setStyle("-fx-border-color: red");

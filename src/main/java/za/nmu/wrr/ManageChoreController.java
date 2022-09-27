@@ -7,6 +7,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 import java.sql.ResultSet;
 import java.time.DateTimeException;
@@ -137,33 +138,94 @@ public class ManageChoreController extends Controller {
                 areaName.set(temp.areaName.getValue());
                 description.set(temp.description.getValue());
                 completed.set(temp.isCompleted.getValue() != 0);
+
+                tfAreaName.setDisable(false);
+                taDescription.setDisable(false);
+                cbCompleted.setDisable(false);
+            }
+            else {
+                tfAreaName.setDisable(true);
+                taDescription.setDisable(true);
+                cbCompleted.setDisable(true);
             }
         });
 
         Button btnEdit = (Button) mcStage.getScene().lookup("#"+ EDIT + "edit");
-        Button btnClear = (Button) mcStage.getScene().lookup("#"+ EDIT + "clear");
 
         btnEdit.disableProperty().bind(Bindings.createBooleanBinding(() -> {
-            if(tfAreaName.getText().isEmpty() || taDescription.getText().isEmpty())
-                return true;
+            Chore chore = tvChores.getSelectionModel().getSelectedItem();
+            boolean comp = false;
+            boolean sameAreaName = false;
+            boolean sameDescription = false;
+            boolean empty = false;
+            if(tfAreaName.getText().isEmpty()) {
+                Tooltip tooltip = new Tooltip("Area name not entered.");
+                tooltip.setShowDelay(Duration.ONE);
+                tfAreaName.setStyle("-fx-border-color: red");
+                empty = true;
+            }
             else {
-                if (!tfAreaName.getText().isEmpty() && !taDescription.getText().isEmpty()) {
-                    if (cbCompleted.isSelected()) {
-                        try {
-                            if (dpDateCompleted.getValue() == null || dpDateCompleted.getValue().toString().isEmpty())
-                                throw  new DateTimeException("Date is empty");
-                            dpDateCompleted.getConverter().fromString(dpDateCompleted.getValue().toString().replace("-", "/"));
-                            dpDateCompleted.setStyle("-fx-border-color: rgba(0, 0, 0, 1)");
-                        }
-                        catch (DateTimeException e) {
-                            dpDateCompleted.setStyle("-fx-border-color: red");
-                            return true;
-                        }
-                    }
-                    else dpDateCompleted.setStyle("-fx-border-color: rgba(0, 0, 0, 1)");
+                if (tfAreaName.getText().equals(chore.areaName.getValue())) {
+                    Tooltip tooltip = new Tooltip("Area name not changed.");
+                    tooltip.setShowDelay(Duration.ONE);
+                    tfAreaName.setTooltip(tooltip);
+                    tfAreaName.setStyle("-fx-border-color: orange");
+                    sameAreaName = true;
+                }
+                else {
+                    tfAreaName.setTooltip(null);
+                    tfAreaName.setStyle("-fx-border-color: green");
                 }
             }
-            return false;
+            if (taDescription.getText().isEmpty()) {
+                Tooltip tooltip = new Tooltip("Description not entered.");
+                tooltip.setShowDelay(Duration.ONE);
+                taDescription.setTooltip(tooltip);
+                taDescription.setStyle("-fx-border-color: red");
+                empty = true;
+            }
+            else {
+                if (taDescription.getText().equals(chore.description.getValue())) {
+                    Tooltip tooltip = new Tooltip("Description not changed.");
+                    tooltip.setShowDelay(Duration.ONE);
+                    taDescription.setTooltip(tooltip);
+                    taDescription.setStyle("-fx-border-color: orange");
+                    sameDescription = true;
+                }
+                else  {
+                    taDescription.setTooltip(null);
+                    taDescription.setStyle("-fx-border-color: green");
+                }
+            }
+            if (cbCompleted.isSelected()) {
+                try {
+                    if (dpDateCompleted.getValue() == null || dpDateCompleted.getValue().toString().isEmpty())
+                        throw  new DateTimeException("Date is empty");
+                    dpDateCompleted.getConverter().fromString(dpDateCompleted.getValue().toString().replace("-", "/"));
+                    dpDateCompleted.setStyle("-fx-border-color: green");
+                    dpDateCompleted.setTooltip(null);
+                }
+                catch (DateTimeException e) {
+                    dpDateCompleted.setStyle("-fx-border-color: red");
+                    Tooltip tooltip = new Tooltip("Date not picked..");
+                    tooltip.setShowDelay(Duration.ONE);
+                    dpDateCompleted.setTooltip(tooltip);
+                    comp = true;
+                }
+            }
+            else {
+                dpDateCompleted.setStyle("-fx-border-color: green");
+                dpDateCompleted.setTooltip(null);
+            }
+
+            if (comp)
+                return true;
+            else if (empty)
+                return true;
+            else if (sameAreaName && sameDescription)
+                return true;
+            else return false;
+
         }, tfAreaName.textProperty(), taDescription.textProperty(), cbCompleted.selectedProperty(), dpDateCompleted.valueProperty()));
 
         btnEdit.setOnAction(event -> {
@@ -208,7 +270,32 @@ public class ManageChoreController extends Controller {
         }, tfAreaName.textProperty(), taDescription.textProperty()));
 
         btnAdd.disableProperty().bind(Bindings.createBooleanBinding(() -> {
-            return tfAreaName.getText().isEmpty() || taDescription.getText().isEmpty();
+            boolean empty = false;
+            if(tfAreaName.getText().isEmpty()) {
+                Tooltip tooltip = new Tooltip("Area name not entered.");
+                tooltip.setShowDelay(Duration.ONE);
+                tfAreaName.setTooltip(tooltip);
+                tfAreaName.setStyle("-fx-border-color: red");
+                empty = true;
+            }
+            else {
+                tfAreaName.setTooltip(null);
+                tfAreaName.setStyle("-fx-border-color: green");
+            }
+
+            if (taDescription.getText().isEmpty()) {
+                Tooltip tooltip = new Tooltip("Description not entered.");
+                tooltip.setShowDelay(Duration.ONE);
+                taDescription.setTooltip(tooltip);
+                taDescription.setStyle("-fx-border-color: red");
+                empty = true;
+            }
+            else {
+                taDescription.setStyle("-fx-border-color: green");
+                taDescription.setTooltip(null);
+            }
+
+            return empty;
         }, tfAreaName.textProperty(), taDescription.textProperty()));
 
         btnAdd.setOnAction(event -> {
