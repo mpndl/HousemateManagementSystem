@@ -263,6 +263,8 @@ public class ManageChoreController extends Controller {
 
         Button btnAdd = (Button) mcStage.getScene().lookup("#"+ ADD + "add");
         Button btnClear = (Button) mcStage.getScene().lookup("#"+ ADD + "clear");
+        btnClear.disableProperty().bind(Bindings.createBooleanBinding(() -> tfAreaName.getText().isEmpty() && taDescription.getText().isEmpty()
+                , tfAreaName.textProperty(), taDescription.textProperty()));
         CheckBox cbSelfAssign = (CheckBox) mcStage.getScene().lookup("#"+ ADD + "self_assign");
 
         cbSelfAssign.disableProperty().bind(Bindings.createBooleanBinding(() -> {

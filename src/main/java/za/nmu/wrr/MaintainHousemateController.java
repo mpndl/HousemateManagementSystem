@@ -65,6 +65,8 @@ public class MaintainHousemateController extends Controller {
 
 
         Button btnRemove = (Button) mhStage.getScene().lookup("#"+ REMOVE + "remove");
+        btnRemove.disableProperty().bind(Bindings.createBooleanBinding(() -> tvHousemates.getSelectionModel().getSelectedItem() == null,
+                tvHousemates.getSelectionModel().selectedItemProperty()));
 
         btnRemove.setOnAction(event -> {
             Housemate housemate = new Housemate();
@@ -150,14 +152,30 @@ public class MaintainHousemateController extends Controller {
 
         tvHousemates.setItems(housemates);
 
+        tvHousemates.getSelectionModel().selectedItemProperty().addListener((observableValue, housemate, t1) -> {
+            Housemate temp = observableValue.getValue();
+            if (temp != null) {
+                tfUsername.setDisable(false);
+                tfFirstname.setDisable(false);
+                tfLastname.setDisable(false);
+                tfPhoneNumber.setDisable(false);
+                tfPassword.setDisable(false);
+            }
+            else {
+                tfUsername.setDisable(true);
+                tfFirstname.setDisable(true);
+                tfLastname.setDisable(true);
+                tfPhoneNumber.setDisable(true);
+                tfPassword.setDisable(true);
+            }
+        });
+
         Button btnCancel = (Button) mhStage.getScene().lookup("#"+n+"cancel");
         btnCancel.setOnAction(event -> {
             mhStage.close();
         });
 
         Button btnFunc = (Button) mhStage.getScene().lookup("#"+ n + f);
-
-        validate(tfUsername, tfFirstname, tfLastname, tfPhoneNumber, tfPassword, btnFunc);
 
         Button btnClear = (Button) mhStage.getScene().lookup("#"+n+"clear");
         btnClear.disableProperty().bind(Bindings.createBooleanBinding(() -> !(!tfUsername.getText().isEmpty() || !tfFirstname.getText().isEmpty()
@@ -174,10 +192,6 @@ public class MaintainHousemateController extends Controller {
             tfPassword.setText("");
             tvHousemates.getSelectionModel().clearSelection();
         });
-    }
-
-    private void validate(TextField tfUsername, TextField tfFirstname, TextField tfLastname, TextField tfPhoneNumber, TextField tfPassword, Button btnFunc) {
-        ValidateHousemateController.validate2(tfUsername, tfFirstname, tfLastname, tfPhoneNumber, tfPassword, btnFunc);
     }
 
     private void editHousemates(Stage mhStage) {
@@ -204,6 +218,8 @@ public class MaintainHousemateController extends Controller {
 
         Button btnEdit = (Button) mhStage.getScene().lookup("#"+ EDIT + "edit");
         Button btnClear = (Button) mhStage.getScene().lookup("#"+ EDIT + "clear");
+
+        ValidateHousemateController.validateEdit(tfUsername, tfFirstname, tfLastname, tfPhoneNumber, tfPassword, btnEdit, tvHousemates);
 
         btnEdit.setOnAction(event -> {
             Housemate housemate = new Housemate();
@@ -258,6 +274,8 @@ public class MaintainHousemateController extends Controller {
 
         Button btnClear = (Button) mhStage.getScene().lookup("#"+ ADD + "clear");
         Button btnAdd = (Button) mhStage.getScene().lookup("#"+ ADD + "add");
+
+        ValidateHousemateController.validateRegister(tfUsername, tfFirstname, tfLastname, tfPhoneNumber, tfPassword, btnAdd);
 
         btnAdd.setOnAction(event -> {
             Housemate housemate = new Housemate();
