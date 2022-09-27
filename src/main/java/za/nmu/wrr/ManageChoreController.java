@@ -317,7 +317,6 @@ public class ManageChoreController extends Controller {
                 else {
                     id = database.executeInsert("INSERT INTO Chore(description, areaName) VALUES('" + chore.description.getValue() + "', '" + chore.areaName.getValue() + "')");
                     database.executeInsert("INSERT INTO Swap(housemateID, choreID) VALUES(" + loggedInUser.housemateID.getValue() + "," + id + ")");
-                    database.executeUpdate("UPDATE Chore SET assigned = 1 WHERE choreID = " + id);
                 }
                 if (id != -1)
                     chore.choreID.setValue(id + "");

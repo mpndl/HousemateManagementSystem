@@ -42,7 +42,7 @@ public class AssignChoreController extends Controller {
     private void setupChores() {
         TableView<Chore> tvChores = (TableView<Chore>) acStage.getScene().lookup("#chores_"+ ASSIGN + "table");
         clearTables(tvChores, null);
-        ResultSet rs = database.executeQuery("SELECT choreID, description, isCompleted, dateCompleted, areaName FROM Chore WHERE assigned = 0");
+        ResultSet rs = database.executeQuery("SELECT * FROM Chore LEFT JOIN Swap ON Chore.choreID = Swap.choreID WHERE Swap.choreID IS NULL");
         try {
             while (rs.next()) {
                 Chore chore = new Chore();
@@ -133,7 +133,6 @@ public class AssignChoreController extends Controller {
             TextField tfChoreID = (TextField) acStage.getScene().lookup("#"+ ASSIGN + "choreid");
 
             database.executeInsert("INSERT INTO Swap(housemateID, choreID) VALUES(" + tfHousemateID.getText() + "," + tfChoreID.getText() + ")");
-            database.executeUpdate("UPDATE Chore SET assigned = 1 WHERE choreID = " + tfChoreID.getText());
             setupChores();
 
             TextField tfAreaName = (TextField) acStage.getScene().lookup("#"+ ASSIGN + "areaname");
