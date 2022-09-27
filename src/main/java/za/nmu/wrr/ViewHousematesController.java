@@ -110,8 +110,8 @@ public class ViewHousematesController extends Controller {
 
         btnViewChores.setOnAction(actionEvent -> {
             try {
-                setupChores(tvHousemates.getSelectionModel().getSelectedItem());
                 Stage stage = createViewHousemateChore(vhStage, tvHousemates.getSelectionModel().getSelectedItem());
+                setupChores(tvHousemates.getSelectionModel().getSelectedItem());
                 linkToHousemateChoreScene(stage);
                 stage.showAndWait();
             } catch (IOException e) {
@@ -154,7 +154,8 @@ public class ViewHousematesController extends Controller {
 
     private void setupChores(Housemate housemate) {
         ResultSet rs;
-        rs = database.executeQuery("SELECT Chore.choreID, Chore.description, Chore.isCompleted, Chore.dateCompleted, Chore.areaName FROM Chore INNER JOIN Swap ON Chore.choreID = Swap.choreID WHERE HousemateID = " + housemate.housemateID.getValue());
+        chores = FXCollections.observableArrayList();
+        rs = database.executeQuery("SELECT * FROM Chore INNER JOIN Swap ON Chore.choreID = Swap.choreID WHERE Swap.HousemateID = " + housemate.housemateID.getValue());
 
         try {
             while (rs.next()) {

@@ -269,7 +269,23 @@ public class ValidateHousemateController extends Controller {
                     if (errorCount > 0)
                         return true;
                     else if (!(warningCount > 0) || !(warningCount < 5)) return true;
-                    return false;
+                    else {
+                        tfUsername.setTooltip(null);
+                        tfUsername.setStyle("-fx-border-color: green");
+
+                        tfFirstname.setTooltip(null);
+                        tfFirstname.setStyle("-fx-border-color: green");
+
+                        tfLastname.setTooltip(null);
+                        tfLastname.setStyle("-fx-border-color: green");
+
+                        tfPhoneNumber.setTooltip(null);
+                        tfPhoneNumber.setStyle("-fx-border-color: green");
+
+                        tfPassword.setTooltip(null);
+                        tfPassword.setStyle("-fx-border-color: green");
+                        return false;
+                    }
                 }
                 , tfUsername.textProperty(), tfFirstname.textProperty(), tfLastname.textProperty()
                 , tfPhoneNumber.textProperty(), tfPassword.textProperty()));
@@ -387,7 +403,23 @@ public class ValidateHousemateController extends Controller {
            else if (sameUsername && sameFirstname && sameLastname && samePhoneNumber && samePassword) {
                 return true;
            }
-           else return false;
+           else {
+               tfUsername.setTooltip(null);
+               tfUsername.setStyle("-fx-border-color: green");
+
+               tfFirstname.setTooltip(null);
+               tfFirstname.setStyle("-fx-border-color: green");
+
+               tfLastname.setTooltip(null);
+               tfLastname.setStyle("-fx-border-color: green");
+
+               tfPhoneNumber.setTooltip(null);
+               tfPhoneNumber.setStyle("-fx-border-color: green");
+
+               tfPassword.setTooltip(null);
+               tfPassword.setStyle("-fx-border-color: green");
+               return false;
+           }
                 }
                 , tfUsername.textProperty(), tfFirstname.textProperty(), tfLastname.textProperty()
                 , tfPhoneNumber.textProperty(), tfPassword.textProperty()));

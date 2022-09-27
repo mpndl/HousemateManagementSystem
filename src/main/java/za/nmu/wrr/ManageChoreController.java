@@ -224,7 +224,15 @@ public class ManageChoreController extends Controller {
                 return true;
             else if (sameAreaName && sameDescription)
                 return true;
-            else return false;
+            else {
+                tfAreaName.setTooltip(null);
+                tfAreaName.setStyle("-fx-border-color: green");
+
+                taDescription.setTooltip(null);
+                taDescription.setStyle("-fx-border-color: green");
+
+                return false;
+            }
 
         }, tfAreaName.textProperty(), taDescription.textProperty(), cbCompleted.selectedProperty(), dpDateCompleted.valueProperty()));
 
@@ -245,6 +253,8 @@ public class ManageChoreController extends Controller {
                 if (index != -1) {
                     database.executeUpdate("UPDATE Chore SET description = '" + chore.description.getValue() + "', isCompleted = '" + chore.isCompleted.getValue().toString() + "', dateCompleted = " + chore.dateCompleted.getValue() + ", areaName = '" + chore.areaName.getValue() + "' WHERE choreID = '" + chore.choreID.getValue() + "'");
                     chores.set(index, chore);
+                    tvChores.getSelectionModel().select(chore);
+                    tfAreaName.setText(chore.areaName.getValue());
                 }
             }
             catch (Exception e) {
@@ -422,22 +432,26 @@ public class ManageChoreController extends Controller {
     private void setupDashboardLinks(Scene dashboardScene, Stage mcStage) {
         Hyperlink hpManageChore = (Hyperlink) dashboardScene.lookup("#mc_dashboard");
         if (loggedInUser != null) {
-            hpManageChore.setOnAction(event -> {
-                if (!linked) {
-                    setupChores();
-                    // Add
-                    linkToScene(mcStage, ADD);
-                    addChore(mcStage);
-                    // Edit
-                    linkToScene(mcStage, EDIT);
-                    editChore(mcStage);
-                    // Remove
-                    linkToScene(mcStage, REMOVE);
-                    removeChore(mcStage);
-                    linked = true;
-                }
-                mcStage.showAndWait();
-            });
+            if (loggedInUser.isLeader.getValue() == 0)
+                hpManageChore.setDisable(true);
+            else {
+                hpManageChore.setOnAction(event -> {
+                    if (!linked) {
+                        setupChores();
+                        // Add
+                        linkToScene(mcStage, ADD);
+                        addChore(mcStage);
+                        // Edit
+                        linkToScene(mcStage, EDIT);
+                        editChore(mcStage);
+                        // Remove
+                        linkToScene(mcStage, REMOVE);
+                        removeChore(mcStage);
+                        linked = true;
+                    }
+                    mcStage.showAndWait();
+                });
+            }
         }
         else
             hpManageChore.setDisable(true);

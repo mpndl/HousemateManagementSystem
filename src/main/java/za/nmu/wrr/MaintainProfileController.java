@@ -157,22 +157,9 @@ public class MaintainProfileController extends Controller {
             housemate.password.setValue(tfPassword.getText());
             housemate.isLeader.set(0);
 
-            try {
-                Integer.parseInt(housemate.phoneNumber.getValue());
-                if(housemate.phoneNumber.getValue().length() == 10) {
-                    database.executeUpdate("UPDATE Housemate SET username = '" + housemate.username.getValue() + "', firstName = '" + housemate.firstName.getValue() + "', lastName = '" + housemate.lastName.getValue() + "', password = '" + housemate.password.getValue() + "', phoneNumber = '" + housemate.phoneNumber.getValue() + "' WHERE housemateID = '" + housemate.housemateID.getValue() + "'");
-                    loggedInUser = housemate;
-                    btnEdit.setDisable(true);
-                }
-                else
-                    throw new Exception();
-            }
-            catch (Exception e) {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Number format error");
-                alert.setHeaderText("Check phone number format");
-                alert.showAndWait();
-            }
+            database.executeUpdate("UPDATE Housemate SET username = '" + housemate.username.getValue() + "', firstName = '" + housemate.firstName.getValue() + "', lastName = '" + housemate.lastName.getValue() + "', password = '" + housemate.password.getValue() + "', phoneNumber = '" + housemate.phoneNumber.getValue() + "' WHERE housemateID = '" + housemate.housemateID.getValue() + "'");
+            loggedInUser = housemate;
+            tfFirstname.setText(housemate.firstName.getValue());
         });
     }
 
