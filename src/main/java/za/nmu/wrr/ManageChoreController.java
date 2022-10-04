@@ -1,30 +1,42 @@
 package za.nmu.wrr;
 
+import javafx.beans.Observable;
 import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 import javafx.util.Duration;
+import org.controlsfx.control.CheckComboBox;
 
 import java.sql.ResultSet;
 import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class ManageChoreController extends Controller {
     private ObservableList<Chore> chores = FXCollections.observableArrayList();
+    ObservableList<Resource> resources = FXCollections.observableArrayList();
+    ObservableList<Resource> selectedResources = FXCollections.observableArrayList();
     private final String ADD = "add_mc_";
     private final String EDIT = "edit_mc_";
     private final String REMOVE = "remove_mc_";
     private Scene dashboardScene;
     private Stage mcStage;
     private boolean linked = false;
+
+    private BooleanProperty isSelectedProperty = new SimpleBooleanProperty();
     public ManageChoreController(){}
     public ManageChoreController(Scene dashboardScene,Stage mcStage) {
         this.dashboardScene = dashboardScene;
@@ -39,26 +51,28 @@ public class ManageChoreController extends Controller {
         TextArea taDescription = (TextArea) mcStage.getScene().lookup("#"+ REMOVE + "description");
         CheckBox cbCompleted = (CheckBox) mcStage.getScene().lookup("#"+ REMOVE + "completed");
         DatePicker dpDateCompleted = (DatePicker) mcStage.getScene().lookup("#"+ REMOVE + "datacompleted");
+        ListView<Resource> lvResources = (ListView<Resource>) mcStage.getScene().lookup("#"+ REMOVE + "resources");
 
         Button btnRemove = (Button) mcStage.getScene().lookup("#"+ REMOVE + "remove");
 
         tvChores.getSelectionModel().selectedItemProperty().addListener((observableValue, housemate, t1) -> {
-            Chore temp = observableValue.getValue();
-            if(temp != null) {
-                btnRemove.setDisable(false);
-                cbCompleted.setSelected(temp.isCompleted.getValue() != 0);
-                tfChoreID.setText(temp.choreID.getValue());
-                tfAreaName.setText(temp.areaName.getValue());
-                taDescription.setText(temp.description.getValue());
-                cbCompleted.setText(temp.isCompleted.getValue() + "");
-                if (dpDateCompleted != null && temp.dateCompleted.getValue() != null) {
-                    DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-                    LocalDate localDate = LocalDate.parse(temp.dateCompleted.getValue(), dateTimeFormatter);
-                    dpDateCompleted.setValue(localDate);
-                }
-                else if(dpDateCompleted != null && temp.dateCompleted.getValue() == null) dpDateCompleted.setValue(null);
+            if (loggedInUser.isLeader.getValue() != 1) {
+                Chore temp = observableValue.getValue();
+                if (temp != null) {
+                    btnRemove.setDisable(false);
+                    cbCompleted.setSelected(temp.isCompleted.getValue() != 0);
+                    tfChoreID.setText(temp.choreID.getValue());
+                    tfAreaName.setText(temp.areaName.getValue());
+                    taDescription.setText(temp.description.getValue());
+                    cbCompleted.setText(temp.isCompleted.getValue() + "");
+                    if (dpDateCompleted != null && temp.dateCompleted.getValue() != null) {
+                        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                        LocalDate localDate = LocalDate.parse(temp.dateCompleted.getValue(), dateTimeFormatter);
+                        dpDateCompleted.setValue(localDate);
+                    } else if (dpDateCompleted != null && temp.dateCompleted.getValue() == null)
+                        dpDateCompleted.setValue(null);
+                } else btnRemove.setDisable(true);
             }
-            else btnRemove.setDisable(true);
         });
 
         btnRemove.setOnAction(event -> {
@@ -85,11 +99,22 @@ public class ManageChoreController extends Controller {
                 Optional<ButtonType> result = alert.showAndWait();
 
                 if(result.get() == btRemove) {
+                    ArrayList<Resource> temp = new ArrayList<>();
+                    for (int i = 0; i < lvResources.getSelectionModel().getSelectedItems().size();i++) {
+                        Resource curResource = lvResources.getSelectionModel().getSelectedItems().get(i);
+                        Resource resource = new Resource(curResource.resourceName.getValue(), curResource.isFinished.getValue(),
+                                curResource.housemateID.getValue());
+                        temp.add(resource);
+                    }
 
                     chores.remove(index);
 
                     database.executeUpdate("DELETE FROM Swap WHERE choreID = '" + chore.choreID.getValue() + "' AND housemateID = " + loggedInUser.housemateID.getValue());
                     database.executeUpdate("DELETE FROM Chore WHERE choreID = '" + chore.choreID.getValue() + "'");
+
+                    for (Resource resource : temp) {
+                        database.executeUpdate("DELETE FROM Usage WHERE resourceName = '" + resource.resourceName.getValue() + "'");
+                    }
 
                     tfChoreID.setText("");
                     taDescription.setText("");
@@ -105,6 +130,53 @@ public class ManageChoreController extends Controller {
         });
     }
 
+    private void setupSelectedResources(Chore chore) {
+        selectedResources = FXCollections.observableArrayList();
+        ResultSet rs = database.executeQuery("SELECT * FROM Resource INNER JOIN Usage ON Resource.resourceName = Usage.resourceName WHERE housemateID = " + loggedInUser.housemateID.getValue() + " AND choreID = " + chore.choreID.getValue());
+        try {
+            while (rs.next()) {
+                Resource resource = new Resource(rs.getString("resourceName"), Integer.parseInt(rs.getString("isFinished")),
+                        rs.getString("housemateID"));
+                selectedResources.add(resource);
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void setSelectedResources(Chore c, String n) {
+        setupSelectedResources(new Chore(c.choreID.getValue(), "", 0, "", ""));
+        ListView<Resource> lvResources = (ListView<Resource>) mcStage.getScene().lookup("#" + n + "resources");
+
+        lvResources.getSelectionModel().clearSelection();
+
+        for (Resource oldSelectedResource: selectedResources) {
+            for (int i = 0; i < lvResources.getItems().size(); i++) {
+                Resource newSelectedResource = lvResources.getItems().get(i);
+                if (newSelectedResource.resourceName.getValue().equals(oldSelectedResource.resourceName.getValue())) {
+                    lvResources.getSelectionModel().select(i);
+                }
+            }
+        }
+    }
+
+    private boolean sameResources(String n) {
+        ListView<Resource> lvResources = (ListView<Resource>) mcStage.getScene().lookup("#"+ n + "resources");
+        int sameCount = 0;
+        if (lvResources.getSelectionModel().getSelectedItems().size() != selectedResources.size())
+            return false;
+        else {
+            for (Resource oldSelectedResource: selectedResources) {
+                for (Resource newSelectedResource: lvResources.getSelectionModel().getSelectedItems()) {
+                    if (oldSelectedResource.resourceName.getValue().equals(newSelectedResource.resourceName.getValue()))
+                        sameCount++;
+                }
+            }
+            return sameCount == selectedResources.size();
+        }
+    }
+
     private void editChore(Stage mcStage) {
         TableView<Chore> tvChores = (TableView<Chore>) mcStage.getScene().lookup("#"+ EDIT + "table");
         TextField tfChoreID = (TextField) mcStage.getScene().lookup("#"+ EDIT + "choreid");
@@ -112,6 +184,7 @@ public class ManageChoreController extends Controller {
         TextArea taDescription = (TextArea) mcStage.getScene().lookup("#"+ EDIT + "description");
         CheckBox cbCompleted = (CheckBox) mcStage.getScene().lookup("#"+ EDIT + "completed");
         DatePicker dpDateCompleted = (DatePicker) mcStage.getScene().lookup("#"+ EDIT + "datecompleted");
+        ListView<Resource> lvResources = (ListView<Resource>) mcStage.getScene().lookup("#"+ EDIT + "resources");
 
         dpDateCompleted.disableProperty().bind(cbCompleted.selectedProperty().not());
 
@@ -122,7 +195,8 @@ public class ManageChoreController extends Controller {
 
         tvChores.getSelectionModel().selectedItemProperty().addListener((observableValue, housemate, t1) -> {
             Chore temp = observableValue.getValue();
-            if(temp != null) {
+            if (temp != null) {
+                setSelectedResources(temp, EDIT);
                 cbCompleted.setSelected(temp.isCompleted.getValue() != 0);
                 tfChoreID.setText(temp.choreID.getValue());
                 tfAreaName.setText(temp.areaName.getValue());
@@ -130,7 +204,7 @@ public class ManageChoreController extends Controller {
                 dateCompleted.set(null);
                 if (temp.dateCompleted.getValue() != null) {
                     DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-                    LocalDate localDate = LocalDate.parse(temp.dateCompleted.getValue().replace("\'",""), dateTimeFormatter);
+                    LocalDate localDate = LocalDate.parse(temp.dateCompleted.getValue().replace("\'", ""), dateTimeFormatter);
                     dateCompleted.set(localDate);
                     dpDateCompleted.setValue(localDate);
                 }
@@ -142,11 +216,12 @@ public class ManageChoreController extends Controller {
                 tfAreaName.setDisable(false);
                 taDescription.setDisable(false);
                 cbCompleted.setDisable(false);
-            }
-            else {
+                lvResources.setDisable(false);
+            } else {
                 tfAreaName.setDisable(true);
                 taDescription.setDisable(true);
                 cbCompleted.setDisable(true);
+                lvResources.setDisable(true);
             }
         });
 
@@ -157,7 +232,29 @@ public class ManageChoreController extends Controller {
             boolean comp = false;
             boolean sameAreaName = false;
             boolean sameDescription = false;
+            boolean sameResources = false;
             boolean empty = false;
+
+            if(lvResources.getSelectionModel().getSelectedIndex() == -1) {
+                Tooltip tooltip = new Tooltip("Resources not selected.");
+                tooltip.setShowDelay(Duration.ONE);
+                lvResources.setStyle("-fx-border-color: red");
+                empty = true;
+            }
+            else {
+                if (sameResources(EDIT)) {
+                    Tooltip tooltip = new Tooltip("Resources not changed.");
+                    tooltip.setShowDelay(Duration.ONE);
+                    lvResources.setTooltip(tooltip);
+                    lvResources.setStyle("-fx-border-color: orange");
+                    sameResources = true;
+                }
+                else {
+                    lvResources.setTooltip(null);
+                    lvResources.setStyle("-fx-border-color: green");
+                }
+            }
+
             if(tfAreaName.getText().isEmpty()) {
                 Tooltip tooltip = new Tooltip("Area name not entered.");
                 tooltip.setShowDelay(Duration.ONE);
@@ -222,7 +319,7 @@ public class ManageChoreController extends Controller {
                 return true;
             else if (empty)
                 return true;
-            else if (sameAreaName && sameDescription)
+            else if (sameAreaName && sameDescription && sameResources)
                 return true;
             else {
                 tfAreaName.setTooltip(null);
@@ -231,37 +328,75 @@ public class ManageChoreController extends Controller {
                 taDescription.setTooltip(null);
                 taDescription.setStyle("-fx-border-color: green");
 
+                lvResources.setTooltip(null);
+                lvResources.setStyle("-fx-background-color: green");
+
                 return false;
             }
 
-        }, tfAreaName.textProperty(), taDescription.textProperty(), cbCompleted.selectedProperty(), dpDateCompleted.valueProperty()));
+        }, tfAreaName.textProperty(), taDescription.textProperty(), cbCompleted.selectedProperty(), dpDateCompleted.valueProperty()
+        , lvResources.getSelectionModel().selectedItemProperty()));
 
         btnEdit.setOnAction(event -> {
-            Chore chore = new Chore();
-            chore.choreID.setValue(tfChoreID.getText());
-            chore.description.setValue(taDescription.getText());
-            if(cbCompleted.isSelected())
-                chore.isCompleted.setValue(1);
-            else
-                chore.isCompleted.setValue(0);
-            if (dpDateCompleted.getValue() != null && !dpDateCompleted.isDisabled())
-                chore.dateCompleted.setValue( "'" + dpDateCompleted.getValue().toString() + "'");
-            chore.areaName.setValue(tfAreaName.getText());
+                Chore chore = new Chore();
+                chore.choreID.setValue(tfChoreID.getText());
+                chore.description.setValue(taDescription.getText());
+                if (cbCompleted.isSelected())
+                    chore.isCompleted.setValue(1);
+                else
+                    chore.isCompleted.setValue(0);
+                if (dpDateCompleted.getValue() != null && !dpDateCompleted.isDisabled())
+                    chore.dateCompleted.setValue("'" + dpDateCompleted.getValue().toString() + "'");
+                chore.areaName.setValue(tfAreaName.getText());
 
-            try {
-                int index = getChoreIndex(chore.choreID.getValue());
-                if (index != -1) {
-                    database.executeUpdate("UPDATE Chore SET description = '" + chore.description.getValue() + "', isCompleted = '" + chore.isCompleted.getValue().toString() + "', dateCompleted = " + chore.dateCompleted.getValue() + ", areaName = '" + chore.areaName.getValue() + "' WHERE choreID = '" + chore.choreID.getValue() + "'");
-                    chores.set(index, chore);
-                    tvChores.getSelectionModel().select(chore);
-                    tfAreaName.setText(chore.areaName.getValue());
+            ArrayList<Resource> temp = new ArrayList<>();
+            for (int i = 0; i < lvResources.getSelectionModel().getSelectedItems().size();i++) {
+                Resource curResource = lvResources.getSelectionModel().getSelectedItems().get(i);
+                Resource resource = new Resource(curResource.resourceName.getValue(), curResource.isFinished.getValue(),
+                        curResource.housemateID.getValue());
+                temp.add(resource);
+            }
+
+                try {
+                    int index = getChoreIndex(chore.choreID.getValue());
+                    if (index != -1) {
+                        database.executeUpdate("UPDATE Chore SET description = '" + chore.description.getValue() + "', isCompleted = '" + chore.isCompleted.getValue().toString() + "', dateCompleted = " + chore.dateCompleted.getValue() + ", areaName = '" + chore.areaName.getValue() + "' WHERE choreID = '" + chore.choreID.getValue() + "'");
+                        chores.set(index, chore);
+                        tvChores.getSelectionModel().select(chore);
+                        tfAreaName.setText(chore.areaName.getValue());
+                    }
+                    if (index != -1) {
+                        for (Resource resource : lvResources.getItems()) {
+                            database.executeUpdate("DELETE FROM Usage WHERE resourceName = '" + resource.resourceName.getValue() + "' AND choreID = " + chore.choreID.getValue());
+                        }
+
+                        for (Resource resource : temp) {
+                            database.executeInsert("INSERT INTO Usage(choreID, resourceName)" +
+                                    "VALUES(" + chore.choreID.getValue() + ", '" + resource.resourceName.getValue() + "')");
+                        }
+                        setupResources();
+                        setSelectedResources(chore, EDIT);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-            }
-            catch (Exception e) {
-                e.printStackTrace();
-            }
         });
     }
+
+    private void setupResources() {
+        ResultSet rs = database.executeQuery("SELECT * FROM Resource WHERE housemateID = " + loggedInUser.housemateID.getValue());
+        try {
+            while (rs.next()) {
+                Resource resource = new Resource(rs.getString("resourceName"), Integer.parseInt(rs.getString("isFinished")),
+                        rs.getString("housemateID"));
+                resources.add(resource);
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
     public void addChore(Stage mcStage) {
         TableView<Chore> tvChores = (TableView<Chore>) mcStage.getScene().lookup("#"+ ADD + "table");
@@ -270,6 +405,7 @@ public class ManageChoreController extends Controller {
         TextArea taDescription = (TextArea) mcStage.getScene().lookup("#"+ ADD + "description");
         CheckBox cbCompleted = (CheckBox) mcStage.getScene().lookup("#"+ ADD + "completed");
         DatePicker dpDateCompleted = (DatePicker) mcStage.getScene().lookup("#"+ ADD + "datecompleted");
+        ListView<Resource> lvResources = (ListView<Resource>) mcStage.getScene().lookup("#"+ ADD + "resources");
 
         Button btnAdd = (Button) mcStage.getScene().lookup("#"+ ADD + "add");
         Button btnClear = (Button) mcStage.getScene().lookup("#"+ ADD + "clear");
@@ -283,6 +419,19 @@ public class ManageChoreController extends Controller {
 
         btnAdd.disableProperty().bind(Bindings.createBooleanBinding(() -> {
             boolean empty = false;
+
+            if(lvResources.getSelectionModel().getSelectedIndex() == -1) {
+                Tooltip tooltip = new Tooltip("Resources not selected.");
+                tooltip.setShowDelay(Duration.ONE);
+                lvResources.setTooltip(tooltip);
+                lvResources.setStyle("-fx-border-color: red");
+                empty = true;
+            }
+            else {
+                lvResources.setTooltip(null);
+                lvResources.setStyle("-fx-border-color: green");
+            }
+
             if(tfAreaName.getText().isEmpty()) {
                 Tooltip tooltip = new Tooltip("Area name not entered.");
                 tooltip.setShowDelay(Duration.ONE);
@@ -308,39 +457,49 @@ public class ManageChoreController extends Controller {
             }
 
             return empty;
-        }, tfAreaName.textProperty(), taDescription.textProperty()));
+        }, tfAreaName.textProperty(), taDescription.textProperty(), lvResources.getSelectionModel().selectedItemProperty()));
+
+
 
         btnAdd.setOnAction(event -> {
-            Chore chore = new Chore();
-            chore.choreID.setValue(tfChoreID.getText());
-            chore.description.setValue(taDescription.getText());
-            if(cbCompleted.isSelected())
-                chore.isCompleted.setValue(1);
-            else
-                chore.isCompleted.setValue(0);
-            chore.areaName.setValue(tfAreaName.getText());
+                Chore chore = new Chore();
+                chore.choreID.setValue(tfChoreID.getText());
+                chore.description.setValue(taDescription.getText());
+                if (cbCompleted.isSelected())
+                    chore.isCompleted.setValue(1);
+                else
+                    chore.isCompleted.setValue(0);
+                chore.areaName.setValue(tfAreaName.getText());
 
-            try {
-                int id;
-                if (loggedInUser.isLeader.getValue() == 1 && !cbSelfAssign.isSelected())
-                    id = database.executeInsert("INSERT INTO Chore(description, areaName) VALUES('" + chore.description.getValue() + "', '" + chore.areaName.getValue() + "')");
-                else {
-                    id = database.executeInsert("INSERT INTO Chore(description, areaName) VALUES('" + chore.description.getValue() + "', '" + chore.areaName.getValue() + "')");
-                    database.executeInsert("INSERT INTO Swap(housemateID, choreID) VALUES(" + loggedInUser.housemateID.getValue() + "," + id + ")");
+                try {
+                    int id;
+                    if (loggedInUser.isLeader.getValue() == 1 && !cbSelfAssign.isSelected())
+                        id = database.executeInsert("INSERT INTO Chore(description, areaName) VALUES('" + chore.description.getValue() + "', '" + chore.areaName.getValue() + "')");
+                    else {
+                        id = database.executeInsert("INSERT INTO Chore(description, areaName) VALUES('" + chore.description.getValue() + "', '" + chore.areaName.getValue() + "')");
+                        database.executeInsert("INSERT INTO Swap(housemateID, choreID) VALUES(" + loggedInUser.housemateID.getValue() + "," + id + ")");
+                    }
+
+                    if (id != -1) {
+                        ObservableList<Resource> selectedItems = lvResources.getSelectionModel().getSelectedItems();
+                        for (Resource resource : selectedItems) {
+                            database.executeInsert("INSERT INTO Usage(choreID, resourceName)" +
+                                    "VALUES(" + id + ", '" + resource.resourceName.getValue() + "')");
+                        }
+                    }
+
+                    if (id != -1)
+                        chore.choreID.setValue(id + "");
+                    tfChoreID.setText("");
+                    taDescription.setText("");
+                    cbCompleted.setSelected(false);
+                    dpDateCompleted.setValue(null);
+                    tfAreaName.setText("");
+                    chores.add(chore);
+                    tvChores.getSelectionModel().clearSelection();
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-                if (id != -1)
-                    chore.choreID.setValue(id + "");
-                tfChoreID.setText("");
-                taDescription.setText("");
-                cbCompleted.setSelected(false);
-                dpDateCompleted.setValue(null);
-                tfAreaName.setText("");
-                chores.add(chore);
-                tvChores.getSelectionModel().clearSelection();
-            }
-            catch (Exception e) {
-                e.printStackTrace();
-            }
         });
     }
 
@@ -351,6 +510,18 @@ public class ManageChoreController extends Controller {
         TextArea taDescription = (TextArea) mcStage.getScene().lookup("#"+ n + "description");
         CheckBox cbCompleted = (CheckBox) mcStage.getScene().lookup("#"+ n + "completed");
         DatePicker dpDateCompleted = (DatePicker) mcStage.getScene().lookup("#"+ n + "datecompleted");
+        ListView<Resource> lvResources = (ListView<Resource>) mcStage.getScene().lookup("#"+ n + "resources");
+        lvResources.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+
+        Callback<Resource, Observable[]> extractor = resource -> new Observable[] {resource.resourceNameProperty(),
+                resource.isFinishedProperty(), resource.housemateIDProperty()};
+
+        resources = FXCollections.observableArrayList(extractor);
+        setupResources();
+
+        lvResources.setItems(resources);
+
+        lvResources.getSelectionModel().selectFirst();
 
         TableColumn tcChoreID = new TableColumn("Chore ID");
         tcChoreID.setCellValueFactory(new PropertyValueFactory<>("choreID"));
@@ -432,26 +603,23 @@ public class ManageChoreController extends Controller {
     private void setupDashboardLinks(Scene dashboardScene, Stage mcStage) {
         Hyperlink hpManageChore = (Hyperlink) dashboardScene.lookup("#mc_dashboard");
         if (loggedInUser != null) {
-            if (loggedInUser.isLeader.getValue() == 0)
-                hpManageChore.setDisable(true);
-            else {
-                hpManageChore.setOnAction(event -> {
-                    if (!linked) {
-                        setupChores();
-                        // Add
-                        linkToScene(mcStage, ADD);
-                        addChore(mcStage);
-                        // Edit
-                        linkToScene(mcStage, EDIT);
-                        editChore(mcStage);
-                        // Remove
-                        linkToScene(mcStage, REMOVE);
-                        removeChore(mcStage);
-                        linked = true;
-                    }
-                    mcStage.showAndWait();
-                });
-            }
+            hpManageChore.setOnAction(event -> {
+                setupResources();
+                if (!linked) {
+                    setupChores();
+                    // Add
+                    linkToScene(mcStage, ADD);
+                    addChore(mcStage);
+                    // Edit
+                    linkToScene(mcStage, EDIT);
+                    editChore(mcStage);
+                    // Remove
+                    linkToScene(mcStage, REMOVE);
+                    removeChore(mcStage);
+                    linked = true;
+                }
+                mcStage.showAndWait();
+            });
         }
         else
             hpManageChore.setDisable(true);

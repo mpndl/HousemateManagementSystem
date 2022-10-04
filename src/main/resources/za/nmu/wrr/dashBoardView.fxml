@@ -20,7 +20,7 @@
             <Hyperlink text="Swap Chores"/>
             <Hyperlink text="View Housemates" fx:id="vh_dashboard"/>
             <Hyperlink text="View Chores"/>
-            <Hyperlink text="View Resources"/>
+            <Hyperlink text="View Resources" fx:id="vr_dashboard"/>
         </VBox>
     </left>
 

@@ -1,26 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
 <?import javafx.geometry.Insets?>
 <AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
-            fx:controller="za.nmu.wrr.ViewHousematesController"
+            fx:controller="za.nmu.wrr.ViewResourcesController"
             prefHeight="400.0" prefWidth="600.0">
     <BorderPane>
         <padding >
             <Insets left="10" right="10" top="10" bottom="10"/>
         </padding>
         <top>
-            <Label fx:id="lbl_housemates" text="View Housemates" style="-fx-font-weight: bold"/>
+            <Label fx:id="lbl_resources" text="View Resources" style="-fx-font-weight: bold"/>
         </top>
         <right>
             <VBox>
-                <TableView fx:id="view_vh_table"/>
+                <TableView fx:id="view_vr_table"/>
                 <HBox>
-                    <Button fx:id="view_vh_view_resources" disable="true" text="View Resources"/>
-                    <Button fx:id="view_vh_view_chores" disable="true" text="View Chores"/>
-                    <Button fx:id="view_vh_cancel" text="Cancel"/>
+                    <Button fx:id="view_vr_view_housemates" disable="true" text="View Housemates"/>
+                    <Button fx:id="view_vr_view_chores" text="View Chores"/>
+                    <Button fx:id="view_vr_cancel" text="Cancel"/>
                 </HBox>
             </VBox>
         </right>

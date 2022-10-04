@@ -53,6 +53,10 @@ public class Main extends Application {
         Stage vhStage2 = createViewHousematesView(dashboardStage);
         new ViewHousematesController(dashboardScene, vhStage2);
 
+        // View Resources View/Controller
+        Stage vrStage = createViewResourcesView(dashboardStage);
+        new ViewResourcesController(dashboardScene, vrStage);
+
         dashboardStage.setScene(dashboardScene);
         dashboardStage.setTitle("Dashboard");
         dashboardStage.setWidth(600);
@@ -111,6 +115,25 @@ public class Main extends Application {
 
         stage.setScene(scene);
         stage.setTitle("View Housemates");
+
+        stage.setResizable(false);
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.initStyle(StageStyle.UTILITY);
+        stage.initOwner(owner);
+
+        return stage;
+    }
+
+    public Stage createViewResourcesView(Stage owner) throws IOException {
+        Stage stage = new Stage();
+
+        FXMLLoader mhLoader = new FXMLLoader();
+        mhLoader.setLocation(getClass().getResource("viewResourcesView.fxml"));
+
+        Scene scene = new Scene(mhLoader.load());
+
+        stage.setScene(scene);
+        stage.setTitle("View Resources");
 
         stage.setResizable(false);
         stage.initModality(Modality.APPLICATION_MODAL);

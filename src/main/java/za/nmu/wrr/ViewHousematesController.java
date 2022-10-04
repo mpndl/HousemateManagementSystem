@@ -16,8 +16,10 @@ import java.sql.ResultSet;
 
 public class ViewHousematesController extends Controller {
     private ObservableList<Housemate> housemates = FXCollections.observableArrayList();
+    private ObservableList<Resource> resources = FXCollections.observableArrayList();
     private ObservableList<Chore> chores = FXCollections.observableArrayList();
     private final String VIEW = "view_vh_";
+    private final String RVIEW = "view_vr_";
     private Scene dashboardScene;
     private Stage vhStage;
     private boolean linked = false;
@@ -97,8 +99,10 @@ public class ViewHousematesController extends Controller {
 
         tvHousemates.setItems(housemates);
 
+        Button btnViewResources = (Button) vhStage.getScene().lookup("#"+ VIEW + "view_resources");
         Button btnViewChores = (Button) vhStage.getScene().lookup("#" + VIEW + "view_chores");
         btnViewChores.disableProperty().bind(Bindings.createBooleanBinding(() -> tvHousemates.getSelectionModel().getSelectedItem() == null, tvHousemates.getSelectionModel().selectedItemProperty()));
+        btnViewResources.disableProperty().bind(Bindings.createBooleanBinding(() -> tvHousemates.getSelectionModel().getSelectedItem() == null, tvHousemates.getSelectionModel().selectedItemProperty()));
 
 
         Button btnCancel = (Button) vhStage.getScene().lookup("#"+VIEW+"cancel");
@@ -106,7 +110,16 @@ public class ViewHousematesController extends Controller {
             vhStage.close();
         });
 
-        Button btnViewResources = (Button) vhStage.getScene().lookup("#"+ VIEW + "view_resources");
+        btnViewResources.setOnAction(actionEvent -> {
+            try {
+                Stage stage = createViewHousemateResources(vhStage, tvHousemates.getSelectionModel().getSelectedItem());
+                setupResources(tvHousemates.getSelectionModel().getSelectedItem());
+                linkToHousemateResourceScene(stage);
+                stage.showAndWait();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
 
         btnViewChores.setOnAction(actionEvent -> {
             try {
@@ -152,6 +165,37 @@ public class ViewHousematesController extends Controller {
         });
     }
 
+    private void linkToHousemateResourceScene(Stage vrStage) {
+        TableView<Resource> tvResources = (TableView<Resource>) vrStage.getScene().lookup("#"+RVIEW+"table");
+
+        TableColumn tcResourceName = new TableColumn("Resource Name");
+        tcResourceName.setCellValueFactory(new PropertyValueFactory("resourceName"));
+        tcResourceName.setPrefWidth(100);
+
+        TableColumn tcIsFinished = new TableColumn("Is Finished");
+        tcIsFinished.setCellValueFactory(new PropertyValueFactory("isFinished"));
+        tcIsFinished.setPrefWidth(100);
+
+        TableColumn tcHousemateID = new TableColumn("Housemate ID");
+        tcHousemateID.setCellValueFactory(new PropertyValueFactory("housemateID"));
+        tcHousemateID.setPrefWidth(100);
+
+        tvResources.getColumns().addAll(tcResourceName, tcIsFinished, tcHousemateID);
+
+        tvResources.setItems(resources);
+
+        Button btnViewChores = (Button) vrStage.getScene().lookup("#" +RVIEW + "view_chores");
+        Button btnViewHousemates = (Button) vrStage.getScene().lookup("#"+ RVIEW + "view_housemates");
+        btnViewChores.disableProperty().bind(Bindings.createBooleanBinding(() -> tvResources.getSelectionModel().getSelectedItem() == null, tvResources.getSelectionModel().selectedItemProperty()));
+        btnViewHousemates.disableProperty().bind(Bindings.createBooleanBinding(() -> tvResources.getSelectionModel().getSelectedItem() == null, tvResources.getSelectionModel().selectedItemProperty()));
+
+
+        Button btnCancel = (Button) vrStage.getScene().lookup("#"+RVIEW+"cancel");
+        btnCancel.setOnAction(event -> {
+            vrStage.close();
+        });
+    }
+
     private void setupChores(Housemate housemate) {
         ResultSet rs;
         chores = FXCollections.observableArrayList();
@@ -174,6 +218,21 @@ public class ViewHousematesController extends Controller {
         }
     }
 
+    private void setupResources(Housemate housemate) {
+        resources = FXCollections.observableArrayList();
+        ResultSet rs = database.executeQuery("SELECT * FROM Resource WHERE housemateID = " + housemate.housemateID.getValue());
+        try {
+            while (rs.next()) {
+                Resource resource = new Resource(rs.getString("resourceName"), Integer.parseInt(rs.getString("isFinished")),
+                        rs.getString("housemateID"));
+                resources.add(resource);
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     private Stage createViewHousemateChore(Stage owner, Housemate selectedItem) throws IOException {
         Stage stage = new Stage();
 
@@ -184,6 +243,27 @@ public class ViewHousematesController extends Controller {
 
         Label lblHousemate = (Label) scene.lookup("#label_housemate");
         lblHousemate.setText("View chores for " + selectedItem.firstName.getValue() + " " + selectedItem.lastName.getValue());
+
+        stage.setScene(scene);
+        stage.setTitle("View chores for " + selectedItem.firstName.getValue() + " " + selectedItem.lastName.getValue());
+        stage.setResizable(false);
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.initStyle(StageStyle.UTILITY);
+        stage.initOwner(owner);
+
+        return stage;
+    }
+
+    private Stage createViewHousemateResources(Stage owner, Housemate selectedItem) throws IOException {
+        Stage stage = new Stage();
+
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource("viewResourcesView.fxml"));
+
+        Scene scene = new Scene(loader.load());
+
+        Label lblHousemate = (Label) scene.lookup("#lbl_resources");
+        lblHousemate.setText("View resources for " + selectedItem.firstName.getValue() + " " + selectedItem.lastName.getValue());
 
         stage.setScene(scene);
         stage.setTitle("View chores for " + selectedItem.firstName.getValue() + " " + selectedItem.lastName.getValue());

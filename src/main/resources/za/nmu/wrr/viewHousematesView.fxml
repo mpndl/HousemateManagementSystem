@@ -12,7 +12,7 @@
             <Insets left="10" right="10" top="10" bottom="10"/>
         </padding>
         <top>
-            <Label text="View Housemates" style="-fx-font-weight: bold"/>
+            <Label fx:id="lbl_housemates" text="View Housemates" style="-fx-font-weight: bold"/>
         </top>
         <right>
             <VBox>

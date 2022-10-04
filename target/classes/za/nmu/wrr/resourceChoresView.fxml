@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.geometry.Insets?>
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="za.nmu.wrr.ViewResourcesController">
+    <padding >
+        <Insets left="10" right="10" top="10" bottom="10"/>
+    </padding>
+    <top>
+        <Label fx:id="label_chores" text="View Resource Chores" style="-fx-font-weight: bold"/>
+    </top>
+    <center>
+        <TableView fx:id="view_vr_table"/>
+    </center>
+    <bottom>
+        <Button fx:id="view_vr_cancel" text="Cancel"/>
+    </bottom>
+</BorderPane>
