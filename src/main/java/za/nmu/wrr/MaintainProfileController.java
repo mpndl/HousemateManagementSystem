@@ -50,42 +50,43 @@ public class MaintainProfileController extends Controller {
 
         Button btnDelete = (Button) mpStage.getScene().lookup("#"+ DELETE + "delete");
         btnDelete.setOnAction(event -> {
-            Housemate housemate = new Housemate();
-            housemate.housemateID.setValue(tfHousemateID.getText());
-            housemate.firstName.setValue(tfFirstname.getText());
-            housemate.username.setValue(tfUsername.getText());
-            housemate.lastName.setValue(tfLastname.getText());
-            housemate.phoneNumber.setValue(tfPhoneNumber.getText());
-            housemate.password.setValue(tfPassword.getText());
-            housemate.isLeader.set(0);
+            if (loggedInUser.isLeader.getValue() == 0) {
+                Housemate housemate = new Housemate();
+                housemate.housemateID.setValue(tfHousemateID.getText());
+                housemate.firstName.setValue(tfFirstname.getText());
+                housemate.username.setValue(tfUsername.getText());
+                housemate.lastName.setValue(tfLastname.getText());
+                housemate.phoneNumber.setValue(tfPhoneNumber.getText());
+                housemate.password.setValue(tfPassword.getText());
+                housemate.isLeader.set(0);
 
-            int index = getHousemateIndex(housemate.housemateID.getValue());
-            if(index != -1) {
-                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-                alert.setTitle("Confirm Delete Profile");
-                alert.setHeaderText("Are you sure you want to delete your profile?");
+                int index = getHousemateIndex(housemate.housemateID.getValue());
+                if (index != -1) {
+                    Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                    alert.setTitle("Confirm Delete Profile");
+                    alert.setHeaderText("Are you sure you want to delete your profile?");
 
-                ButtonType btDelete = new ButtonType("Delete");
-                ButtonType btCancel = new ButtonType("Cancel");
+                    ButtonType btDelete = new ButtonType("Delete");
+                    ButtonType btCancel = new ButtonType("Cancel");
 
-                alert.getButtonTypes().setAll(btDelete, btCancel);
-                Optional<ButtonType> result = alert.showAndWait();
+                    alert.getButtonTypes().setAll(btDelete, btCancel);
+                    Optional<ButtonType> result = alert.showAndWait();
 
-                if(result.get() == btDelete) {
+                    if (result.get() == btDelete) {
 
-                    housemates.remove(index);
+                        housemates.remove(index);
 
-                    database.executeUpdate("DELETE FROM Housemate WHERE housemateID = '" + loggedInUser.housemateID.getValue() + "'");
+                        database.executeUpdate("DELETE FROM Housemate WHERE housemateID = '" + loggedInUser.housemateID.getValue() + "'");
 
-                    tfHousemateID.setText("");
-                    tfUsername.setText("");
-                    tfFirstname.setText("");
-                    tfLastname.setText("");
-                    tfPhoneNumber.setText("");
-                    tfPassword.setText("");
+                        tfHousemateID.setText("");
+                        tfUsername.setText("");
+                        tfFirstname.setText("");
+                        tfLastname.setText("");
+                        tfPhoneNumber.setText("");
+                        tfPassword.setText("");
+                    } else
+                        alert.close();
                 }
-                else
-                    alert.close();
             }
         });
     }
