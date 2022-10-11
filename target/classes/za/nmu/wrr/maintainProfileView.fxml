@@ -95,7 +95,7 @@
             <bottom>
                 <VBox>
                     <HBox>
-                        <Button fx:id="delete_mp_delete" text="Remove"/>
+                        <Button style="-fx-border-color: red; -fx-border-width: 3" fx:id="delete_mp_delete" text="Remove"/>
                         <Button fx:id="delete_mp_cancel" text="Cancel"/>
                         <Button fx:id="delete_mp_clear" disable="true" text="Clear"/>
                     </HBox>

@@ -22,7 +22,7 @@
                 <Label BorderPane.alignment="CENTER" text="Housemates" style="-fx-font-weight: bold"/>
             </top>
             <right>
-                <TableView fx:id="housemates_ac_table" prefHeight="50"/>
+                <TableView fx:id="housemates_ac_table" prefWidth="500" prefHeight="50"/>
             </right>
             <left>
                 <GridPane hgap="5" vgap="5">
@@ -56,11 +56,14 @@
     </center>
     <bottom>
         <BorderPane>
+            <padding>
+                <Insets top="20" bottom="20"/>
+            </padding>
             <top>
                 <Label BorderPane.alignment="CENTER" text="Chores" style="-fx-font-weight: bold"/>
             </top>
             <right>
-                <TableView fx:id="chores_ac_table" prefHeight="50"/>
+                <TableView fx:id="chores_ac_table" prefWidth="500" prefHeight="50"/>
             </right>
             <left>
                 <GridPane hgap="5" vgap="5">
@@ -72,13 +75,13 @@
                     <TextField fx:id="ac_choreid" disable="true" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
 
                     <Label text="Resources:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
-                    <ComboBox fx:id="ac_resources" disable="true" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+                    <ListView fx:id="ac_resources" maxWidth="500" maxHeight="50" disable="true" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
 
                     <Label text="Area Name:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
                     <TextField fx:id="ac_areaname" disable="true" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
 
                     <Label text="Description:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
-                    <TextArea fx:id="ac_description" disable="true" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+                    <TextArea fx:id="ac_description" prefHeight="100" disable="true" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
 
                     <Label text="Completed:" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
                     <CheckBox fx:id="ac_completed" disable="true" GridPane.rowIndex="4" GridPane.columnIndex="1"/>

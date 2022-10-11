@@ -1,0 +1,1 @@
+"%JAVA_HOME%"\bin\java.exe -cp WRR.jar za.nmu.wrr.Launcher -jar WRR.jar

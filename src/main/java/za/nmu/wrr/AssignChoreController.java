@@ -224,7 +224,7 @@ public class AssignChoreController extends Controller {
         CheckBox cbCompleted = (CheckBox) acStage.getScene().lookup("#"+ ASSIGN + "completed");
         DatePicker dpDateCompleted = (DatePicker) acStage.getScene().lookup("#"+ ASSIGN + "datecompleted");
 
-        TableColumn tcChoreID = new TableColumn("ChoreID ID");
+        TableColumn tcChoreID = new TableColumn("Chore ID");
         tcChoreID.setCellValueFactory(new PropertyValueFactory<>("choreID"));
         tcChoreID.setPrefWidth(100);
 
@@ -245,7 +245,6 @@ public class AssignChoreController extends Controller {
         tcDateCompleted.setPrefWidth(100);
 
         tvChores.getColumns().addAll(tcChoreID, tcAreaName, tcDescription, tcCompleted, tcDateCompleted);
-        System.out.println(chores.size());
 
         tvChores.setItems(chores);
 

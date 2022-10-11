@@ -2,7 +2,6 @@ package za.nmu.wrr;
 
 import javafx.beans.Observable;
 import javafx.beans.binding.Bindings;
-import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
@@ -13,20 +12,18 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.Duration;
-import org.controlsfx.control.CheckComboBox;
 
 import java.sql.ResultSet;
 import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class ManageChoreController extends Controller {
-    private ObservableList<Chore> chores = FXCollections.observableArrayList();
+    private final ObservableList<Chore> chores = FXCollections.observableArrayList();
     ObservableList<Resource> resources = FXCollections.observableArrayList();
     ObservableList<Resource> selectedResources = FXCollections.observableArrayList();
     private final String ADD = "add_mc_";
@@ -36,7 +33,6 @@ public class ManageChoreController extends Controller {
     private Stage mcStage;
     private boolean linked = false;
 
-    private BooleanProperty isSelectedProperty = new SimpleBooleanProperty();
     public ManageChoreController(){}
     public ManageChoreController(Scene dashboardScene,Stage mcStage) {
         this.dashboardScene = dashboardScene;
@@ -58,7 +54,12 @@ public class ManageChoreController extends Controller {
         tvChores.getSelectionModel().selectedItemProperty().addListener((observableValue, housemate, t1) -> {
             Chore temp = observableValue.getValue();
             if (temp != null) {
-                setupResources(temp, REMOVE);
+                if (loggedInUser.isLeader.getValue() == 1)
+                    setupResources(temp, REMOVE);
+                else setupResources(null, REMOVE);
+                if (resources.size() > 0)
+                    selectResources(temp, REMOVE);
+                else selectedResources.clear();
                 btnRemove.setDisable(false);
                 cbCompleted.setSelected(temp.isCompleted.getValue() != 0);
                 tfChoreID.setText(temp.choreID.getValue());
@@ -129,19 +130,21 @@ public class ManageChoreController extends Controller {
         });
     }
 
-    private void setupSelectedResources(Chore chore) {
-        selectedResources = FXCollections.observableArrayList();
+    private void setupResources(Chore chore, String n) {
+        resources.clear();
+        ListView<Resource> lvResources = (ListView<Resource>) mcStage.getScene().lookup("#"+ n + "resources");
+        lvResources.setItems(resources);
         ResultSet rs;
-        if (loggedInUser.isLeader.getValue() == 0)
-            rs = database.executeQuery("SELECT * FROM Resource INNER JOIN Usage ON Resource.resourceName = Usage.resourceName WHERE housemateID = " + loggedInUser.housemateID.getValue() + " AND choreID = " + chore.choreID.getValue());
+        if ( chore == null)
+            rs = database.executeQuery("SELECT * FROM Resource WHERE housemateID = " + loggedInUser.housemateID.getValue());
         else
-            rs = database.executeQuery("SELECT * FROM Chore INNER JOIN Usage ON " +
-                "Chore.choreID = Usage.choreID INNER JOIN Resource ON Resource.resourceName = Usage.resourceName WHERE Chore.choreID = " + chore.choreID.getValue());
+            rs = database.executeQuery("SELECT * FROM Chore INNER JOIN Swap ON Chore.choreID = Swap.choreID INNER JOIN Resource ON" +
+                    " Swap.housemateID = Resource.housemateID WHERE Chore.choreID = " + chore.choreID.getValue());
         try {
             while (rs.next()) {
                 Resource resource = new Resource(rs.getString("resourceName"), Integer.parseInt(rs.getString("isFinished")),
                         rs.getString("housemateID"));
-                selectedResources.add(resource);
+                resources.add(resource);
             }
         }
         catch (Exception e) {
@@ -149,7 +152,33 @@ public class ManageChoreController extends Controller {
         }
     }
 
-    private void setSelectedResources(Chore c, String n) {
+    private void setupSelectedResources(Chore chore) {
+        selectedResources.clear();
+        ResultSet rs;
+        if (loggedInUser.isLeader.getValue() == 0)
+            rs = database.executeQuery("SELECT * FROM Resource INNER JOIN Usage ON Resource.resourceName = Usage.resourceName " +
+                    "WHERE housemateID = " + loggedInUser.housemateID.getValue() + " AND choreID = " + chore.choreID.getValue());
+        else {
+            rs = database.executeQuery("SELECT * FROM Chore INNER JOIN Usage ON Chore.choreID = Usage.choreID INNER JOIN Resource" +
+                    " ON Resource.resourceName = Usage.resourceName AND Resource.housemateID = Usage.housemateID WHERE Chore.choreID = " + chore.choreID.getValue());
+        }
+            try {
+                while (rs.next()) {
+                    Resource resource = new Resource(rs.getString("resourceName"), Integer.parseInt(rs.getString("isFinished")),
+                            rs.getString("housemateID"));
+                    /*System.out.print(resource.resourceName.getValue());
+                    System.out.print(", " + resource.isFinished.get());
+                    System.out.print(", " + resource.housemateID.getValue());
+                    System.out.println();*/
+                    selectedResources.add(resource);
+                }
+                //System.out.println("++++++++++++++++++++++++++++++++++++++++++++==================");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+    }
+
+    private void selectResources(Chore c, String n) {
         setupSelectedResources(new Chore(c.choreID.getValue(), "", 0, "", ""));
         ListView<Resource> lvResources = (ListView<Resource>) mcStage.getScene().lookup("#" + n + "resources");
 
@@ -165,8 +194,8 @@ public class ManageChoreController extends Controller {
         }
     }
 
-    private boolean sameResources(String n) {
-        ListView<Resource> lvResources = (ListView<Resource>) mcStage.getScene().lookup("#"+ n + "resources");
+    private boolean sameResources() {
+        ListView<Resource> lvResources = (ListView<Resource>) mcStage.getScene().lookup("#"+ EDIT + "resources");
         int sameCount = 0;
         if (lvResources.getSelectionModel().getSelectedItems().size() != selectedResources.size())
             return false;
@@ -189,6 +218,10 @@ public class ManageChoreController extends Controller {
         CheckBox cbCompleted = (CheckBox) mcStage.getScene().lookup("#"+ EDIT + "completed");
         DatePicker dpDateCompleted = (DatePicker) mcStage.getScene().lookup("#"+ EDIT + "datecompleted");
         ListView<Resource> lvResources = (ListView<Resource>) mcStage.getScene().lookup("#"+ EDIT + "resources");
+        lvResources.getSelectionModel().selectedItemProperty().addListener((observableValue, resource, t1) -> {
+            Resource temp = observableValue.getValue();
+            if (temp == null) tvChores.getSelectionModel().select(tvChores.getSelectionModel().getSelectedItem());
+        });
 
         dpDateCompleted.disableProperty().bind(cbCompleted.selectedProperty().not());
 
@@ -203,7 +236,9 @@ public class ManageChoreController extends Controller {
                 if (loggedInUser.isLeader.getValue() == 1)
                     setupResources(temp, EDIT);
                 else setupResources(null, EDIT);
-                setSelectedResources(temp, EDIT);
+                if (resources.size() > 0)
+                    selectResources(temp, EDIT);
+                else selectedResources.clear();
                 cbCompleted.setSelected(temp.isCompleted.getValue() != 0);
                 tfChoreID.setText(temp.choreID.getValue());
                 tfAreaName.setText(temp.areaName.getValue());
@@ -242,14 +277,14 @@ public class ManageChoreController extends Controller {
             boolean sameResources = false;
             boolean empty = false;
 
-            if(lvResources.getSelectionModel().getSelectedIndex() == -1) {
+            /*if(lvResources.getSelectionModel().getSelectedIndex() == -1) {
                 Tooltip tooltip = new Tooltip("Resources not selected.");
                 tooltip.setShowDelay(Duration.ONE);
                 lvResources.setStyle("-fx-border-color: red");
                 empty = true;
-            }
-            else {
-                if (sameResources(EDIT)) {
+            }*/
+            //if(lvResources.getItems().size() > 0) {
+                if (sameResources()) {
                     Tooltip tooltip = new Tooltip("Resources not changed.");
                     tooltip.setShowDelay(Duration.ONE);
                     lvResources.setTooltip(tooltip);
@@ -260,7 +295,7 @@ public class ManageChoreController extends Controller {
                     lvResources.setTooltip(null);
                     lvResources.setStyle("-fx-border-color: green");
                 }
-            }
+            //}
 
             if(tfAreaName.getText().isEmpty()) {
                 Tooltip tooltip = new Tooltip("Area name not entered.");
@@ -377,42 +412,21 @@ public class ManageChoreController extends Controller {
                             database.executeUpdate("DELETE FROM Usage WHERE resourceName = '" + resource.resourceName.getValue() + "' AND choreID = " + chore.choreID.getValue());
                         }
 
+                        if (temp.size() > 0)
+                            selectedResources.clear();
+
                         for (Resource resource : temp) {
-                            database.executeInsert("INSERT INTO Usage(choreID, resourceName)" +
-                                    "VALUES(" + chore.choreID.getValue() + ", '" + resource.resourceName.getValue() + "')");
+                            database.executeInsert("INSERT INTO Usage(choreID, resourceName, housemateID)" +
+                                    "VALUES(" + chore.choreID.getValue() + ", '" + resource.resourceName.getValue() + "', " + resource.housemateID.getValue() + ")");
+                            selectedResources.add(resource);
                         }
-                        if (loggedInUser.isLeader.getValue() == 1)
-                            setupResources(chore, EDIT);
-                        else setupResources(null, EDIT);
-                        setSelectedResources(chore, EDIT);
+                        tvChores.getSelectionModel().clearSelection();
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
         });
     }
-
-    private void setupResources(Chore chore, String n) {
-        resources.clear();
-        ListView<Resource> lvResources1 = (ListView<Resource>) mcStage.getScene().lookup("#"+ n + "resources");
-        lvResources1.setItems(resources);
-        ResultSet rs;
-        if ( chore == null)
-            rs = database.executeQuery("SELECT * FROM Resource WHERE housemateID = " + loggedInUser.housemateID.getValue());
-        else rs = database.executeQuery("SELECT * FROM Chore INNER JOIN Swap ON " +
-                "Chore.choreID = Swap.choreID INNER JOIN Resource ON Swap.housemateID = Resource.housemateID WHERE Chore.choreID = " + chore.choreID.getValue());
-        try {
-            while (rs.next()) {
-                Resource resource = new Resource(rs.getString("resourceName"), Integer.parseInt(rs.getString("isFinished")),
-                        rs.getString("housemateID"));
-                resources.add(resource);
-            }
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
 
     public void addChore(Stage mcStage) {
         TableView<Chore> tvChores = (TableView<Chore>) mcStage.getScene().lookup("#"+ ADD + "table");
@@ -448,7 +462,7 @@ public class ManageChoreController extends Controller {
         btnAdd.disableProperty().bind(Bindings.createBooleanBinding(() -> {
             boolean empty = false;
 
-            if(cbCompleted.isSelected() && lvResources.getSelectionModel().getSelectedIndex() == -1) {
+            /*if(cbCompleted.isSelected() && lvResources.getSelectionModel().getSelectedIndex() == -1) {
                 Tooltip tooltip = new Tooltip("Resources not selected.");
                 tooltip.setShowDelay(Duration.ONE);
                 lvResources.setTooltip(tooltip);
@@ -458,7 +472,7 @@ public class ManageChoreController extends Controller {
             else {
                 lvResources.setTooltip(null);
                 lvResources.setStyle("-fx-border-color: green");
-            }
+            }*/
 
             if(tfAreaName.getText().isEmpty()) {
                 Tooltip tooltip = new Tooltip("Area name not entered.");
@@ -545,7 +559,6 @@ public class ManageChoreController extends Controller {
                 resource.isFinishedProperty(), resource.housemateIDProperty()};
 
         resources = FXCollections.observableArrayList(extractor);
-        setupResources(null, n);
 
         lvResources.setItems(resources);
 
@@ -632,7 +645,6 @@ public class ManageChoreController extends Controller {
         Hyperlink hpManageChore = (Hyperlink) dashboardScene.lookup("#mc_dashboard");
         if (loggedInUser != null) {
             hpManageChore.setOnAction(event -> {
-                //setupResources(null);
                 if (!linked) {
                     setupChores();
                     // Add

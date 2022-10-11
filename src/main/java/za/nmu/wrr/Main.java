@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
@@ -11,6 +12,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
@@ -65,6 +67,9 @@ public class Main extends Application {
         dashboardStage.setOnCloseRequest(event -> {
             controller.database.disconnectFromDB();
         });
+        Rectangle2D rectangle2D = Screen.getPrimary().getVisualBounds();
+        dashboardStage.setX((rectangle2D.getWidth() - dashboardStage.getWidth()) / 2);
+        dashboardStage.setY((rectangle2D.getHeight() - dashboardStage.getHeight()) / 2);
     }
 
     public Stage createAssignChoreView(Stage owner) throws IOException {

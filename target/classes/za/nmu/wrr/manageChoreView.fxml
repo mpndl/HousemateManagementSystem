@@ -35,7 +35,7 @@
                     <TextField fx:id="add_mc_areaname"  GridPane.rowIndex="2" GridPane.columnIndex="1"/>
 
                     <Label text="Description:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
-                    <TextArea fx:id="add_mc_description" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+                    <TextArea fx:id="add_mc_description" prefHeight="100" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
 
                     <Label text="Completed:" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
                     <CheckBox fx:id="add_mc_completed" disable="true" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
@@ -84,7 +84,7 @@
                     <TextField fx:id="edit_mc_areaname" disable="true" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
 
                     <Label text="Description:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
-                    <TextArea fx:id="edit_mc_description" disable="true" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+                    <TextArea fx:id="edit_mc_description" prefHeight="100" disable="true" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
 
                     <Label text="Completed:" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
                     <CheckBox fx:id="edit_mc_completed" disable="true" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
@@ -130,7 +130,7 @@
                     <TextField fx:id="remove_mc_areaname" disable="true" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
 
                     <Label text="Description:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
-                    <TextArea fx:id="remove_mc_description" disable="true" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+                    <TextArea fx:id="remove_mc_description" prefHeight="100" disable="true" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
 
                     <Label text="Completed:" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
                     <CheckBox fx:id="remove_mc_completed" disable="true" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
@@ -143,7 +143,7 @@
                 <VBox>
                     <TableView fx:id="remove_mc_table"/>
                     <HBox>
-                        <Button fx:id="remove_mc_remove" disable="true" text="Remove"/>
+                        <Button style="-fx-border-color: red; -fx-border-width: 3" fx:id="remove_mc_remove" disable="true" text="Remove"/>
                         <Button fx:id="remove_mc_cancel" text="Cancel"/>
                         <Button fx:id="remove_mc_clear" disable="true" text="Clear"/>
                     </HBox>

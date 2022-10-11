@@ -266,7 +266,7 @@ public class ViewHousematesController extends Controller {
         lblHousemate.setText("View resources for " + selectedItem.firstName.getValue() + " " + selectedItem.lastName.getValue());
 
         stage.setScene(scene);
-        stage.setTitle("View chores for " + selectedItem.firstName.getValue() + " " + selectedItem.lastName.getValue());
+        stage.setTitle("View resources for " + selectedItem.firstName.getValue() + " " + selectedItem.lastName.getValue());
         stage.setResizable(false);
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.initStyle(StageStyle.UTILITY);
