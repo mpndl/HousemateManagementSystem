@@ -184,12 +184,6 @@ public class ViewHousematesController extends Controller {
 
         tvResources.setItems(resources);
 
-        Button btnViewChores = (Button) vrStage.getScene().lookup("#" +RVIEW + "view_chores");
-        Button btnViewHousemates = (Button) vrStage.getScene().lookup("#"+ RVIEW + "view_housemates");
-        btnViewChores.disableProperty().bind(Bindings.createBooleanBinding(() -> tvResources.getSelectionModel().getSelectedItem() == null, tvResources.getSelectionModel().selectedItemProperty()));
-        btnViewHousemates.disableProperty().bind(Bindings.createBooleanBinding(() -> tvResources.getSelectionModel().getSelectedItem() == null, tvResources.getSelectionModel().selectedItemProperty()));
-
-
         Button btnCancel = (Button) vrStage.getScene().lookup("#"+RVIEW+"cancel");
         btnCancel.setOnAction(event -> {
             vrStage.close();

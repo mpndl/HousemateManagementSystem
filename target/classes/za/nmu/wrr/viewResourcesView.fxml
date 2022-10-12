@@ -23,7 +23,7 @@
                 <TableView fx:id="view_vr_table"/>
                 <HBox>
                     <Button fx:id="view_vr_view_housemates" disable="true" text="View Housemates"/>
-                    <Button fx:id="view_vr_view_chores" text="View Chores"/>
+                    <Button fx:id="view_vr_view_chores" disable="true" text="View Chores"/>
                     <Button fx:id="view_vr_cancel" text="Cancel"/>
                 </HBox>
             </VBox>

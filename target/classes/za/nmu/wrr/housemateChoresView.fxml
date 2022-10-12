@@ -20,6 +20,10 @@
         <TableView fx:id="view_vh_table"/>
     </center>
     <bottom>
+        <HBox>
+        <Button disable="true" text="View Housemates"/>
+        <Button disable="true" text="View Resources"/>
         <Button fx:id="view_vh_cancel" text="Cancel"/>
+        </HBox>
     </bottom>
 </BorderPane>
