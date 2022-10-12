@@ -488,6 +488,14 @@ public class ManageChoreController extends Controller {
                     chore.isCompleted.setValue(0);
                 chore.areaName.setValue(tfAreaName.getText());
 
+            ArrayList<Resource> temp = new ArrayList<>();
+            for (int i = 0; i < lvResources.getSelectionModel().getSelectedItems().size();i++) {
+                Resource curResource = lvResources.getSelectionModel().getSelectedItems().get(i);
+                Resource resource = new Resource(curResource.resourceName.getValue(), curResource.isFinished.getValue(),
+                        curResource.housemateID.getValue());
+                temp.add(resource);
+            }
+
                 try {
                     int id;
                     if (loggedInUser.isLeader.getValue() == 1 && !cbSelfAssign.isSelected())
@@ -500,9 +508,25 @@ public class ManageChoreController extends Controller {
                     if (id != -1) {
                         ObservableList<Resource> selectedItems = lvResources.getSelectionModel().getSelectedItems();
                         for (Resource resource : selectedItems) {
-                            database.executeInsert("INSERT INTO Usage(choreID, resourceName)" +
-                                    "VALUES(" + id + ", '" + resource.resourceName.getValue() + "')");
+                            database.executeInsert("INSERT INTO Usage(choreID, resourceName, housemateID)" +
+                                    "VALUES(" + id + ", '" + resource.resourceName.getValue() + "', "+ resource.housemateID.getValue() +")");
                         }
+                    }
+
+                    if (id != -1) {
+                        for (Resource resource : temp) {
+                            database.executeUpdate("DELETE FROM Usage WHERE resourceName = '" + resource.resourceName.getValue() + "' AND choreID = " + id);
+                        }
+
+                        if (temp.size() > 0)
+                            selectedResources.clear();
+
+                        for (Resource resource : temp) {
+                            database.executeInsert("INSERT INTO Usage(choreID, resourceName, housemateID)" +
+                                    "VALUES(" + id + ", '" + resource.resourceName.getValue() + "', " + resource.housemateID.getValue() + ")");
+                            selectedResources.add(resource);
+                        }
+                        tvChores.getSelectionModel().clearSelection();
                     }
 
                     if (id != -1)
