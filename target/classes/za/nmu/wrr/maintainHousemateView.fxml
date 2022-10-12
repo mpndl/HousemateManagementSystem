@@ -40,7 +40,7 @@
                     <TextField fx:id="add_mh_phonenumber" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
 
                     <Label text="Password:" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
-                    <TextField fx:id="add_mh_password" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+                    <PasswordField fx:id="add_mh_password" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
 
                     <Label text="Leader" GridPane.rowIndex="6" GridPane.columnIndex="0"/>
                     <CheckBox fx:id="add_mh_leader" GridPane.rowIndex="6" GridPane.columnIndex="1" disable="true"/>
@@ -88,7 +88,7 @@
                     <TextField fx:id="edit_mh_phonenumber" disable="true" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
 
                     <Label text="Password:" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
-                    <TextField fx:id="edit_mh_password" disable="true" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+                    <PasswordField fx:id="edit_mh_password" disable="true" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
 
                     <Label text="Leader" GridPane.rowIndex="6" GridPane.columnIndex="0"/>
                     <CheckBox fx:id="edit_mh_leader" GridPane.rowIndex="6" GridPane.columnIndex="1" disable="true"/>
@@ -136,7 +136,7 @@
                     <TextField fx:id="remove_mh_phonenumber" disable="true" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
 
                     <Label text="Password:" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
-                    <TextField fx:id="remove_mh_password" disable="true" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+                    <PasswordField fx:id="remove_mh_password" disable="true" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
 
                     <Label text="Leader" GridPane.rowIndex="6" GridPane.columnIndex="0"/>
                     <CheckBox fx:id="remove_mh_leader" GridPane.rowIndex="6" GridPane.columnIndex="1" disable="true"/>

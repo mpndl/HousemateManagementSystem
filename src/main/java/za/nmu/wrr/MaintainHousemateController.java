@@ -15,10 +15,7 @@ import javafx.stage.Stage;
 import java.lang.reflect.Type;
 import java.sql.ResultSet;
 import java.time.DateTimeException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public class MaintainHousemateController extends Controller {
     private ObservableList<Housemate> housemates = FXCollections.observableArrayList();
@@ -154,19 +151,20 @@ public class MaintainHousemateController extends Controller {
 
         tvHousemates.getSelectionModel().selectedItemProperty().addListener((observableValue, housemate, t1) -> {
             Housemate temp = observableValue.getValue();
-            if (temp != null) {
-                tfUsername.setDisable(false);
-                tfFirstname.setDisable(false);
-                tfLastname.setDisable(false);
-                tfPhoneNumber.setDisable(false);
-                tfPassword.setDisable(false);
-            }
-            else {
-                tfUsername.setDisable(true);
-                tfFirstname.setDisable(true);
-                tfLastname.setDisable(true);
-                tfPhoneNumber.setDisable(true);
-                tfPassword.setDisable(true);
+            if (!Objects.equals(n, REMOVE)) {
+                if (temp != null) {
+                    tfUsername.setDisable(false);
+                    tfFirstname.setDisable(false);
+                    tfLastname.setDisable(false);
+                    tfPhoneNumber.setDisable(false);
+                    tfPassword.setDisable(false);
+                } else {
+                    tfUsername.setDisable(true);
+                    tfFirstname.setDisable(true);
+                    tfLastname.setDisable(true);
+                    tfPhoneNumber.setDisable(true);
+                    tfPassword.setDisable(true);
+                }
             }
         });
 

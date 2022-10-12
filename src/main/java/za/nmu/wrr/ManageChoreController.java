@@ -157,7 +157,7 @@ public class ManageChoreController extends Controller {
         ResultSet rs;
         if (loggedInUser.isLeader.getValue() == 0)
             rs = database.executeQuery("SELECT * FROM Resource INNER JOIN Usage ON Resource.resourceName = Usage.resourceName " +
-                    "WHERE housemateID = " + loggedInUser.housemateID.getValue() + " AND choreID = " + chore.choreID.getValue());
+                    "WHERE Usage.housemateID = " + loggedInUser.housemateID.getValue() + " AND choreID = " + chore.choreID.getValue());
         else {
             rs = database.executeQuery("SELECT * FROM Chore INNER JOIN Usage ON Chore.choreID = Usage.choreID INNER JOIN Resource" +
                     " ON Resource.resourceName = Usage.resourceName AND Resource.housemateID = Usage.housemateID WHERE Chore.choreID = " + chore.choreID.getValue());
@@ -166,13 +166,8 @@ public class ManageChoreController extends Controller {
                 while (rs.next()) {
                     Resource resource = new Resource(rs.getString("resourceName"), Integer.parseInt(rs.getString("isFinished")),
                             rs.getString("housemateID"));
-                    /*System.out.print(resource.resourceName.getValue());
-                    System.out.print(", " + resource.isFinished.get());
-                    System.out.print(", " + resource.housemateID.getValue());
-                    System.out.println();*/
                     selectedResources.add(resource);
                 }
-                //System.out.println("++++++++++++++++++++++++++++++++++++++++++++==================");
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -277,25 +272,17 @@ public class ManageChoreController extends Controller {
             boolean sameResources = false;
             boolean empty = false;
 
-            /*if(lvResources.getSelectionModel().getSelectedIndex() == -1) {
-                Tooltip tooltip = new Tooltip("Resources not selected.");
+            if (sameResources()) {
+                Tooltip tooltip = new Tooltip("Resources not changed.");
                 tooltip.setShowDelay(Duration.ONE);
-                lvResources.setStyle("-fx-border-color: red");
-                empty = true;
-            }*/
-            //if(lvResources.getItems().size() > 0) {
-                if (sameResources()) {
-                    Tooltip tooltip = new Tooltip("Resources not changed.");
-                    tooltip.setShowDelay(Duration.ONE);
-                    lvResources.setTooltip(tooltip);
-                    lvResources.setStyle("-fx-border-color: orange");
-                    sameResources = true;
-                }
-                else {
-                    lvResources.setTooltip(null);
-                    lvResources.setStyle("-fx-border-color: green");
-                }
-            //}
+                lvResources.setTooltip(tooltip);
+                lvResources.setStyle("-fx-border-color: orange");
+                sameResources = true;
+            }
+            else {
+                lvResources.setTooltip(null);
+                lvResources.setStyle("-fx-border-color: green");
+            }
 
             if(tfAreaName.getText().isEmpty()) {
                 Tooltip tooltip = new Tooltip("Area name not entered.");
@@ -443,11 +430,11 @@ public class ManageChoreController extends Controller {
                 , tfAreaName.textProperty(), taDescription.textProperty()));
         CheckBox cbSelfAssign = (CheckBox) mcStage.getScene().lookup("#"+ ADD + "self_assign");
 
+        if (loggedInUser.isLeader.getValue() == 0) setupResources(null, ADD);
+
         cbSelfAssign.disableProperty().bind(Bindings.createBooleanBinding(() -> {
             return tfAreaName.getText().isEmpty() || taDescription.getText().isEmpty();
         }, tfAreaName.textProperty(), taDescription.textProperty()));
-
-        resources.clear();
 
         cbSelfAssign.setOnAction(actionEvent -> {
             if (cbSelfAssign.isSelected()) {
@@ -461,18 +448,6 @@ public class ManageChoreController extends Controller {
 
         btnAdd.disableProperty().bind(Bindings.createBooleanBinding(() -> {
             boolean empty = false;
-
-            /*if(cbCompleted.isSelected() && lvResources.getSelectionModel().getSelectedIndex() == -1) {
-                Tooltip tooltip = new Tooltip("Resources not selected.");
-                tooltip.setShowDelay(Duration.ONE);
-                lvResources.setTooltip(tooltip);
-                lvResources.setStyle("-fx-border-color: red");
-                empty = true;
-            }
-            else {
-                lvResources.setTooltip(null);
-                lvResources.setStyle("-fx-border-color: green");
-            }*/
 
             if(tfAreaName.getText().isEmpty()) {
                 Tooltip tooltip = new Tooltip("Area name not entered.");
