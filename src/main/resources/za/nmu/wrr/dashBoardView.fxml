@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="za.nmu.wrr.Controller">
+    <top>
+        <Label text="Dashboard" style="-fx-font-weight: bold;" BorderPane.alignment="CENTER" />
+    </top>
+    <left>
+        <VBox fx:id="dashboard_links">
+            <Hyperlink text="Maintain Profile" fx:id="mp_dashboard"/>
+            <Hyperlink text="Maintain House"/>
+            <Hyperlink text="Connect to House"/>
+            <Hyperlink text="Maintain Housemates" fx:id="mh_dashboard" />
+            <Hyperlink text="Manage Chores" fx:id="mc_dashboard"/>
+            <Hyperlink text="Manage Resources"/>
+            <Hyperlink text="Assign Chores" fx:id="ac_dashboard"/>
+            <Hyperlink text="Swap Chores"/>
+            <Hyperlink text="View Housemates" fx:id="vh_dashboard"/>
+            <Hyperlink text="View Chores"/>
+            <Hyperlink text="View Resources" fx:id="vr_dashboard"/>
+        </VBox>
+    </left>
+
+</BorderPane>

@@ -1,5 +1,6 @@
 package za.nmu.wrr;
 
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
@@ -48,45 +49,44 @@ public class MaintainProfileController extends Controller {
         cbIsLeader.setSelected(loggedInUser.isLeader.getValue() != 0);
 
         Button btnDelete = (Button) mpStage.getScene().lookup("#"+ DELETE + "delete");
-        Button btnClear = (Button) mpStage.getScene().lookup("#"+ DELETE + "clear");
-        addFuncsLister(btnDelete, btnClear, tfFirstname, tfLastname, tfPhoneNumber, tfPassword);
         btnDelete.setOnAction(event -> {
-            Housemate housemate = new Housemate();
-            housemate.housemateID.setValue(tfHousemateID.getText());
-            housemate.firstName.setValue(tfFirstname.getText());
-            housemate.username.setValue(tfUsername.getText());
-            housemate.lastName.setValue(tfLastname.getText());
-            housemate.phoneNumber.setValue(tfPhoneNumber.getText());
-            housemate.password.setValue(tfPassword.getText());
-            housemate.isLeader.set(0);
+            if (loggedInUser.isLeader.getValue() == 0) {
+                Housemate housemate = new Housemate();
+                housemate.housemateID.setValue(tfHousemateID.getText());
+                housemate.firstName.setValue(tfFirstname.getText());
+                housemate.username.setValue(tfUsername.getText());
+                housemate.lastName.setValue(tfLastname.getText());
+                housemate.phoneNumber.setValue(tfPhoneNumber.getText());
+                housemate.password.setValue(tfPassword.getText());
+                housemate.isLeader.set(0);
 
-            int index = getHousemateIndex(housemate.housemateID.getValue());
-            if(index != -1) {
-                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-                alert.setTitle("Confirm Delete Profile");
-                alert.setHeaderText("Are you sure you want to delete your profile?");
+                int index = getHousemateIndex(housemate.housemateID.getValue());
+                if (index != -1) {
+                    Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                    alert.setTitle("Confirm Delete Profile");
+                    alert.setHeaderText("Are you sure you want to delete your profile?");
 
-                ButtonType btDelete = new ButtonType("Delete");
-                ButtonType btCancel = new ButtonType("Cancel");
+                    ButtonType btDelete = new ButtonType("Delete");
+                    ButtonType btCancel = new ButtonType("Cancel");
 
-                alert.getButtonTypes().setAll(btDelete, btCancel);
-                Optional<ButtonType> result = alert.showAndWait();
+                    alert.getButtonTypes().setAll(btDelete, btCancel);
+                    Optional<ButtonType> result = alert.showAndWait();
 
-                if(result.get() == btDelete) {
+                    if (result.get() == btDelete) {
 
-                    housemates.remove(index);
+                        housemates.remove(index);
 
-                    database.executeUpdate("DELETE FROM Housemate WHERE housemateID = '" + loggedInUser.housemateID.getValue() + "'");
+                        database.executeUpdate("DELETE FROM Housemate WHERE housemateID = '" + loggedInUser.housemateID.getValue() + "'");
 
-                    tfHousemateID.setText("");
-                    tfUsername.setText("");
-                    tfFirstname.setText("");
-                    tfLastname.setText("");
-                    tfPhoneNumber.setText("");
-                    tfPassword.setText("");
+                        tfHousemateID.setText("");
+                        tfUsername.setText("");
+                        tfFirstname.setText("");
+                        tfLastname.setText("");
+                        tfPhoneNumber.setText("");
+                        tfPassword.setText("");
+                    } else
+                        alert.close();
                 }
-                else
-                    alert.close();
             }
         });
     }
@@ -111,19 +111,14 @@ public class MaintainProfileController extends Controller {
 
         });
 
-        Button btnDelete = (Button) mpStage.getScene().lookup("#"+ DELETE + "delete");
-        btnDelete.setDisable(true);
-        Button abtnClear = (Button) mpStage.getScene().lookup("#"+n+"clear");
-        abtnClear.setDisable(true);
-        abtnClear.setOnAction(event -> {
+        Button btnClear = (Button) mpStage.getScene().lookup("#"+n+"clear");
+        btnClear.setOnAction(event -> {
             tfHousemateID.setText("");
             tfUsername.setText("");
             tfFirstname.setText("");
             tfLastname.setText("");
             tfPhoneNumber.setText("");
             tfPassword.setText("");
-            btnDelete.setDisable(true);
-            abtnClear.setDisable(true);
         });
     }
 
@@ -145,7 +140,13 @@ public class MaintainProfileController extends Controller {
 
         Button btnEdit = (Button) mpStage.getScene().lookup("#"+ EDIT + "edit");
         Button btnClear = (Button) mpStage.getScene().lookup("#"+ EDIT + "clear");
-        addFuncsLister(btnEdit, btnClear, tfUsername, tfFirstname, tfLastname, tfPhoneNumber, tfPassword);
+
+        validate(tfUsername, tfFirstname, tfLastname, tfPhoneNumber, tfPassword, btnEdit);
+
+        btnClear.disableProperty().bind(Bindings.createBooleanBinding(() -> !(!tfUsername.getText().isEmpty() || !tfFirstname.getText().isEmpty()
+                        || !tfLastname.getText().isEmpty() || !tfPhoneNumber.getText().isEmpty()
+                        || !tfPassword.getText().isEmpty()), tfUsername.textProperty(), tfFirstname.textProperty(), tfLastname.textProperty()
+                , tfPhoneNumber.textProperty(), tfPassword.textProperty()));
 
         btnEdit.setOnAction(event -> {
             Housemate housemate = new Housemate();
@@ -157,65 +158,14 @@ public class MaintainProfileController extends Controller {
             housemate.password.setValue(tfPassword.getText());
             housemate.isLeader.set(0);
 
-            try {
-                Integer.parseInt(housemate.phoneNumber.getValue());
-                if(housemate.phoneNumber.getValue().length() == 10) {
-                    database.executeUpdate("UPDATE Housemate SET username = '" + housemate.username.getValue() + "', firstName = '" + housemate.firstName.getValue() + "', lastName = '" + housemate.lastName.getValue() + "', password = '" + housemate.password.getValue() + "', phoneNumber = '" + housemate.phoneNumber.getValue() + "' WHERE housemateID = '" + housemate.housemateID.getValue() + "'");
-                    loggedInUser = housemate;
-                    btnEdit.setDisable(true);
-                }
-                else
-                    throw new Exception();
-            }
-            catch (Exception e) {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Number format error");
-                alert.setHeaderText("Check phone number format");
-                alert.showAndWait();
-            }
+            database.executeUpdate("UPDATE Housemate SET username = '" + housemate.username.getValue() + "', firstName = '" + housemate.firstName.getValue() + "', lastName = '" + housemate.lastName.getValue() + "', password = '" + housemate.password.getValue() + "', phoneNumber = '" + housemate.phoneNumber.getValue() + "' WHERE housemateID = '" + housemate.housemateID.getValue() + "'");
+            loggedInUser = housemate;
+            tfFirstname.setText(housemate.firstName.getValue());
         });
     }
 
-    private void addFuncsLister(Button func, Button clear , TextField... textFields) {
-        for (TextField textField: textFields){
-            textField.textProperty().addListener((observableValue, s, t1) -> {
-                setupDisableFuncs2(func, clear, textFields);
-            });
-        }
-    }
-
-    private void setupDisableFuncs2(Button func, Button clear, TextField... textFields) {
-        if (anyNotEmpty(textFields)) {
-            clear.setDisable(false);
-            if (valuesChanged()) {
-                func.setDisable(false);
-            }
-            else func.setDisable(true);
-        }
-        else {
-            clear.setDisable(true);
-            func.setDisable(true);
-        }
-    }
-
-    private boolean anyNotEmpty(TextField... textFields) {
-        for (TextField textField: textFields) {
-            if (!textField.getText().isEmpty())
-                return true;
-        }
-        return false;
-    }
-
-    private boolean valuesChanged() {
-        TextField tfUsername = (TextField) mpStage.getScene().lookup("#"+ EDIT + "username");
-        TextField tfFirstname = (TextField) mpStage.getScene().lookup("#"+ EDIT + "firstname");
-        TextField tfLastname = (TextField) mpStage.getScene().lookup("#"+ EDIT + "lastname");
-        TextField tfPhoneNumber = (TextField) mpStage.getScene().lookup("#"+ EDIT + "phonenumber");
-        TextField tfPassword = (TextField) mpStage.getScene().lookup("#"+ EDIT + "password");
-
-        return !tfUsername.getText().equals(loggedInUser.username.getValue()) || !tfFirstname.getText().equals(loggedInUser.firstName.getValue())
-                || !tfLastname.getText().equals(loggedInUser.lastName.getValue()) || !tfPhoneNumber.getText().equals(loggedInUser.phoneNumber.getValue())
-                || !tfPassword.getText().equals(loggedInUser.password.getValue());
+    private void validate(TextField tfUsername, TextField tfFirstname, TextField tfLastname, TextField tfPhoneNumber, TextField tfPassword, Button btnFunc) {
+        ValidateHousemateController.validateProfile(tfUsername, tfFirstname, tfLastname, tfPhoneNumber, tfPassword, btnFunc);
     }
 
     private int getHousemateIndex(String id) {

@@ -40,7 +40,7 @@ public class Housemate {
     }
 
     public StringProperty passwordProperty() {
-        return password;
+        return new SimpleStringProperty("*****");
     }
 
     public StringProperty phoneNumberProperty() {

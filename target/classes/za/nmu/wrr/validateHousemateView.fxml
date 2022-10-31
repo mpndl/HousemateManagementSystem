@@ -27,7 +27,7 @@
                     <TextField fx:id="login_vh_username" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
 
                     <Label text="Password:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
-                    <TextField fx:id="login_vh_password" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+                    <PasswordField fx:id="login_vh_password" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
                 </GridPane>
             </center>
             <bottom>
@@ -67,7 +67,7 @@
                     <TextField fx:id="register_vh_phonenumber" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
 
                     <Label text="Password:" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
-                    <TextField fx:id="register_vh_password" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+                    <PasswordField fx:id="register_vh_password" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
                 </GridPane>
             </center>
             <bottom>

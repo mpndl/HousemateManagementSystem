@@ -40,7 +40,7 @@
                     <TextField fx:id="add_mh_phonenumber" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
 
                     <Label text="Password:" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
-                    <TextField fx:id="add_mh_password" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+                    <PasswordField fx:id="add_mh_password" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
 
                     <Label text="Leader" GridPane.rowIndex="6" GridPane.columnIndex="0"/>
                     <CheckBox fx:id="add_mh_leader" GridPane.rowIndex="6" GridPane.columnIndex="1" disable="true"/>
@@ -76,19 +76,19 @@
                     <TextField fx:id="edit_mh_housemateid" disable="true" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
 
                     <Label text="Username:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
-                    <TextField fx:id="edit_mh_username" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+                    <TextField fx:id="edit_mh_username" disable="true" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
 
                     <Label text="First Name:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
-                    <TextField fx:id="edit_mh_firstname" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+                    <TextField fx:id="edit_mh_firstname" disable="true" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
 
                     <Label text="Last Name:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
-                    <TextField fx:id="edit_mh_lastname" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+                    <TextField fx:id="edit_mh_lastname" disable="true" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
 
                     <Label text="Phone Number:" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
-                    <TextField fx:id="edit_mh_phonenumber" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+                    <TextField fx:id="edit_mh_phonenumber" disable="true" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
 
                     <Label text="Password:" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
-                    <TextField fx:id="edit_mh_password" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+                    <PasswordField fx:id="edit_mh_password" disable="true" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
 
                     <Label text="Leader" GridPane.rowIndex="6" GridPane.columnIndex="0"/>
                     <CheckBox fx:id="edit_mh_leader" GridPane.rowIndex="6" GridPane.columnIndex="1" disable="true"/>
@@ -136,7 +136,7 @@
                     <TextField fx:id="remove_mh_phonenumber" disable="true" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
 
                     <Label text="Password:" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
-                    <TextField fx:id="remove_mh_password" disable="true" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+                    <PasswordField fx:id="remove_mh_password" disable="true" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
 
                     <Label text="Leader" GridPane.rowIndex="6" GridPane.columnIndex="0"/>
                     <CheckBox fx:id="remove_mh_leader" GridPane.rowIndex="6" GridPane.columnIndex="1" disable="true"/>
@@ -146,7 +146,7 @@
                 <VBox>
                     <TableView fx:id="remove_mh_table"/>
                     <HBox>
-                        <Button fx:id="remove_mh_remove" disable="true" text="Remove"/>
+                        <Button fx:id="remove_mh_remove" style="-fx-border-color: red; -fx-border-width: 3" disable="true" text="Remove"/>
                         <Button fx:id="remove_mh_cancel" text="Cancel"/>
                         <Button fx:id="remove_mh_clear" disable="true" text="Clear"/>
                     </HBox>

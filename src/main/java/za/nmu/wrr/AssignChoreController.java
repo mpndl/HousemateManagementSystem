@@ -42,7 +42,7 @@ public class AssignChoreController extends Controller {
     private void setupChores() {
         TableView<Chore> tvChores = (TableView<Chore>) acStage.getScene().lookup("#chores_"+ ASSIGN + "table");
         clearTables(tvChores, null);
-        ResultSet rs = database.executeQuery("SELECT DISTINCT Chore.choreID, Chore.description, Chore.isCompleted, Chore.dateCompleted, Chore.areaName FROM Chore WHERE NOT EXISTS (SELECT housemateID, choreID FROM Swap WHERE Swap.choreID = Chore.choreID) AND isCompleted = 0");
+        ResultSet rs = database.executeQuery("SELECT * FROM Chore LEFT JOIN Swap ON Chore.choreID = Swap.choreID WHERE Swap.choreID IS NULL");
         try {
             while (rs.next()) {
                 Chore chore = new Chore();
@@ -224,7 +224,7 @@ public class AssignChoreController extends Controller {
         CheckBox cbCompleted = (CheckBox) acStage.getScene().lookup("#"+ ASSIGN + "completed");
         DatePicker dpDateCompleted = (DatePicker) acStage.getScene().lookup("#"+ ASSIGN + "datecompleted");
 
-        TableColumn tcChoreID = new TableColumn("ChoreID ID");
+        TableColumn tcChoreID = new TableColumn("Chore ID");
         tcChoreID.setCellValueFactory(new PropertyValueFactory<>("choreID"));
         tcChoreID.setPrefWidth(100);
 

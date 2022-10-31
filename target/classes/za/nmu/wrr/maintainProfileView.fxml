@@ -39,7 +39,7 @@
                     <TextField fx:id="edit_mp_phonenumber" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
 
                     <Label text="Password:" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
-                    <TextField fx:id="edit_mp_password" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+                    <PasswordField fx:id="edit_mp_password" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
 
                     <Label text="Leader" GridPane.rowIndex="6" GridPane.columnIndex="0"/>
                     <CheckBox fx:id="edit_mp_leader" GridPane.rowIndex="6" GridPane.columnIndex="1" disable="true"/>
@@ -50,7 +50,7 @@
                     <HBox>
                         <Button fx:id="edit_mp_edit" disable="true" text="Edit"/>
                         <Button fx:id="edit_mp_cancel" text="Cancel"/>
-                        <Button fx:id="edit_mp_clear" text="Clear"/>
+                        <Button fx:id="edit_mp_clear" disable="true" text="Clear"/>
                     </HBox>
                 </VBox>
             </bottom>
@@ -86,7 +86,7 @@
                     <TextField fx:id="delete_mp_phonenumber" disable="true" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
 
                     <Label text="Password:" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
-                    <TextField fx:id="delete_mp_password" disable="true" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+                    <PasswordField fx:id="delete_mp_password" disable="true" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
 
                     <Label text="Leader" GridPane.rowIndex="6" GridPane.columnIndex="0"/>
                     <CheckBox fx:id="delete_mp_leader" GridPane.rowIndex="6" GridPane.columnIndex="1" disable="true"/>
@@ -95,9 +95,9 @@
             <bottom>
                 <VBox>
                     <HBox>
-                        <Button fx:id="delete_mp_delete" text="Remove"/>
+                        <Button style="-fx-border-color: red; -fx-border-width: 3" fx:id="delete_mp_delete" text="Remove"/>
                         <Button fx:id="delete_mp_cancel" text="Cancel"/>
-                        <Button fx:id="delete_mp_clear" text="Clear"/>
+                        <Button fx:id="delete_mp_clear" disable="true" text="Clear"/>
                     </HBox>
                 </VBox>
             </bottom>

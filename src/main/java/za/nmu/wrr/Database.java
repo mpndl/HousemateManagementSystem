@@ -54,7 +54,7 @@ public class Database {
     private void connectToDB() {
         try {
             Class.forName("net.sourceforge.jtds.jdbc.Driver");
-            conn = DriverManager.getConnection("jdbc:jtds:sqlserver://localhost:1433/HMS3;instance=MSSQLSERVER");
+            conn = DriverManager.getConnection("jdbc:jtds:sqlserver://localhost:1433/HMS4;instance=MSSQLSERVER");
             stmt = conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
         }
         catch (Exception e) {
