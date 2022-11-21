@@ -155,7 +155,7 @@ public class Controller {
     }
 
     protected void avail(Hyperlink hp) {
-        hp.setStyle("-fx-background-color: white; -fx-text-fill: black;-fx-border-color: black");
+        hp.setStyle("-fx-background-color: white; -fx-border-color: black");
         hp.setPrefWidth(Double.MAX_VALUE);
     }
 }
