@@ -9,6 +9,7 @@ module za.nmu.wrr {
     opens za.nmu.wrr to javafx.fxml;
     exports za.nmu.wrr;
     exports za.nmu.wrr.controllers;
+    exports za.nmu.wrr.circle;
     opens za.nmu.wrr.controllers to javafx.fxml;
     exports za.nmu.wrr.models;
     opens za.nmu.wrr.models to javafx.fxml;

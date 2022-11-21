@@ -15,7 +15,7 @@ import javafx.scene.paint.Paint;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextBoundsType;
 import za.nmu.wrr.Main;
-import za.nmu.wrr.controllers.Run;
+import za.nmu.wrr.Run;
 
 import java.net.URISyntaxException;
 import java.util.ArrayList;

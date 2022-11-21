@@ -1,4 +1,4 @@
-package za.nmu.wrr.controllers;
+package za.nmu.wrr;
 
 import za.nmu.wrr.circle.CircleView;
 
