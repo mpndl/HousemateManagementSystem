@@ -29,12 +29,12 @@ public class ValidateHousemateController extends Controller {
     }
 
     private void login(Stage vhStage) {
-        TextField tfUsername = (TextField) vhStage.getScene().lookup("#"+ LOGIN + "username");
-        TextField tfPassword = (TextField) vhStage.getScene().lookup("#"+ LOGIN + "password");
+        TextField tfUsername = (TextField) vhStage.getScene().lookup(getID(LOGIN, "username"));
+        TextField tfPassword = (TextField) vhStage.getScene().lookup(getID(LOGIN, "password"));
 
-        Button btnLogin = (Button) vhStage.getScene().lookup("#"+ LOGIN + "login");
+        Button btnLogin = (Button) vhStage.getScene().lookup(getID(LOGIN, "login"));
         validateLogin(tfUsername, tfPassword, btnLogin);
-        Button btnClear = (Button) vhStage.getScene().lookup("#"+ LOGIN + "clear");
+        Button btnClear = (Button) vhStage.getScene().lookup(getID(LOGIN, "clear"));
         btnClear.disableProperty().bind(Bindings.createBooleanBinding(() -> !(!tfPassword.getText().isEmpty() || !tfUsername.getText().isEmpty()),
                 tfUsername.textProperty(), tfPassword.textProperty()));
 
@@ -74,14 +74,14 @@ public class ValidateHousemateController extends Controller {
     }
 
     private void register(Stage vhStage) {
-        TextField tfUsername = (TextField) vhStage.getScene().lookup("#"+ REGISTER + "username");
-        TextField tfFirstname = (TextField) vhStage.getScene().lookup("#"+ REGISTER + "firstname");
-        TextField tfLastname = (TextField) vhStage.getScene().lookup("#"+ REGISTER + "lastname");
-        TextField tfPhoneNumber = (TextField) vhStage.getScene().lookup("#"+ REGISTER + "phonenumber");
-        TextField tfPassword = (TextField) vhStage.getScene().lookup("#"+ REGISTER + "password");
+        TextField tfUsername = (TextField) vhStage.getScene().lookup(getID(REGISTER, "username"));
+        TextField tfFirstname = (TextField) vhStage.getScene().lookup(getID(REGISTER, "firstname"));
+        TextField tfLastname = (TextField) vhStage.getScene().lookup(getID(REGISTER, "lastname"));
+        TextField tfPhoneNumber = (TextField) vhStage.getScene().lookup(getID(REGISTER, "phonenumber"));
+        TextField tfPassword = (TextField) vhStage.getScene().lookup(getID(REGISTER, "password"));
 
-        Button btnRegister = (Button) vhStage.getScene().lookup("#"+ REGISTER + "register");
-        Button btnClear = (Button) vhStage.getScene().lookup("#"+ REGISTER + "clear");
+        Button btnRegister = (Button) vhStage.getScene().lookup(getID(REGISTER, "register"));
+        Button btnClear = (Button) vhStage.getScene().lookup(getID(REGISTER, "clear"));
 
         validateRegister(tfUsername, tfFirstname, tfLastname, tfPhoneNumber, tfPassword, btnRegister);
 
@@ -494,17 +494,17 @@ public class ValidateHousemateController extends Controller {
     }
 
     private void linkToLoginScene(Stage vhStage) {
-        TextField tfUsername = (TextField) vhStage.getScene().lookup("#"+LOGIN+"username");
-        TextField tfPassword = (TextField) vhStage.getScene().lookup("#"+LOGIN+"password");
+        TextField tfUsername = (TextField) vhStage.getScene().lookup(getID(LOGIN, "username"));
+        TextField tfPassword = (TextField) vhStage.getScene().lookup(getID(LOGIN, "password"));
 
-        Button btnCancel = (Button) vhStage.getScene().lookup("#"+LOGIN+"cancel");
+        Button btnCancel = (Button) vhStage.getScene().lookup(getID(LOGIN, "cancel"));
         btnCancel.setOnAction(event -> {
             vhStage.close();
         });
 
-        Button btnLogin = (Button) vhStage.getScene().lookup("#"+ LOGIN + "login");
+        Button btnLogin = (Button) vhStage.getScene().lookup(getID(LOGIN, "login"));
         btnLogin.setDisable(true);
-        Button btnClear = (Button) vhStage.getScene().lookup("#"+LOGIN+"clear");
+        Button btnClear = (Button) vhStage.getScene().lookup(getID(LOGIN, "clear"));
         btnClear.setDisable(true);
         btnClear.setOnAction(event -> {
             tfUsername.setText("");
@@ -515,20 +515,20 @@ public class ValidateHousemateController extends Controller {
     }
 
     private void linkToRegisterScene(Stage vhStage) {
-        TextField tfUsername = (TextField) vhStage.getScene().lookup("#"+REGISTER+"username");
-        TextField tfFirstname = (TextField) vhStage.getScene().lookup("#"+REGISTER+"firstname");
-        TextField tfLastname = (TextField) vhStage.getScene().lookup("#"+REGISTER+"lastname");
-        TextField tfPhoneNumber = (TextField) vhStage.getScene().lookup("#"+REGISTER+"phonenumber");
+        TextField tfUsername = (TextField) vhStage.getScene().lookup(getID(REGISTER, "username"));
+        TextField tfFirstname = (TextField) vhStage.getScene().lookup(getID(REGISTER, "firstname"));
+        TextField tfLastname = (TextField) vhStage.getScene().lookup(getID(REGISTER, "lastname"));
+        TextField tfPhoneNumber = (TextField) vhStage.getScene().lookup(getID(REGISTER, "phonenumber"));
         tfPhoneNumber.addEventFilter(KeyEvent.KEY_TYPED, maxLength(10));
-        TextField tfPassword = (TextField) vhStage.getScene().lookup("#"+REGISTER+"password");
-        Button btnCancel = (Button) vhStage.getScene().lookup("#"+REGISTER+"cancel");
+        TextField tfPassword = (TextField) vhStage.getScene().lookup(getID(REGISTER, "password"));
+        Button btnCancel = (Button) vhStage.getScene().lookup(getID(REGISTER, "cancel"));
         btnCancel.setOnAction(event -> {
             vhStage.close();
         });
 
-        Button btnRegister = (Button) vhStage.getScene().lookup("#"+ REGISTER + "register");
+        Button btnRegister = (Button) vhStage.getScene().lookup(getID(REGISTER, "register"));
         btnRegister.setDisable(true);
-        Button btnClear = (Button) vhStage.getScene().lookup("#"+REGISTER+"clear");
+        Button btnClear = (Button) vhStage.getScene().lookup(getID(REGISTER, "clear"));
         btnClear.setDisable(true);
         btnClear.setOnAction(event -> {
             tfUsername.setText("");
@@ -539,41 +539,5 @@ public class ValidateHousemateController extends Controller {
             btnRegister.setDisable(true);
             btnClear.setDisable(true);
         });
-    }
-
-    private int getHousemateIndexWithID(String id) {
-        for (int i = 0; i < housemates.size(); i++) {
-
-            if(housemates.get(i).housemateID.getValue() != null && housemates.get(i).housemateID.getValue().equals(id))
-                return i;
-        }
-        return -1;
-    }
-
-    private Housemate getHousemate(String id) {
-        for (int i = 0; i < housemates.size(); i++) {
-
-            if(housemates.get(i).housemateID.getValue() != null && housemates.get(i).housemateID.getValue().equals(id))
-                return housemates.get(i);
-        }
-        return null;
-    }
-
-    private Housemate getHousemateWithUsername(String username) {
-        for (Housemate housemate : housemates) {
-            System.out.println(housemate.username.getValue());
-            if (housemate.username.getValue() != null && housemate.username.getValue().equals(username))
-                return housemate;
-        }
-        return null;
-    }
-
-    private int getHousemateIndexWithUsername(String username) {
-        for (int i = 0; i < housemates.size(); i++) {
-
-            if(housemates.get(i).username.getValue() != null && housemates.get(i).username.getValue().equals(username))
-                return i;
-        }
-        return -1;
     }
 }

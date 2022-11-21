@@ -22,7 +22,7 @@
                 <Label BorderPane.alignment="CENTER" text="Housemates" style="-fx-font-weight: bold"/>
             </top>
             <right>
-                <TableView fx:id="housemates_ac_table" prefWidth="500" prefHeight="50"/>
+                <TableView fx:id="ac_table_housemates" prefWidth="500" prefHeight="50"/>
             </right>
             <left>
                 <GridPane hgap="5" vgap="5">
@@ -63,7 +63,7 @@
                 <Label BorderPane.alignment="CENTER" text="Chores" style="-fx-font-weight: bold"/>
             </top>
             <right>
-                <TableView fx:id="chores_ac_table" prefWidth="500" prefHeight="50"/>
+                <TableView fx:id="ac_table_chores" prefWidth="500" prefHeight="50"/>
             </right>
             <left>
                 <GridPane hgap="5" vgap="5">

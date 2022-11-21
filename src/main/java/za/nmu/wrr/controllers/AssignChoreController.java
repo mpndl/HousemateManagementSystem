@@ -20,7 +20,7 @@ public class AssignChoreController extends Controller {
 
     private ObservableList<Chore> chores = FXCollections.observableArrayList();
     private ObservableList<Housemate> housemates = FXCollections.observableArrayList();
-    private final String ASSIGN = "ac_";
+    public final String ASSIGN = "ac_";
     private Scene dashboardScene;
     private Stage acStage;
     private boolean linked = false;
@@ -126,10 +126,10 @@ public class AssignChoreController extends Controller {
         linkHousematesToScene(acStage);
         linkChoresToScene(acStage);
 
-        Button btnCancel = (Button) acStage.getScene().lookup("#"+ASSIGN+"cancel");
-        Button btnAssign = (Button) acStage.getScene().lookup("#"+ASSIGN+"assign");
+        Button btnCancel = (Button) acStage.getScene().lookup(getID("cancel"));
+        Button btnAssign = (Button) acStage.getScene().lookup(getID("assign"));
         btnCancel.setOnAction(event -> {
-            TextField tfHousemateID = (TextField) acStage.getScene().lookup("#"+ASSIGN+"housemateid");
+            TextField tfHousemateID = (TextField) acStage.getScene().lookup(getID("housemateid"));
             TextField tfUsername = (TextField) acStage.getScene().lookup("#"+ASSIGN+"username");
             TextField tfFirstname = (TextField) acStage.getScene().lookup("#"+ASSIGN+"firstname");
             TextField tfLastname = (TextField) acStage.getScene().lookup("#"+ASSIGN+"lastname");
@@ -149,14 +149,14 @@ public class AssignChoreController extends Controller {
         });
 
         btnAssign.setOnAction(actionEvent -> {
-            TextField tfHousemateID = (TextField) acStage.getScene().lookup("#"+ASSIGN+"housemateid");
-            TextField tfChoreID = (TextField) acStage.getScene().lookup("#"+ ASSIGN + "choreid");
+            TextField tfHousemateID = (TextField) acStage.getScene().lookup(getID("housemateid"));
+            TextField tfChoreID = (TextField) acStage.getScene().lookup(getID("choreid"));
 
             database.executeInsert("INSERT INTO Swap(housemateID, choreID) VALUES(" + tfHousemateID.getText() + "," + tfChoreID.getText() + ")");
             setupChores();
 
-            TextField tfAreaName = (TextField) acStage.getScene().lookup("#"+ ASSIGN + "areaname");
-            TextArea taDescription = (TextArea) acStage.getScene().lookup("#"+ ASSIGN + "description");
+            TextField tfAreaName = (TextField) acStage.getScene().lookup(getID("areaname"));
+            TextArea taDescription = (TextArea) acStage.getScene().lookup(getID("description"));
 
             tfChoreID.setText("");
             tfAreaName.setText("");
@@ -166,8 +166,8 @@ public class AssignChoreController extends Controller {
             tvChores.getSelectionModel().clearSelection();
         });
 
-        TextField tfHousemateID = (TextField) acStage.getScene().lookup("#"+ASSIGN+"housemateid");
-        TextField tfChoreID = (TextField) acStage.getScene().lookup("#"+ ASSIGN + "choreid");
+        TextField tfHousemateID = (TextField) acStage.getScene().lookup(getID("housemateid"));
+        TextField tfChoreID = (TextField) acStage.getScene().lookup(getID("choreid"));
 
         tfHousemateID.textProperty().addListener((observableValue, s, t1) -> {
             setupDisableFuncs(btnAssign, tfChoreID,tfChoreID);
@@ -179,15 +179,15 @@ public class AssignChoreController extends Controller {
     }
 
     private void linkHousematesToScene(Stage acStage) {
-        TextField tfHousemateID = (TextField) acStage.getScene().lookup("#"+ASSIGN+"housemateid");
-        TextField tfUsername = (TextField) acStage.getScene().lookup("#"+ASSIGN+"username");
-        TextField tfFirstname = (TextField) acStage.getScene().lookup("#"+ASSIGN+"firstname");
-        TextField tfLastname = (TextField) acStage.getScene().lookup("#"+ASSIGN+"lastname");
-        TextField tfPhoneNumber = (TextField) acStage.getScene().lookup("#"+ASSIGN+"phonenumber");
+        TextField tfHousemateID = (TextField) acStage.getScene().lookup(getID("housemateid"));
+        TextField tfUsername = (TextField) acStage.getScene().lookup(getID("username"));
+        TextField tfFirstname = (TextField) acStage.getScene().lookup(getID("firstname"));
+        TextField tfLastname = (TextField) acStage.getScene().lookup(getID("lastname"));
+        TextField tfPhoneNumber = (TextField) acStage.getScene().lookup(getID("phonenumber"));
         tfPhoneNumber.addEventFilter(KeyEvent.KEY_TYPED, maxLength(10));
-        TextField tfPassword = (TextField) acStage.getScene().lookup("#"+ASSIGN+"password");
-        CheckBox cbIsLeader = (CheckBox) acStage.getScene().lookup("#"+ ASSIGN + "leader");
-        TableView<Housemate> tvHousemates = (TableView<Housemate>) acStage.getScene().lookup("#housemates_" +ASSIGN+"table");
+        TextField tfPassword = (TextField) acStage.getScene().lookup(getID("password"));
+        CheckBox cbIsLeader = (CheckBox) acStage.getScene().lookup(getID("leader"));
+        TableView<Housemate> tvHousemates = (TableView<Housemate>) acStage.getScene().lookup(getID("table_housemates"));
 
         TableColumn tcHousemateID = new TableColumn("Housemate ID");
         tcHousemateID.setCellValueFactory(new PropertyValueFactory<>("housemateID"));
@@ -236,13 +236,17 @@ public class AssignChoreController extends Controller {
         });
     }
 
+    private String getID(String name) {
+        return "#" + ASSIGN + name;
+    }
+
     private void linkChoresToScene(Stage acStage) {
-        TableView<Chore> tvChores = (TableView<Chore>) acStage.getScene().lookup("#chores_"+ ASSIGN + "table");
-        TextField tfChoreID = (TextField) acStage.getScene().lookup("#"+ ASSIGN + "choreid");
-        TextField tfAreaName = (TextField) acStage.getScene().lookup("#"+ ASSIGN + "areaname");
-        TextArea taDescription = (TextArea) acStage.getScene().lookup("#"+ ASSIGN + "description");
-        CheckBox cbCompleted = (CheckBox) acStage.getScene().lookup("#"+ ASSIGN + "completed");
-        DatePicker dpDateCompleted = (DatePicker) acStage.getScene().lookup("#"+ ASSIGN + "datecompleted");
+        TableView<Chore> tvChores = (TableView<Chore>) acStage.getScene().lookup(getID("table_chores"));
+        TextField tfChoreID = (TextField) acStage.getScene().lookup(getID("choreid"));
+        TextField tfAreaName = (TextField) acStage.getScene().lookup(getID("areaname"));
+        TextArea taDescription = (TextArea) acStage.getScene().lookup(getID("description"));
+        CheckBox cbCompleted = (CheckBox) acStage.getScene().lookup(getID("completed"));
+        DatePicker dpDateCompleted = (DatePicker) acStage.getScene().lookup(getID("datecompleted"));
 
         TableColumn tcChoreID = new TableColumn("Chore ID");
         tcChoreID.setCellValueFactory(new PropertyValueFactory<>("choreID"));

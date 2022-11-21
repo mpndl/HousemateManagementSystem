@@ -110,13 +110,13 @@ public class ViewHousematesController extends Controller {
 
         tvHousemates.setItems(housemates);
 
-        Button btnViewResources = (Button) vhStage.getScene().lookup("#"+ VIEW + "view_resources");
-        Button btnViewChores = (Button) vhStage.getScene().lookup("#" + VIEW + "view_chores");
+        Button btnViewResources = (Button) vhStage.getScene().lookup(getID(VIEW, "view_resources"));
+        Button btnViewChores = (Button) vhStage.getScene().lookup(getID(VIEW, "view_chores"));
         btnViewChores.disableProperty().bind(Bindings.createBooleanBinding(() -> tvHousemates.getSelectionModel().getSelectedItem() == null, tvHousemates.getSelectionModel().selectedItemProperty()));
         btnViewResources.disableProperty().bind(Bindings.createBooleanBinding(() -> tvHousemates.getSelectionModel().getSelectedItem() == null, tvHousemates.getSelectionModel().selectedItemProperty()));
 
 
-        Button btnCancel = (Button) vhStage.getScene().lookup("#"+VIEW+"cancel");
+        Button btnCancel = (Button) vhStage.getScene().lookup(getID(VIEW, "cancel"));
         btnCancel.setOnAction(event -> {
             vhStage.close();
         });
@@ -145,7 +145,7 @@ public class ViewHousematesController extends Controller {
     }
 
     private void linkToHousemateChoreScene(Stage vhcStage) {
-        TableView<Chore> tvChores = (TableView<Chore>) vhcStage.getScene().lookup("#"+ VIEW + "table");
+        TableView<Chore> tvChores = (TableView<Chore>) vhcStage.getScene().lookup(getID(VIEW, "table"));
         TableColumn tcChoreID = new TableColumn("Chore ID");
         tcChoreID.setCellValueFactory(new PropertyValueFactory<>("choreID"));
         tcChoreID.setPrefWidth(100);
@@ -170,14 +170,14 @@ public class ViewHousematesController extends Controller {
 
         tvChores.setItems(chores);
 
-        Button btnCancel = (Button) vhcStage.getScene().lookup("#"+VIEW+"cancel");
+        Button btnCancel = (Button) vhcStage.getScene().lookup(getID(VIEW, "cancel"));
         btnCancel.setOnAction(event -> {
             vhcStage.close();
         });
     }
 
     private void linkToHousemateResourceScene(Stage vrStage) {
-        TableView<Resource> tvResources = (TableView<Resource>) vrStage.getScene().lookup("#"+RVIEW+"table");
+        TableView<Resource> tvResources = (TableView<Resource>) vrStage.getScene().lookup(getID(RVIEW, "table"));
 
         TableColumn tcResourceName = new TableColumn("Resource Name");
         tcResourceName.setCellValueFactory(new PropertyValueFactory("resourceName"));
@@ -195,7 +195,7 @@ public class ViewHousematesController extends Controller {
 
         tvResources.setItems(resources);
 
-        Button btnCancel = (Button) vrStage.getScene().lookup("#"+RVIEW+"cancel");
+        Button btnCancel = (Button) vrStage.getScene().lookup(getID(RVIEW, "cancel"));
         btnCancel.setOnAction(event -> {
             vrStage.close();
         });

@@ -44,15 +44,15 @@ public class ManageChoreController extends Controller {
     }
 
     private void removeChore(Stage mcStage) {
-        TableView<Chore> tvChores = (TableView<Chore>) mcStage.getScene().lookup("#"+ REMOVE + "table");
-        TextField tfChoreID = (TextField) mcStage.getScene().lookup("#"+ REMOVE + "choreid");
-        TextField tfAreaName = (TextField) mcStage.getScene().lookup("#"+ REMOVE + "areaname");
-        TextArea taDescription = (TextArea) mcStage.getScene().lookup("#"+ REMOVE + "description");
-        CheckBox cbCompleted = (CheckBox) mcStage.getScene().lookup("#"+ REMOVE + "completed");
-        DatePicker dpDateCompleted = (DatePicker) mcStage.getScene().lookup("#"+ REMOVE + "datacompleted");
-        ListView<Resource> lvResources = (ListView<Resource>) mcStage.getScene().lookup("#"+ REMOVE + "resources");
+        TableView<Chore> tvChores = (TableView<Chore>) mcStage.getScene().lookup(getID(REMOVE, "table"));
+        TextField tfChoreID = (TextField) mcStage.getScene().lookup(getID(REMOVE, "choreid"));
+        TextField tfAreaName = (TextField) mcStage.getScene().lookup(getID(REMOVE, "areaname"));
+        TextArea taDescription = (TextArea) mcStage.getScene().lookup(getID(REMOVE, "description"));
+        CheckBox cbCompleted = (CheckBox) mcStage.getScene().lookup(getID(REMOVE, "completed"));
+        DatePicker dpDateCompleted = (DatePicker) mcStage.getScene().lookup(getID(REMOVE, "datacompleted"));
+        ListView<Resource> lvResources = (ListView<Resource>) mcStage.getScene().lookup(getID(REMOVE, "resources"));
 
-        Button btnRemove = (Button) mcStage.getScene().lookup("#"+ REMOVE + "remove");
+        Button btnRemove = (Button) mcStage.getScene().lookup(getID(REMOVE, "remove"));
 
         tvChores.getSelectionModel().selectedItemProperty().addListener((observableValue, housemate, t1) -> {
             Chore temp = observableValue.getValue();
@@ -133,9 +133,9 @@ public class ManageChoreController extends Controller {
         });
     }
 
-    private void setupResources(Chore chore, String n) {
+    private void setupResources(Chore chore, String tab) {
         resources.clear();
-        ListView<Resource> lvResources = (ListView<Resource>) mcStage.getScene().lookup("#"+ n + "resources");
+        ListView<Resource> lvResources = (ListView<Resource>) mcStage.getScene().lookup(getID(tab, "resources"));
         lvResources.setItems(resources);
         ResultSet rs;
         if ( chore == null)
@@ -176,9 +176,9 @@ public class ManageChoreController extends Controller {
             }
     }
 
-    private void selectResources(Chore c, String n) {
+    private void selectResources(Chore c, String tab) {
         setupSelectedResources(new Chore(c.choreID.getValue(), "", 0, "", ""));
-        ListView<Resource> lvResources = (ListView<Resource>) mcStage.getScene().lookup("#" + n + "resources");
+        ListView<Resource> lvResources = (ListView<Resource>) mcStage.getScene().lookup(getID(tab, "resources"));
 
         lvResources.getSelectionModel().clearSelection();
 
@@ -193,7 +193,7 @@ public class ManageChoreController extends Controller {
     }
 
     private boolean sameResources() {
-        ListView<Resource> lvResources = (ListView<Resource>) mcStage.getScene().lookup("#"+ EDIT + "resources");
+        ListView<Resource> lvResources = (ListView<Resource>) mcStage.getScene().lookup(getID(EDIT, "resources"));
         int sameCount = 0;
         if (lvResources.getSelectionModel().getSelectedItems().size() != selectedResources.size())
             return false;
@@ -209,13 +209,13 @@ public class ManageChoreController extends Controller {
     }
 
     private void editChore(Stage mcStage) {
-        TableView<Chore> tvChores = (TableView<Chore>) mcStage.getScene().lookup("#"+ EDIT + "table");
-        TextField tfChoreID = (TextField) mcStage.getScene().lookup("#"+ EDIT + "choreid");
-        TextField tfAreaName = (TextField) mcStage.getScene().lookup("#"+ EDIT + "areaname");
-        TextArea taDescription = (TextArea) mcStage.getScene().lookup("#"+ EDIT + "description");
-        CheckBox cbCompleted = (CheckBox) mcStage.getScene().lookup("#"+ EDIT + "completed");
-        DatePicker dpDateCompleted = (DatePicker) mcStage.getScene().lookup("#"+ EDIT + "datecompleted");
-        ListView<Resource> lvResources = (ListView<Resource>) mcStage.getScene().lookup("#"+ EDIT + "resources");
+        TableView<Chore> tvChores = (TableView<Chore>) mcStage.getScene().lookup(getID(EDIT, "table"));
+        TextField tfChoreID = (TextField) mcStage.getScene().lookup(getID(EDIT, "choreid"));
+        TextField tfAreaName = (TextField) mcStage.getScene().lookup(getID(EDIT, "areaname"));
+        TextArea taDescription = (TextArea) mcStage.getScene().lookup(getID(EDIT, "description"));
+        CheckBox cbCompleted = (CheckBox) mcStage.getScene().lookup(getID(EDIT, "completed"));
+        DatePicker dpDateCompleted = (DatePicker) mcStage.getScene().lookup(getID(EDIT, "datecompleted"));
+        ListView<Resource> lvResources = (ListView<Resource>) mcStage.getScene().lookup(getID(EDIT, "resources"));
         lvResources.getSelectionModel().selectedItemProperty().addListener((observableValue, resource, t1) -> {
             Resource temp = observableValue.getValue();
             if (temp == null) tvChores.getSelectionModel().select(tvChores.getSelectionModel().getSelectedItem());
@@ -244,7 +244,7 @@ public class ManageChoreController extends Controller {
                 dateCompleted.set(null);
                 if (temp.dateCompleted.getValue() != null) {
                     DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-                    LocalDate localDate = LocalDate.parse(temp.dateCompleted.getValue().replace("\'", ""), dateTimeFormatter);
+                    LocalDate localDate = LocalDate.parse(temp.dateCompleted.getValue().replace("'", ""), dateTimeFormatter);
                     dateCompleted.set(localDate);
                     dpDateCompleted.setValue(localDate);
                 }
@@ -265,7 +265,7 @@ public class ManageChoreController extends Controller {
             }
         });
 
-        Button btnEdit = (Button) mcStage.getScene().lookup("#"+ EDIT + "edit");
+        Button btnEdit = (Button) mcStage.getScene().lookup(getID(EDIT, "edit"));
 
         btnEdit.disableProperty().bind(Bindings.createBooleanBinding(() -> {
             Chore chore = tvChores.getSelectionModel().getSelectedItem();
@@ -419,19 +419,19 @@ public class ManageChoreController extends Controller {
     }
 
     public void addChore(Stage mcStage) {
-        TableView<Chore> tvChores = (TableView<Chore>) mcStage.getScene().lookup("#"+ ADD + "table");
-        TextField tfChoreID = (TextField) mcStage.getScene().lookup("#"+ ADD + "choreid");
-        TextField tfAreaName = (TextField) mcStage.getScene().lookup("#"+ ADD + "areaname");
-        TextArea taDescription = (TextArea) mcStage.getScene().lookup("#"+ ADD + "description");
-        CheckBox cbCompleted = (CheckBox) mcStage.getScene().lookup("#"+ ADD + "completed");
-        DatePicker dpDateCompleted = (DatePicker) mcStage.getScene().lookup("#"+ ADD + "datecompleted");
-        ListView<Resource> lvResources = (ListView<Resource>) mcStage.getScene().lookup("#"+ ADD + "resources");
+        TableView<Chore> tvChores = (TableView<Chore>) mcStage.getScene().lookup(getID(ADD, "table"));
+        TextField tfChoreID = (TextField) mcStage.getScene().lookup(getID(ADD, "choreid"));
+        TextField tfAreaName = (TextField) mcStage.getScene().lookup(getID(ADD, "areaname"));
+        TextArea taDescription = (TextArea) mcStage.getScene().lookup(getID(ADD, "description"));
+        CheckBox cbCompleted = (CheckBox) mcStage.getScene().lookup(getID(ADD, "completed"));
+        DatePicker dpDateCompleted = (DatePicker) mcStage.getScene().lookup(getID(ADD, "datecompleted"));
+        ListView<Resource> lvResources = (ListView<Resource>) mcStage.getScene().lookup(getID(ADD, "resources"));
 
-        Button btnAdd = (Button) mcStage.getScene().lookup("#"+ ADD + "add");
-        Button btnClear = (Button) mcStage.getScene().lookup("#"+ ADD + "clear");
+        Button btnAdd = (Button) mcStage.getScene().lookup(getID(ADD, "add"));
+        Button btnClear = (Button) mcStage.getScene().lookup(getID(ADD, "clear"));
         btnClear.disableProperty().bind(Bindings.createBooleanBinding(() -> tfAreaName.getText().isEmpty() && taDescription.getText().isEmpty()
                 , tfAreaName.textProperty(), taDescription.textProperty()));
-        CheckBox cbSelfAssign = (CheckBox) mcStage.getScene().lookup("#"+ ADD + "self_assign");
+        CheckBox cbSelfAssign = (CheckBox) mcStage.getScene().lookup(getID(ADD, "self_assign"));
 
         if (loggedInUser.isLeader.getValue() == 0) setupResources(null, ADD);
 
@@ -547,14 +547,14 @@ public class ManageChoreController extends Controller {
         });
     }
 
-    private void linkToScene(Stage mcStage, String n) {
-        TableView<Chore> tvChores = (TableView<Chore>) mcStage.getScene().lookup("#"+ n + "table");
-        TextField tfChoreID = (TextField) mcStage.getScene().lookup("#"+ n + "choreid");
-        TextField tfAreaName = (TextField) mcStage.getScene().lookup("#"+ n + "areaname");
-        TextArea taDescription = (TextArea) mcStage.getScene().lookup("#"+ n + "description");
-        CheckBox cbCompleted = (CheckBox) mcStage.getScene().lookup("#"+ n + "completed");
-        DatePicker dpDateCompleted = (DatePicker) mcStage.getScene().lookup("#"+ n + "datecompleted");
-        ListView<Resource> lvResources = (ListView<Resource>) mcStage.getScene().lookup("#"+ n + "resources");
+    private void linkToScene(Stage mcStage, String tab) {
+        TableView<Chore> tvChores = (TableView<Chore>) mcStage.getScene().lookup(getID(tab, "table"));
+        TextField tfChoreID = (TextField) mcStage.getScene().lookup(getID(tab, "choreid"));
+        TextField tfAreaName = (TextField) mcStage.getScene().lookup(getID(tab, "areaname"));
+        TextArea taDescription = (TextArea) mcStage.getScene().lookup(getID(tab, "description"));
+        CheckBox cbCompleted = (CheckBox) mcStage.getScene().lookup(getID(tab, "completed"));
+        DatePicker dpDateCompleted = (DatePicker) mcStage.getScene().lookup(getID(tab, "datecompleted"));
+        ListView<Resource> lvResources = (ListView<Resource>) mcStage.getScene().lookup(getID(tab, "resources"));
         lvResources.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
         Callback<Resource, Observable[]> extractor = resource -> new Observable[] {resource.resourceNameProperty(),
@@ -590,12 +590,12 @@ public class ManageChoreController extends Controller {
 
         tvChores.setItems(chores);
 
-        Button btnCancel = (Button) mcStage.getScene().lookup("#"+n+"cancel");
+        Button btnCancel = (Button) mcStage.getScene().lookup(getID(tab, "cancel"));
         btnCancel.setOnAction(event -> {
             mcStage.close();
         });
 
-        Button btnClear = (Button) mcStage.getScene().lookup("#"+n+"clear");
+        Button btnClear = (Button) mcStage.getScene().lookup(getID(tab, "clear"));
         btnClear.setOnAction(event -> {
             tfChoreID.setText("");
             tfChoreID.setText("");
@@ -606,7 +606,7 @@ public class ManageChoreController extends Controller {
             tvChores.getSelectionModel().clearSelection();
         });
 
-        CheckBox cbSelfAssign = (CheckBox) mcStage.getScene().lookup("#" + ADD + "self_assign");
+        CheckBox cbSelfAssign = (CheckBox) mcStage.getScene().lookup(getID(ADD, "self_assign"));
         if (loggedInUser.isLeader.getValue() == 1)
             cbSelfAssign.setVisible(true);
     }

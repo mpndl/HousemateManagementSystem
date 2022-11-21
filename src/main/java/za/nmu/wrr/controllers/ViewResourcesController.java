@@ -20,7 +20,7 @@ import java.sql.ResultSet;
 
 public class ViewResourcesController extends Controller {
     public final static String v = "View Resources";
-    private ObservableList<Resource> resources = FXCollections.observableArrayList();
+    private final ObservableList<Resource> resources = FXCollections.observableArrayList();
     private ObservableList<Housemate> housemates = FXCollections.observableArrayList();
     private ObservableList<Chore> chores = FXCollections.observableArrayList();
     private final String VIEW = "view_vr_";
@@ -72,7 +72,7 @@ public class ViewResourcesController extends Controller {
     }
 
     private void linkToScene(Stage vrStage) {
-        TableView<Resource> tvResources = (TableView<Resource>) vrStage.getScene().lookup("#"+VIEW+"table");
+        TableView<Resource> tvResources = (TableView<Resource>) vrStage.getScene().lookup(getID(VIEW, "table"));
 
         TableColumn tcResourceName = new TableColumn("Resource Name");
         tcResourceName.setCellValueFactory(new PropertyValueFactory("resourceName"));
@@ -90,13 +90,13 @@ public class ViewResourcesController extends Controller {
 
         tvResources.setItems(resources);
 
-        Button btnViewChores = (Button) vrStage.getScene().lookup("#" + VIEW + "view_chores");
-        Button btnViewHousemates = (Button) vrStage.getScene().lookup("#"+ VIEW + "view_housemates");
+        Button btnViewChores = (Button) vrStage.getScene().lookup(getID(VIEW, "view_chores"));
+        Button btnViewHousemates = (Button) vrStage.getScene().lookup(getID(VIEW, "view_housemates"));
         btnViewChores.disableProperty().bind(Bindings.createBooleanBinding(() -> tvResources.getSelectionModel().getSelectedItem() == null, tvResources.getSelectionModel().selectedItemProperty()));
         btnViewHousemates.disableProperty().bind(Bindings.createBooleanBinding(() -> tvResources.getSelectionModel().getSelectedItem() == null, tvResources.getSelectionModel().selectedItemProperty()));
 
 
-        Button btnCancel = (Button) vrStage.getScene().lookup("#"+VIEW+"cancel");
+        Button btnCancel = (Button) vrStage.getScene().lookup(getID(VIEW, "cancel"));
         btnCancel.setOnAction(event -> {
             vrStage.close();
         });
@@ -125,7 +125,7 @@ public class ViewResourcesController extends Controller {
     }
 
     private void linkToResourceChoreScene(Stage vrcStage) {
-        TableView<Chore> tvChores = (TableView<Chore>) vrcStage.getScene().lookup("#"+ VIEW + "table");
+        TableView<Chore> tvChores = (TableView<Chore>) vrcStage.getScene().lookup(getID(VIEW, "table"));
         TableColumn tcChoreID = new TableColumn("Chore ID");
         tcChoreID.setCellValueFactory(new PropertyValueFactory<>("choreID"));
         tcChoreID.setPrefWidth(100);
@@ -150,14 +150,14 @@ public class ViewResourcesController extends Controller {
 
         tvChores.setItems(chores);
 
-        Button btnCancel = (Button) vrcStage.getScene().lookup("#"+VIEW+"cancel");
+        Button btnCancel = (Button) vrcStage.getScene().lookup(getID(VIEW, "cancel"));
         btnCancel.setOnAction(event -> {
             vrcStage.close();
         });
     }
 
     private void linkToResourceHousemateScene(Stage vrhStage) {
-        TableView<Housemate> tvHousemates = (TableView<Housemate>) vrhStage.getScene().lookup("#"+HVIEW+"table");
+        TableView<Housemate> tvHousemates = (TableView<Housemate>) vrhStage.getScene().lookup(getID(HVIEW, "table"));
 
         TableColumn tcHousemateID = new TableColumn("Housemate ID");
         tcHousemateID.setCellValueFactory(new PropertyValueFactory<>("housemateID"));
@@ -190,7 +190,7 @@ public class ViewResourcesController extends Controller {
 
         tvHousemates.setItems(housemates);
 
-        Button btnCancel = (Button) vrhStage.getScene().lookup("#"+HVIEW+"cancel");
+        Button btnCancel = (Button) vrhStage.getScene().lookup(getID(HVIEW, "cancel"));
         btnCancel.setOnAction(event -> {
             vrhStage.close();
         });

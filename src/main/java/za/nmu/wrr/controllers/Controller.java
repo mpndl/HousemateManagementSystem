@@ -154,6 +154,10 @@ public class Controller {
         hp.setTooltip(tooltip);
     }
 
+    protected String getID(String tab, String name) {
+        return "#" + tab + name;
+    }
+
     protected void avail(Hyperlink hp) {
         hp.setStyle("-fx-border-color: black");
         hp.setPrefWidth(Double.MAX_VALUE);

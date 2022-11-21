@@ -27,27 +27,27 @@ public class MaintainProfileController extends Controller {
     }
 
     private void deleteProfile(Stage mpStage) {
-        TextField tfHousemateID = (TextField) mpStage.getScene().lookup("#"+ DELETE + "housemateid");
+        TextField tfHousemateID = (TextField) mpStage.getScene().lookup(getID(DELETE, "housemateid"));
         tfHousemateID.setText(loggedInUser.housemateID.getValue());
-        TextField tfUsername = (TextField) mpStage.getScene().lookup("#"+ DELETE + "username");
+        TextField tfUsername = (TextField) mpStage.getScene().lookup(getID(DELETE, "username"));
         tfUsername.setText(loggedInUser.username.getValue());
         tfUsername.setDisable(true);
-        TextField tfFirstname = (TextField) mpStage.getScene().lookup("#"+ DELETE + "firstname");
+        TextField tfFirstname = (TextField) mpStage.getScene().lookup(getID(DELETE, "firstname"));
         tfFirstname.setText(loggedInUser.firstName.getValue());
         tfFirstname.setDisable(true);
-        TextField tfLastname = (TextField) mpStage.getScene().lookup("#"+ DELETE + "lastname");
+        TextField tfLastname = (TextField) mpStage.getScene().lookup(getID(DELETE, "lastname"));
         tfLastname.setText(loggedInUser.lastName.getValue());
         tfLastname.setDisable(true);
-        TextField tfPhoneNumber = (TextField) mpStage.getScene().lookup("#"+ DELETE + "phonenumber");
+        TextField tfPhoneNumber = (TextField) mpStage.getScene().lookup(getID(DELETE, "phonenumber"));
         tfPhoneNumber.setText(loggedInUser.phoneNumber.getValue());
         tfPhoneNumber.setDisable(true);
-        TextField tfPassword = (TextField) mpStage.getScene().lookup("#"+ DELETE + "password");
+        TextField tfPassword = (TextField) mpStage.getScene().lookup(getID(DELETE, "password"));
         tfPassword.setText(loggedInUser.password.getName());
         tfPassword.setDisable(true);
-        CheckBox cbIsLeader = (CheckBox) mpStage.getScene().lookup("#"+ DELETE + "leader");
+        CheckBox cbIsLeader = (CheckBox) mpStage.getScene().lookup(getID(DELETE, "leader"));
         cbIsLeader.setSelected(loggedInUser.isLeader.getValue() != 0);
 
-        Button btnDelete = (Button) mpStage.getScene().lookup("#"+ DELETE + "delete");
+        Button btnDelete = (Button) mpStage.getScene().lookup(getID(DELETE, "delete"));
         btnDelete.setOnAction(event -> {
             if (loggedInUser.isLeader.getValue() == 0) {
                 Housemate housemate = new Housemate();
@@ -90,16 +90,16 @@ public class MaintainProfileController extends Controller {
         });
     }
 
-    private void linkToScene(Stage mpStage, String n) {
-        TextField tfHousemateID = (TextField) mpStage.getScene().lookup("#"+n+"housemateid");
-        TextField tfUsername = (TextField) mpStage.getScene().lookup("#"+n+"username");
-        TextField tfFirstname = (TextField) mpStage.getScene().lookup("#"+n+"firstname");
-        TextField tfLastname = (TextField) mpStage.getScene().lookup("#"+n+"lastname");
-        TextField tfPhoneNumber = (TextField) mpStage.getScene().lookup("#"+n+"phonenumber");
+    private void linkToScene(Stage mpStage, String tab) {
+        TextField tfHousemateID = (TextField) mpStage.getScene().lookup(getID(tab, "housemateid"));
+        TextField tfUsername = (TextField) mpStage.getScene().lookup(getID(tab, "username"));
+        TextField tfFirstname = (TextField) mpStage.getScene().lookup(getID(tab, "firstname"));
+        TextField tfLastname = (TextField) mpStage.getScene().lookup(getID(tab, "lastname"));
+        TextField tfPhoneNumber = (TextField) mpStage.getScene().lookup(getID(tab, "phonenumber"));
         tfPhoneNumber.addEventFilter(KeyEvent.KEY_TYPED, maxLength(10));
-        TextField tfPassword = (TextField) mpStage.getScene().lookup("#"+n+"password");
+        TextField tfPassword = (TextField) mpStage.getScene().lookup(getID(tab, "password"));
 
-        Button btnCancel = (Button) mpStage.getScene().lookup("#"+n+"cancel");
+        Button btnCancel = (Button) mpStage.getScene().lookup(getID(tab, "cancel"));
         btnCancel.setOnAction(event -> {
             mpStage.close();
             tfUsername.setText(loggedInUser.username.getValue());
@@ -110,7 +110,7 @@ public class MaintainProfileController extends Controller {
 
         });
 
-        Button btnClear = (Button) mpStage.getScene().lookup("#"+n+"clear");
+        Button btnClear = (Button) mpStage.getScene().lookup(getID(tab, "clear"));
         btnClear.setOnAction(event -> {
             tfHousemateID.setText("");
             tfUsername.setText("");
@@ -122,23 +122,23 @@ public class MaintainProfileController extends Controller {
     }
 
     private void editProfile(Stage mpStage) {
-        TextField tfHousemateID = (TextField) mpStage.getScene().lookup("#"+ EDIT + "housemateid");
+        TextField tfHousemateID = (TextField) mpStage.getScene().lookup(getID(EDIT, "housemateid"));
         tfHousemateID.setText(loggedInUser.housemateID.getValue());
-        TextField tfUsername = (TextField) mpStage.getScene().lookup("#"+ EDIT + "username");
+        TextField tfUsername = (TextField) mpStage.getScene().lookup(getID(EDIT, "username"));
         tfUsername.setText(loggedInUser.username.getValue());
-        TextField tfFirstname = (TextField) mpStage.getScene().lookup("#"+ EDIT + "firstname");
+        TextField tfFirstname = (TextField) mpStage.getScene().lookup(getID(EDIT, "firstname"));
         tfFirstname.setText(loggedInUser.firstName.getValue());
-        TextField tfLastname = (TextField) mpStage.getScene().lookup("#"+ EDIT + "lastname");
+        TextField tfLastname = (TextField) mpStage.getScene().lookup(getID(EDIT, "lastname"));
         tfLastname.setText(loggedInUser.lastName.getValue());
-        TextField tfPhoneNumber = (TextField) mpStage.getScene().lookup("#"+ EDIT + "phonenumber");
+        TextField tfPhoneNumber = (TextField) mpStage.getScene().lookup(getID(EDIT, "phonenumber"));
         tfPhoneNumber.setText(loggedInUser.phoneNumber.getValue());
-        TextField tfPassword = (TextField) mpStage.getScene().lookup("#"+ EDIT + "password");
+        TextField tfPassword = (TextField) mpStage.getScene().lookup(getID(EDIT, "password"));
         tfPassword.setText(loggedInUser.password.getValue());
-        CheckBox cbIsLeader = (CheckBox) mpStage.getScene().lookup("#"+ EDIT + "leader");
+        CheckBox cbIsLeader = (CheckBox) mpStage.getScene().lookup(getID(EDIT, "leader"));
         cbIsLeader.setSelected(loggedInUser.isLeader.getValue() != 0);
 
-        Button btnEdit = (Button) mpStage.getScene().lookup("#"+ EDIT + "edit");
-        Button btnClear = (Button) mpStage.getScene().lookup("#"+ EDIT + "clear");
+        Button btnEdit = (Button) mpStage.getScene().lookup(getID(EDIT, "edit"));
+        Button btnClear = (Button) mpStage.getScene().lookup(getID(EDIT, "clear"));
 
         validate(tfUsername, tfFirstname, tfLastname, tfPhoneNumber, tfPassword, btnEdit);
 

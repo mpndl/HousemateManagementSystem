@@ -32,19 +32,19 @@ public class MaintainHousemateController extends Controller {
     }
 
     private void removeHousemates(Stage mhStage) {
-        TableView<Housemate> tvHousemates = (TableView<Housemate>) mhStage.getScene().lookup("#"+ REMOVE + "table");
-        TextField tfHousemateID = (TextField) mhStage.getScene().lookup("#"+ REMOVE + "housemateid");
-        TextField tfUsername = (TextField) mhStage.getScene().lookup("#"+ REMOVE + "username");
+        TableView<Housemate> tvHousemates = (TableView<Housemate>) mhStage.getScene().lookup(getID(REMOVE, "table"));
+        TextField tfHousemateID = (TextField) mhStage.getScene().lookup(getID(REMOVE, "housemateid"));
+        TextField tfUsername = (TextField) mhStage.getScene().lookup(getID(REMOVE, "username"));
         tfUsername.setDisable(true);
-        TextField tfFirstname = (TextField) mhStage.getScene().lookup("#"+ REMOVE + "firstname");
+        TextField tfFirstname = (TextField) mhStage.getScene().lookup(getID(REMOVE, "firstname"));
         tfFirstname.setDisable(true);
-        TextField tfLastname = (TextField) mhStage.getScene().lookup("#"+ REMOVE + "lastname");
+        TextField tfLastname = (TextField) mhStage.getScene().lookup(getID(REMOVE, "lastname"));
         tfLastname.setDisable(true);
-        TextField tfPhoneNumber = (TextField) mhStage.getScene().lookup("#"+ REMOVE + "phonenumber");
+        TextField tfPhoneNumber = (TextField) mhStage.getScene().lookup(getID(REMOVE, "phonenumber"));
         tfPhoneNumber.setDisable(true);
-        TextField tfPassword = (TextField) mhStage.getScene().lookup("#"+ REMOVE + "password");
+        TextField tfPassword = (TextField) mhStage.getScene().lookup(getID(REMOVE, "password"));
         tfPassword.setDisable(true);
-        CheckBox cbIsLeader = (CheckBox) mhStage.getScene().lookup("#"+ REMOVE + "leader");
+        CheckBox cbIsLeader = (CheckBox) mhStage.getScene().lookup(getID(REMOVE, "leader"));
         tvHousemates.getSelectionModel().selectedItemProperty().addListener((observableValue, housemate, t1) -> {
             Housemate temp = observableValue.getValue();
             if(temp != null) {
@@ -59,7 +59,7 @@ public class MaintainHousemateController extends Controller {
         });
 
 
-        Button btnRemove = (Button) mhStage.getScene().lookup("#"+ REMOVE + "remove");
+        Button btnRemove = (Button) mhStage.getScene().lookup(getID(REMOVE, "remove"));
         btnRemove.disableProperty().bind(Bindings.createBooleanBinding(() -> tvHousemates.getSelectionModel().getSelectedItem() == null,
                 tvHousemates.getSelectionModel().selectedItemProperty()));
 
@@ -106,15 +106,15 @@ public class MaintainHousemateController extends Controller {
         });
     }
 
-    private void linkToScene(Stage mhStage, String n, String f) {
-        TextField tfHousemateID = (TextField) mhStage.getScene().lookup("#"+n+"housemateid");
-        TextField tfUsername = (TextField) mhStage.getScene().lookup("#"+n+"username");
-        TextField tfFirstname = (TextField) mhStage.getScene().lookup("#"+n+"firstname");
-        TextField tfLastname = (TextField) mhStage.getScene().lookup("#"+n+"lastname");
-        TextField tfPhoneNumber = (TextField) mhStage.getScene().lookup("#"+n+"phonenumber");
+    private void linkToScene(Stage mhStage, String tab) {
+        TextField tfHousemateID = (TextField) mhStage.getScene().lookup(getID(tab, "housemateid"));
+        TextField tfUsername = (TextField) mhStage.getScene().lookup(getID(tab, "username"));
+        TextField tfFirstname = (TextField) mhStage.getScene().lookup(getID(tab, "firstname"));
+        TextField tfLastname = (TextField) mhStage.getScene().lookup(getID(tab, "lastname"));
+        TextField tfPhoneNumber = (TextField) mhStage.getScene().lookup(getID(tab, "phonenumber"));
         tfPhoneNumber.addEventFilter(KeyEvent.KEY_TYPED, maxLength(10));
-        TextField tfPassword = (TextField) mhStage.getScene().lookup("#"+n+"password");
-        TableView<Housemate> tvHousemates = (TableView<Housemate>) mhStage.getScene().lookup("#"+n+"table");
+        TextField tfPassword = (TextField) mhStage.getScene().lookup(getID(tab, "password"));
+        TableView<Housemate> tvHousemates = (TableView<Housemate>) mhStage.getScene().lookup(getID(tab, "table"));
 
         TableColumn tcHousemateID = new TableColumn("Housemate ID");
         tcHousemateID.setCellValueFactory(new PropertyValueFactory<>("housemateID"));
@@ -149,7 +149,7 @@ public class MaintainHousemateController extends Controller {
 
         tvHousemates.getSelectionModel().selectedItemProperty().addListener((observableValue, housemate, t1) -> {
             Housemate temp = observableValue.getValue();
-            if (!Objects.equals(n, REMOVE)) {
+            if (!Objects.equals(tab, REMOVE)) {
                 if (temp != null) {
                     tfUsername.setDisable(false);
                     tfFirstname.setDisable(false);
@@ -166,12 +166,12 @@ public class MaintainHousemateController extends Controller {
             }
         });
 
-        Button btnCancel = (Button) mhStage.getScene().lookup("#"+n+"cancel");
+        Button btnCancel = (Button) mhStage.getScene().lookup(getID(tab, "cancel"));
         btnCancel.setOnAction(event -> {
             mhStage.close();
         });
 
-        Button btnClear = (Button) mhStage.getScene().lookup("#"+n+"clear");
+        Button btnClear = (Button) mhStage.getScene().lookup(getID(tab, "clear"));
         btnClear.disableProperty().bind(Bindings.createBooleanBinding(() -> !(!tfUsername.getText().isEmpty() || !tfFirstname.getText().isEmpty()
                         || !tfLastname.getText().isEmpty() || !tfPhoneNumber.getText().isEmpty()
                         || !tfPassword.getText().isEmpty()), tfUsername.textProperty(), tfFirstname.textProperty(), tfLastname.textProperty()
@@ -189,14 +189,16 @@ public class MaintainHousemateController extends Controller {
     }
 
     private void editHousemates(Stage mhStage) {
-        TableView<Housemate> tvHousemates = (TableView<Housemate>) mhStage.getScene().lookup("#"+ EDIT + "table");
-        TextField tfHousemateID = (TextField) mhStage.getScene().lookup("#"+ EDIT + "housemateid");
-        TextField tfUsername = (TextField) mhStage.getScene().lookup("#"+ EDIT + "username");
-        TextField tfFirstname = (TextField) mhStage.getScene().lookup("#"+ EDIT + "firstname");
-        TextField tfLastname = (TextField) mhStage.getScene().lookup("#"+ EDIT + "lastname");
-        TextField tfPhoneNumber = (TextField) mhStage.getScene().lookup("#"+ EDIT + "phonenumber");
-        TextField tfPassword = (TextField) mhStage.getScene().lookup("#"+ EDIT + "password");
-        CheckBox cbIsLeader = (CheckBox) mhStage.getScene().lookup("#"+ EDIT + "leader");
+        TableView<Housemate> tvHousemates = (TableView<Housemate>) mhStage.getScene().lookup(getID(EDIT, "table"));
+        TextField tfHousemateID = (TextField) mhStage.getScene().lookup(getID(EDIT, "housemateid"));
+        TextField tfUsername = (TextField) mhStage.getScene().lookup(getID(EDIT, "username"));
+        TextField tfFirstname = (TextField) mhStage.getScene().lookup(getID(EDIT, "firstname"));
+        TextField tfLastname = (TextField) mhStage.getScene().lookup(getID(EDIT, "lastname"));
+        TextField tfPhoneNumber = (TextField) mhStage.getScene().lookup(getID(EDIT, "phonenumber"));
+        TextField tfPassword = (TextField) mhStage.getScene().lookup(getID(EDIT, "password"));
+
+        Button btnEdit = (Button) mhStage.getScene().lookup(getID(EDIT, "edit"));
+        CheckBox cbIsLeader = (CheckBox) mhStage.getScene().lookup(getID(EDIT, "leader"));
         tvHousemates.getSelectionModel().selectedItemProperty().addListener((observableValue, housemate, t1) -> {
             Housemate temp = observableValue.getValue();
             if(temp != null) {
@@ -209,9 +211,6 @@ public class MaintainHousemateController extends Controller {
                 tfPassword.setText(temp.password.getValue());
             }
         });
-
-        Button btnEdit = (Button) mhStage.getScene().lookup("#"+ EDIT + "edit");
-        Button btnClear = (Button) mhStage.getScene().lookup("#"+ EDIT + "clear");
 
         ValidateHousemateController.validateEdit(tfUsername, tfFirstname, tfLastname, tfPhoneNumber, tfPassword, btnEdit, tvHousemates);
 
@@ -245,16 +244,14 @@ public class MaintainHousemateController extends Controller {
     }
 
     public void addHousemates(Stage mhStage) {
-        TableView<Housemate> tvHousemates = (TableView<Housemate>) mhStage.getScene().lookup("#"+ ADD + "table");
-        TextField tfHousemateID = (TextField) mhStage.getScene().lookup("#"+ ADD + "housemateid");
-        TextField tfUsername = (TextField) mhStage.getScene().lookup("#"+ ADD + "username");
-        TextField tfFirstname = (TextField) mhStage.getScene().lookup("#"+ ADD + "firstname");
-        TextField tfLastname = (TextField) mhStage.getScene().lookup("#"+ ADD + "lastname");
-        TextField tfPhoneNumber = (TextField) mhStage.getScene().lookup("#"+ ADD + "phonenumber");
-        TextField tfPassword = (TextField) mhStage.getScene().lookup("#"+ ADD + "password");
+        TextField tfHousemateID = (TextField) mhStage.getScene().lookup(getID(ADD, "housemateid"));
+        TextField tfUsername = (TextField) mhStage.getScene().lookup(getID(ADD, "username"));
+        TextField tfFirstname = (TextField) mhStage.getScene().lookup(getID(ADD, "firstname"));
+        TextField tfLastname = (TextField) mhStage.getScene().lookup(getID(ADD, "lastname"));
+        TextField tfPhoneNumber = (TextField) mhStage.getScene().lookup(getID(ADD, "phonenumber"));
+        TextField tfPassword = (TextField) mhStage.getScene().lookup(getID(ADD, "password"));
 
-        Button btnClear = (Button) mhStage.getScene().lookup("#"+ ADD + "clear");
-        Button btnAdd = (Button) mhStage.getScene().lookup("#"+ ADD + "add");
+        Button btnAdd = (Button) mhStage.getScene().lookup(getID(ADD, "add"));
 
         ValidateHousemateController.validateRegister(tfUsername, tfFirstname, tfLastname, tfPhoneNumber, tfPassword, btnAdd);
 
@@ -276,7 +273,6 @@ public class MaintainHousemateController extends Controller {
             tfLastname.setText("");
             tfPhoneNumber.setText("");
             tfPassword.setText("");
-            //tvHousemates.getSelectionModel().clearSelection();
             housemates.add(housemate);
         });
     }
@@ -306,13 +302,13 @@ public class MaintainHousemateController extends Controller {
         if (!linked) {
             setupHousemates();
             // Add
-            linkToScene(mhStage, ADD, "add");
+            linkToScene(mhStage, ADD);
             addHousemates(mhStage);
             // Edit
-            linkToScene(mhStage, EDIT, "edit");
+            linkToScene(mhStage, EDIT);
             editHousemates(mhStage);
             // Remove
-            linkToScene(mhStage, REMOVE, "remove");
+            linkToScene(mhStage, REMOVE);
             removeHousemates(mhStage);
             linked = true;
         }
