@@ -57,7 +57,7 @@ public class Main extends Application {
         dashboardStage.setScene(dashboardScene);
         dashboardStage.setTitle("Dashboard");
         dashboardStage.setWidth(600);
-        dashboardStage.setHeight(350);
+        dashboardStage.setHeight(320);
         dashboardStage.setResizable(false);
         dashboardStage.setOnCloseRequest(event -> {
             controller.database.disconnectFromDB();
