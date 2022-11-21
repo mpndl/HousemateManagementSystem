@@ -76,6 +76,7 @@ public class Controller {
         double curY = circleView.radius;
 
         circleView.onClick = entry.getValue();
+        entry.getValue().run(circleView);
 
         circleView.setCenterX(curX);
         circleView.setCenterY(curY);
@@ -92,6 +93,7 @@ public class Controller {
             else {
                 circleView = new CircleView(curX, curY, pane, circleViews, entry.getKey());
                 circleView.onClick = entry.getValue();
+                entry.getValue().run(circleView);
             }
             point = computeBoundedPoint(pane, curX, curY, circleView.radius, maxRadius);
             curX = point.getX() + circleView.radius * 2 + 10;

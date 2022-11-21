@@ -52,9 +52,7 @@ public class ViewHousematesController extends Controller {
 
         Hyperlink hpMaintainHousemates = (Hyperlink) dashboardScene.lookup("#vh_dashboard");
         avail(hpMaintainHousemates);
-        hpMaintainHousemates.setOnAction(event -> {
-            onDashboardLinkClicked(null);
-        });
+        hpMaintainHousemates.setOnAction(event -> onDashboardLinkClicked(null));
     }
 
     private void setupHousemates() {
