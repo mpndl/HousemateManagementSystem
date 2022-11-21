@@ -9,7 +9,7 @@
 <?import javafx.geometry.Insets?>
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
-            fx:controller="za.nmu.wrr.ViewHousematesController">
+            fx:controller="za.nmu.wrr.controllers.ViewHousematesController">
     <padding >
         <Insets left="10" right="10" top="10" bottom="10"/>
     </padding>

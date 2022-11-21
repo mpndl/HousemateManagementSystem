@@ -9,7 +9,7 @@
 <?import javafx.geometry.Insets?>
 <TabPane xmlns="http://javafx.com/javafx"
          xmlns:fx="http://javafx.com/fxml"
-         fx:controller="za.nmu.wrr.MaintainProfileController">
+         fx:controller="za.nmu.wrr.controllers.MaintainProfileController">
     <Tab text="Edit" closable="false">
         <BorderPane>
             <padding >

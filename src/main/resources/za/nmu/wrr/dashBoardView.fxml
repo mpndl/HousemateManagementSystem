@@ -4,22 +4,35 @@
 <?import javafx.scene.layout.*?>
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
-            fx:controller="za.nmu.wrr.Controller">
+            fx:controller="za.nmu.wrr.controllers.Controller">
     <top>
         <Label text="Dashboard" style="-fx-font-weight: bold;" BorderPane.alignment="CENTER" />
     </top>
+    <center>
+        <Pane fx:id="pane" style="-fx-border-color: black" onMouseReleased="#setOnMouseReleased" onMouseClicked="#setOnMouseClicked"/>
+    </center>
     <left>
-        <VBox fx:id="dashboard_links">
+        <VBox fx:id="dashboard_links" style="-fx-border-color: black" prefWidth="130">
             <Hyperlink text="Maintain Profile" fx:id="mp_dashboard"/>
-            <Hyperlink text="Maintain House"/>
-            <Hyperlink text="Connect to House"/>
+            <Hyperlink style="-fx-background-color: gainsboro; -fx-text-fill: black;-fx-border-color: black; -fx-underline: false" prefWidth="Infinity" text="Maintain House">
+                <tooltip><Tooltip text="Unavailable" showDelay="0ms"/></tooltip>
+            </Hyperlink>
+            <Hyperlink style="-fx-background-color: gainsboro; -fx-text-fill: black;-fx-border-color: black; -fx-underline: false" prefWidth="Infinity" text="Connect to House">
+                <tooltip><Tooltip text="Unavailable" showDelay="0ms"/></tooltip>
+            </Hyperlink>
             <Hyperlink text="Maintain Housemates" fx:id="mh_dashboard" />
             <Hyperlink text="Manage Chores" fx:id="mc_dashboard"/>
-            <Hyperlink text="Manage Resources"/>
+            <Hyperlink style="-fx-background-color: gainsboro; -fx-text-fill: black;-fx-border-color: black; -fx-underline: false" prefWidth="Infinity" text="Manage Resources">
+                <tooltip><Tooltip text="Unavailable" showDelay="0ms"/></tooltip>
+            </Hyperlink>
             <Hyperlink text="Assign Chores" fx:id="ac_dashboard"/>
-            <Hyperlink text="Swap Chores"/>
+            <Hyperlink style="-fx-background-color: gainsboro; -fx-text-fill: black;-fx-border-color: black; -fx-underline: false" prefWidth="Infinity" text="Swap Chores">
+                <tooltip><Tooltip text="Unavailable" showDelay="0ms"/></tooltip>
+            </Hyperlink>
             <Hyperlink text="View Housemates" fx:id="vh_dashboard"/>
-            <Hyperlink text="View Chores"/>
+            <Hyperlink style="-fx-background-color: gainsboro; -fx-text-fill: black;-fx-border-color: black; -fx-underline: false" prefWidth="Infinity" text="View Chores">
+                <tooltip><Tooltip text="Unavailable" showDelay="0ms"/></tooltip>
+            </Hyperlink>
             <Hyperlink text="View Resources" fx:id="vr_dashboard"/>
         </VBox>
     </left>

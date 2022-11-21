@@ -2,19 +2,13 @@ package za.nmu.wrr;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import za.nmu.wrr.controllers.*;
 
 import java.io.IOException;
 
@@ -33,7 +27,6 @@ public class Main extends Application {
         FXMLLoader dashboardView = new FXMLLoader();
         dashboardView.setLocation(getClass().getResource("dashBoardView.fxml"));
         Scene dashboardScene = new Scene(dashboardView.load());
-        Controller controller = new Controller(dashboardStage, dashboardScene, vhStage);
 
         // Maintain Housemates View/Controller
         Stage mhStage = createMaintainHousemateView(dashboardStage);
@@ -58,6 +51,8 @@ public class Main extends Application {
         // View Resources View/Controller
         Stage vrStage = createViewResourcesView(dashboardStage);
         new ViewResourcesController(dashboardScene, vrStage);
+
+        Controller controller = new Controller(vhStage, dashboardStage);
 
         dashboardStage.setScene(dashboardScene);
         dashboardStage.setTitle("Dashboard");

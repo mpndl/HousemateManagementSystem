@@ -10,7 +10,7 @@
 <?import org.controlsfx.control.CheckComboBox?>
 <TabPane xmlns="http://javafx.com/javafx"
          xmlns:fx="http://javafx.com/fxml"
-         fx:controller="za.nmu.wrr.ManageChoreController">
+         fx:controller="za.nmu.wrr.controllers.ManageChoreController">
     <Tab text="Add" closable="false">
         <BorderPane>
             <padding >

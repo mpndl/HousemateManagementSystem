@@ -9,7 +9,7 @@
 <?import javafx.geometry.Insets?>
 <TabPane xmlns="http://javafx.com/javafx"
          xmlns:fx="http://javafx.com/fxml"
-         fx:controller="za.nmu.wrr.ValidateHousemateController">
+         fx:controller="za.nmu.wrr.controllers.ValidateHousemateController">
     <Tab text="Login" closable="false">
         <BorderPane>
             <padding >
