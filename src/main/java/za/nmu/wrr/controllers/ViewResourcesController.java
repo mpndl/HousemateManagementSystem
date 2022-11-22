@@ -10,6 +10,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import za.nmu.wrr.Main;
 import za.nmu.wrr.models.Chore;
 import za.nmu.wrr.models.Housemate;
 import za.nmu.wrr.models.Resource;
@@ -244,7 +245,7 @@ public class ViewResourcesController extends Controller {
         Stage stage = new Stage();
 
         FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource("resourceChoresView.fxml"));
+        loader.setLocation(Main.class.getResource("resourceChoresView.fxml"));
 
         Scene scene = new Scene(loader.load());
 
@@ -265,7 +266,7 @@ public class ViewResourcesController extends Controller {
         Stage stage = new Stage();
 
         FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource("viewHousematesView.fxml"));
+        loader.setLocation(Main.class.getResource("viewHousematesView.fxml"));
 
         Scene scene = new Scene(loader.load());
 
