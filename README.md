@@ -6,3 +6,6 @@ The WRR.bat file uses the JAVA_HOME environment variable therefore the operating
 
 ## [HMS database](/database/HMS)
 The system uses the SQL SERVER/JDBC database. The backup containing data is in [HMS database](/database).
+
+## Demonstration
+[A demonstration of the system's functionality.](https://youtu.be/PQpv2Fro_6s)
